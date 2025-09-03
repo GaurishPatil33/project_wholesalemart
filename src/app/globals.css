@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.no-pip::-webkit-media-controls-picture-in-picture-button {
+  display: none !important;
+}
+
+/* primary color */
+.text-primary {
+  color: #900001 !important;
+}
+
+/* custom scrollbar-hide */
+.scrollbar-hide::-webkit-scrollbar {
+  display: hidden;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* custom scrollbar-hide */
