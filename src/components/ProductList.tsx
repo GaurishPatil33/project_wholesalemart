@@ -16,7 +16,13 @@ const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
-const ProductList = ({ products }: { products: Product[] }) => {
+const ProductList = ({
+  products,
+  title,
+}: {
+  products: Product[];
+  title: string;
+}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(false);
@@ -50,42 +56,76 @@ const ProductList = ({ products }: { products: Product[] }) => {
       behavior: "smooth",
     });
   };
-  console.log(products);
+  // console.log(products);
+
+  // const { activeId, setActiveId } = useVideoStore();
+
+  // useEffect(() => {
+  //   if (!products.length) return;
+
+  //   let currentIndex = products.findIndex((p) => p.id === activeId);
+  //   if (currentIndex === -1) currentIndex = 0;
+
+  //   const timer = setInterval(() => {
+  //     const nextIndex = (currentIndex + 1) % products.length;
+  //     setActiveId(products[nextIndex].id);
+  //     currentIndex = nextIndex;
+  //   }, 4000);
+
+  //   return () => clearInterval(timer);
+  // }, [activeId, products, setActiveId]);
+
   return (
     <div className="relative">
       {" "}
-      <motion.div
+      <motion.section
         variants={containerVariants}
-        ref={scrollRef}
-        className="flex  overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth scrollbar-hide"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
       >
-        {products.map((p) => (
-          <motion.div
-            key={p.id}
+        <div className="bg-white py-3 md:py-6 mx-auto px-2 md:px-6">
+          {/* Section Title */}
+          <motion.h2
             variants={fadeInUp}
-            className="relative snap-start h-fit max-w-50 flex-shrink-0"
+            className="text-xl md:text-2xl font-bold text-center mb-3 md:mb-4 bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent"
           >
-            <ProductCard product={p} />
+            {title}
+          </motion.h2>
+          <motion.div
+            variants={containerVariants}
+            ref={scrollRef}
+            className="flex  overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth scrollbar-hide"
+          >
+            {products.map((p) => (
+              <motion.div
+                key={p.id}
+                variants={fadeInUp}
+                className="relative snap-start h-fit max-w-50 flex-shrink-0"
+              >
+                <ProductCard product={p}  />
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
-      </motion.div>
-      {/* Left/Right Arrows (Desktop only, auto-hide) */}
-      {showLeft && (
-        <button
-          onClick={() => scroll("left")}
-          className="flex absolute top-1/2 left-2 -translate-y-1/2 bg-white/30 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
-        >
-          <ChevronLeft className="w-5 h-5 text-black" />
-        </button>
-      )}
-      {showRight && (
-        <button
-          onClick={() => scroll("right")}
-          className="flex absolute top-1/2 right-2 -translate-y-1/2 bg-white/30 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
-        >
-          <ChevronRight className="w-5 h-5 text-black" />
-        </button>
-      )}
+          {/* Left/Right Arrows (Desktop only, auto-hide) */}
+          {showLeft && (
+            <button
+              onClick={() => scroll("left")}
+              className="flex absolute top-1/2 left-2 -translate-y-1/2 bg-white/30 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
+            >
+              <ChevronLeft className="w-5 h-5 text-black" />
+            </button>
+          )}
+          {showRight && (
+            <button
+              onClick={() => scroll("right")}
+              className="flex absolute top-1/2 right-2 -translate-y-1/2 bg-white/30 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
+            >
+              <ChevronRight className="w-5 h-5 text-black" />
+            </button>
+          )}
+        </div>
+      </motion.section>
     </div>
   );
 };

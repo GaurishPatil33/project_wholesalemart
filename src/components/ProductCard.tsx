@@ -1,22 +1,35 @@
 "use client";
 import { useCartStore } from "@/lib/store/cartStore";
 import { useToast } from "@/lib/store/toast";
+import { useVideoStore } from "@/lib/store/videoStore";
 import { Product } from "@/lib/types";
 import { motion, useInView } from "framer-motion";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const ProductCard = ({ product }: { product: Product }) => {
+const ProductCard = ({
+  product,
+  index,
+}: {
+  product: Product;
+  index?: number;
+}) => {
   const [showVideo, setShowVideo] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
   const timeRef = useRef<NodeJS.Timeout | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(cardRef, {
-    margin: "-40% 0px -30% 0px",
+    // margin: "-10% 0px -10% 0px",
+    margin: " 0px",
+    amount: 0.8,
     once: false,
+    //  threshold: 0.7, // 👈 play when 70% visible
+    // triggerOnce: false,
   });
   const {
-    wishlist,
+    // wishlist,
     isInWishlist,
     isInCart,
     toggleWishlist,
@@ -25,8 +38,8 @@ const ProductCard = ({ product }: { product: Product }) => {
   } = useCartStore();
 
   const { showToast } = useToast();
-
-  const router =useRouter()
+  const { activeId, setActiveId, visibleIds, setVisibleIds } = useVideoStore();
+  const router = useRouter();
 
   // useEffect(() => {
   //   if (product.video) {
@@ -37,18 +50,81 @@ const ProductCard = ({ product }: { product: Product }) => {
   //   }
   // }, [product.video]);
 
-  const handleStart = () => {
-    timeRef.current = setTimeout(() => {
-      setShowVideo(true);
-    }, 500);
-  };
-  const handleStop = () => {
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+
+  //   if (isInView) {
+  //     // start a delay
+  //     timeRef.current = setTimeout(() => {
+  //       setShowVideo(true);
+  //       videoRef.current?.play().catch(() => {});
+  //       // setIsPlaying(true);
+  //     }, 1800);
+  //   } else {
+  //     // cancel delay if user scrolls away / unhover
+  //     if (timeRef.current) {
+  //       clearTimeout(timeRef.current);
+  //       timeRef.current = null;
+  //     }
+  //     setShowVideo(false);
+  //     videoRef.current.pause();
+  //     // setIsPlaying(false);
+  //   }
+
+  //   return () => {
+  //     if (timeRef.current) {
+  //       clearTimeout(timeRef.current);
+  //       timeRef.current = null;
+  //     }
+  //   };
+  // }, [isInView,]);
+
+  // 🎥 Manage playback based on view & active state
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    // Clear old timers when effect runs
     if (timeRef.current) {
       clearTimeout(timeRef.current);
       timeRef.current = null;
     }
-    setShowVideo(false);
-  };
+
+    if (isInView) {
+      // Immediately mark as active
+      setActiveId(product.id);
+
+      timeRef.current = setTimeout(() => {
+        if (videoRef.current) {
+          setShowVideo(true);
+          videoRef.current.currentTime = 0;
+          videoRef.current.play().catch(() => {});
+
+          // Stop vid after 4sec
+          timeRef.current = setTimeout(() => {
+            // ✅ No need to check stale activeId here
+            if (videoRef.current) {
+              videoRef.current.pause();
+              setShowVideo(false);
+            }
+          }, 6000);
+        }
+      }, 3000);
+    } else {
+      // Reset when out of view
+      if (activeId === product.id) {
+        setActiveId(null);
+      }
+      setShowVideo(false);
+      videoRef.current.pause();
+    }
+
+    return () => {
+      if (timeRef.current) {
+        clearTimeout(timeRef.current);
+        timeRef.current = null;
+      }
+    };
+  }, [isInView, product.id, setActiveId]);
 
   const handleWishlistToggle = () => {
     toggleWishlist(product);
@@ -64,7 +140,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       showToast("Removed from Cart 🛒");
       removeFromCart(product.id);
     } else {
-      showToast("Added to Cart 🛒");
+      showToast("Adde  to Cart 🛒");
       addToCart(product);
     }
   };
@@ -72,38 +148,51 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div
       ref={cardRef}
-      className="min-w-40 h-fit  hover:scale-101 px-1 mt-2"
-      onMouseEnter={handleStart}
-      onMouseLeave={handleStop}
-      onTouchStart={handleStart}
-      onTouchEnd={handleStop}
-      onTouchCancel={handleStop}
+      data-product-id={product.id}
+      className="min-w-40 h-fit  px-1 mt-2"
+      // onMouseEnter={handleStart}
+      // onMouseLeave={handleStop}
+      // onTouchStart={handleStart}
+      // onTouchEnd={handleStop}
+      // onTouchCancel={handleStop}
     >
-      <div className=" relative rounded-tr-3xl xs:px-4 rounded-bl-3xl overflow-hidden ">
-        {showVideo && product.video && cardRef ? (
-          <motion.video
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            src={product.video}
-            className="w-full h-70 md:h-100 object-cover backdrop-contrast-200 no-pip"
-            muted
-            loop
-            playsInline
-            autoPlay
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            controlsList=" nodownload nofullscreen noremoteplayback"
-          />
-        ) : (
-          <img
+      <div className=" relative rounded-tr-3xl xs:px-4 shadow-lg rounded-bl-3xl overflow-hidden ">
+        <div
+          className="relative w-full h-70 md:h-100 hover:scale-99  "
+          onClick={() => router.push(`/product/${product.id}`)}
+        >
+          <motion.img
+            key="image"
             src={product.images[0]}
             alt={product.title}
-            className=" w-full h-70 md:h-100  object-cover"
+            loading="lazy"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: showVideo ? 0 : 1 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 w-full h-full object-cover "
           />
-        )}
+          {product.video && (
+            <motion.video
+              key="video"
+              ref={videoRef}
+              preload="none"
+              src={product.video}
+              muted
+              loop={false}
+              playsInline
+              disablePictureInPicture
+              disableRemotePlayback
+              controls={false}
+              controlsList="nodownload nofullscreen noremoteplayback"
+              initial={{ opacity: 0 }}
+              exit={{ opacity: 0 }}
+              animate={{ opacity: showVideo ? 1 : 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="absolute inset-0 w-full h-full object-cover hover:scale-102 "
+              onEnded={() => setShowVideo(false)}
+            />
+          )}
+        </div>
 
         <motion.div
           initial={{ y: "100%", opacity: 0 }}
@@ -129,13 +218,16 @@ const ProductCard = ({ product }: { product: Product }) => {
           >
             <ShoppingCart
               className={`w-4 h-4 text-gray-700 ${
-                isInCart(product.id) ? "fill-current text-white" : ""
+                isInCart(product.id) ? "fill-red-500  " : ""
               }`}
             />
           </button>
         </motion.div>
       </div>
-      <div className=" px-1" onClick={()=>router.push(`/product/${product.id}`)}>
+      <div
+        className=" px-1 mt-1"
+        onClick={() => router.push(`/product/${product.id}`)}
+      >
         <span className=" text-gray-500 text-sm font-medium line-clamp-2 text-center">
           {product.title}
         </span>

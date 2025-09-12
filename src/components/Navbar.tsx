@@ -11,6 +11,7 @@ import {
   Menu,
   Mail,
   PhoneCallIcon,
+  SearchIcon,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,12 +21,15 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cartStore";
 import { FaWhatsapp } from "react-icons/fa";
 import { Categories } from "@/lib/data";
+import CartSidebar from "./CartSidebar";
+import WishlistSidebar from "./WishlistSidebar";
 
 const Navbar = () => {
   const router = useRouter();
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeCategory, setActiveCategory] = useState("");
-
+  const [cartOpen, setCartOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
   const { cart, wishlist } = useCartStore();
 
   // Motion variants
@@ -45,7 +49,7 @@ const Navbar = () => {
         type: "spring",
         stiffness: 400,
         damping: 40,
-        staggerChildren: 0.05,
+        staggerChildren: 0.1,
       },
     },
     exit: {
@@ -68,34 +72,39 @@ const Navbar = () => {
         animate="visible"
         className="fixed top-0 left-0 right-0 z-30 transition-all duration-200 shadow-lg bg-white"
       >
-        <div className="max-w-screen mx-auto px-2 md:px-4 py-1 md:py-2 flex items-center justify-between gap-2">
+        <div className="max-w-screen mx-auto px-2 md:px-8 my-1 md:py-2 flex items-center justify-between w-full gap-2">
           {/* Mobile menu button + Logo */}
-          <div className="flex w-fit items-center gap-2 ">
+          <div className="md:hidden flex w-fit items-center justify-between  gap-2">
             <motion.button
               onClick={() => setMobileMenu(true)}
               whileTap={{ scale: 0.95 }}
-              className="md:hidden p-2 hover:bg-gray-50 border border-gray-200 rounded-lg"
+              className=" p-2 hover:bg-gray-50 border border-gray-200 rounded-lg"
               aria-label="Open mobile menu"
             >
               <Menu className="size-4 " />
             </motion.button>
-
-            <Link href="/" aria-label="Go to homepage" className="flex items-center gap-3">
+          </div>
+          <div className="flex  items-center justify-between  gap-1 md:gap-3">
+            <Link
+              href="/"
+              aria-label="Go to homepage"
+              className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
+            >
               <motion.div
-                className="cursor-pointer max-w-14 max-h-14 flex items-center gap-2"
+                className="cursor-pointer max-w-14 max-h-14 flex items-center gap-1 md:gap-2"
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
               >
-                <Image
+                <img
                   src="/logo1.png"
                   alt="Logo"
-                  width={48}
-                  height={48}
-                  // className=" w-10 h-10"
-                  priority
+                  // width={48}
+                  // height={48}
+                  className=" w-8 h-8 mb-0.5"
+                  // priority
                 />
               </motion.div>
-              <span className=" hidden lg:block text-2xl text-primary font-semibold">
+              <span className=" md:hidden lg:block  text-md md:text-2xl text-primary font-semibold">
                 CHHABI
               </span>
             </Link>
@@ -106,7 +115,7 @@ const Navbar = () => {
             {["Home", "Categories", "Shop by speciality"].map((item, i) => (
               <motion.button
                 key={i}
-                className="font-semibold text-gray-500 hover:text-red-700 transition-colors border-b-red-700 hover:border-b"
+                className="relative font-semibold text-gray-500 hover:text-red-700 transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-red-700 hover:after:w-full after:transition-all"
                 whileHover={{ y: -1 }}
               >
                 {item}
@@ -114,39 +123,48 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="flex items-center justify-between gap-2 w-full md:w-fit  md:gap-4">
+          <div className="flex items-center justify-between gap-1 w-fit md:gap-4">
             {/* Search */}
-            <div className="w-full  lg:min-w-80 ">
+            <div className="hidden md:block w-full lg:min-w-80 ">
               <Search />
             </div>
+            <div className=" md:hidden text-primary ">
+              <SearchIcon
+                // onClick={handleSubmit}
+                className=" size-6"
+              />
+            </div>
             {/* Cart & Wishlist */}
-            <div className="flex items-center md:gap-2">
+            <div className="flex items-center gap-1 md:gap-2">
               <motion.button
                 onClick={() => router.push("/profile")}
                 aria-label="Profile"
-                className="hidden md:block p-2 rounded-lg"
+                className="hidden md:block  rounded-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="text-red-700 bg-red-50 rounded-full p-2">
-                  <User2 className="size-6" />
+                <div className="text-red-700 bg-red-50 rounded-full p-1 md:p-2">
+                  <User2 className="size-5" />
                 </div>
               </motion.button>
 
               <motion.button
-                onClick={() => router.push("/wishlist")}
+                // onClick={() => router.push("/wishlist")}
+                onClick={() => setWishlistOpen(true)}
                 aria-label="Wishlist"
-                className="relative p-2 rounded-lg"
+                className="relative p-1 rounded-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Heart className="size-6 text-gray-700" />
+                <Heart className="size-5 text-gray-700" />
                 {wishlist.length > 0 && (
                   <motion.span
-                    layout
+                    key={wishlist.length} // key forces re-animation on change
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-1 right-0 bg-red-700 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center"
+                    exit={{ scale: 0 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
                   >
                     {wishlist.length}
                   </motion.span>
@@ -154,19 +172,21 @@ const Navbar = () => {
               </motion.button>
 
               <motion.button
-                onClick={() => router.push("/cart")}
+                onClick={() => setCartOpen(true)}
                 aria-label="Cart"
-                className="relative p-2 rounded-lg"
+                className="relative p-1 rounded-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <ShoppingBagIcon className="size-6 text-gray-700" />
+                <ShoppingBagIcon className="size-5 text-gray-700" />
                 {cart.length > 0 && (
                   <motion.span
-                    layout
+                    key={cart.length} // key forces re-animation on change
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-1 right-0 bg-red-700 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center"
+                    exit={{ scale: 0 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
                   >
                     {cart.length}
                   </motion.span>
@@ -190,6 +210,8 @@ const Navbar = () => {
             />
 
             <motion.div
+              role="dialog"
+              aria-modal="true"
               variants={mobileMenuVariants}
               initial="hidden"
               animate="visible"
@@ -200,7 +222,13 @@ const Navbar = () => {
               <div className="flex items-center justify-between border-b border-gray-300 px-3 py-2 mb-2">
                 <Link href="/" aria-label="Go to homepage">
                   <div className="flex items-center gap-2">
-                    <Image src="/logo1.png" alt="Logo" width={28} height={28} />
+                    <Image
+                      src="/logo1.png"
+                      alt="Logo"
+                      width={28}
+                      height={28}
+                      loading="lazy"
+                    />
                     <h1 className="text-xl font-bold text-red-700">Name</h1>
                   </div>
                 </Link>
@@ -236,7 +264,11 @@ const Navbar = () => {
                       aria-expanded={activeCategory === cat.slug}
                     >
                       <span className="font-medium">{cat.title}</span>
-                      <ChevronRight className="w-5 h-5" />
+                      <ChevronRight
+                        className={`w-5 h-5 transition-transform ${
+                          activeCategory === cat.slug ? "rotate-90" : ""
+                        }`}
+                      />
                     </button>
                   </motion.div>
                 ))}
@@ -246,7 +278,7 @@ const Navbar = () => {
               <div className="px-2">
                 <motion.button
                   variants={itemVariants}
-                  className="w-full mt-3  flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-700 text-white"
+                  className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-700 text-white"
                 >
                   LOG IN
                   <LogInIcon className="w-5 h-5" />
@@ -304,6 +336,13 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* CART SIDEBAR */}
+      <CartSidebar isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <WishlistSidebar
+        isOpen={wishlistOpen}
+        onClose={() => setWishlistOpen(false)}
+      />
     </>
   );
 };

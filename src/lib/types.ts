@@ -39,7 +39,6 @@ export interface CartItem {
     selected?: boolean
 }
 
-export interface WishlistItem {
+export interface WishlistItem extends Product {
     product: Product
-
 }

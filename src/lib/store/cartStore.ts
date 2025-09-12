@@ -15,7 +15,9 @@ export interface CartStore {
     isInCart: (id: number) => boolean;
 
     toggleSelect: (id: number) => void;
+    toggleSelectAll: (selectAll: boolean) => void;
     removeSelected: () => void
+    moveSelectedToWishlist: () => void
 
     cartTotal: () => number;
     cartItemsCount: () => number;
@@ -76,11 +78,41 @@ export const useCartStore = create<CartStore>()(
                 })
             },
 
+            toggleSelectAll: (selectAll: boolean) => {
+                set({
+                    cart: get().cart.map(i => ({ ...i, selected: selectAll }))
+                })
+            },
+
             removeSelected: () => {
                 set({
                     cart: get().cart.filter(i => !i.selected)
                 });
             },
+
+
+            moveSelectedToWishlist: () => {
+                const selectedItems = get().selectedCartItems(); // ✅ call via get()
+
+                if (selectedItems.length === 0) return; // nothing selected
+
+                // Copy current wishlist
+                const newWishlist = [...get().wishlist];
+
+                // Add selected products (avoid duplicates)
+                selectedItems.forEach(item => {
+                    if (!newWishlist.find(w => w.id === item.product.id)) {
+                        newWishlist.push(item.product);
+                    }
+                });
+
+                // Remove them from cart
+                set({
+                    wishlist: newWishlist,
+                    cart: get().cart.filter(i => !i.selected),
+                });
+            },
+
 
             clearCart: () => {
                 set({
@@ -120,10 +152,10 @@ export const useCartStore = create<CartStore>()(
             isInWishlist: (id) => {
                 return !!get().wishlist.find(i => i.id === id)
             },
-            
-            isInCart:(id)=> {
+
+            isInCart: (id) => {
                 return !!get().cart.find(i => i.product.id === id)
-                
+
             },
 
         }),

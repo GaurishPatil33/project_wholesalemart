@@ -21,11 +21,7 @@ export const Categories = [
         slug: "lehengas",
         image: "https://www.taneira.com/on/demandware.static/-/Sites-Taneira-Library/default/dw8d3e577f/HomePage/ShopByCategory/Lehengas_003_M.png",
     },
-    {
-        title: "Blouses",
-        slug: "blouses",
-        image: "https://www.taneira.com/on/demandware.static/-/Sites-Taneira-Library/default/dw7a979460/HomePage/ShopByCategory/Blouses_003_M.png",
-    },
+
 
 ]
 export const occasions = [
