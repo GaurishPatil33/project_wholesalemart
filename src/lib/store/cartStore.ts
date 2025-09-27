@@ -30,6 +30,9 @@ export interface CartStore {
     toggleWishlist: (item: Product) => void;
     removeFromWishlist: (id: number) => void;
     isInWishlist: (id: number) => boolean;
+
+
+    buyNow: (product: Product, quantity: number) => void
 }
 
 export const useCartStore = create<CartStore>()(
@@ -156,6 +159,21 @@ export const useCartStore = create<CartStore>()(
             isInCart: (id) => {
                 return !!get().cart.find(i => i.product.id === id)
 
+            },
+            buyNow: (product, quantity) => {
+                set({ cart: get().cart.map(item => item.product.id === product.id ? { ...item, quantity, selected: true } : { ...item, selected: false }) });
+                if (!get().isInCart(product.id)) {
+                    set({
+                        cart: [...get().cart.map(item => ({ ...item, selected: false })), {
+                            product: product,
+                            price: product.price,
+                            quantity,
+                            attributes: [],
+                            sku: "",
+                            selected: true,
+                        }]
+                    })
+                };
             },
 
         }),

@@ -108,7 +108,7 @@ const ProductCard = ({
             }
           }, 6000);
         }
-      }, 3000);
+      }, 1800);
     } else {
       // Reset when out of view
       if (activeId === product.id) {
@@ -158,7 +158,7 @@ const ProductCard = ({
     >
       <div className=" relative rounded-tr-3xl xs:px-4 shadow-lg rounded-bl-3xl overflow-hidden ">
         <div
-          className="relative w-full h-70 md:h-100 hover:scale-99  "
+          className="relative w-full h-70 md:h-100 hover:scale-105  "
           onClick={() => router.push(`/product/${product.id}`)}
         >
           <motion.img

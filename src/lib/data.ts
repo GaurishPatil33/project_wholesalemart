@@ -59,6 +59,10 @@ export const products = [
         id: 1,
         title: "Dark Wine Maheshwari Silk Cotton Handloom Saree",
         category: "sarees",
+        price: 4500,
+        minimumOrderQuanty: [{ qty: 1, price: 999 },],
+        sizes: [{ size: "12*18", price: 999 }],
+        colors: ["red", "black"],
         brand: "Thenmozhi Designs",
         video: "/videos/product1.mp4",
         images: [
@@ -70,7 +74,6 @@ export const products = [
             "https://thenmozhidesigns.com/cdn/shop/files/3S2A2649.jpg",
             "https://thenmozhidesigns.com/cdn/shop/files/3S2A2652.jpg"
         ],
-        price: 4500,
         discount: 15,
         description: "Elevate your ethnic wardrobe with this Dark Wine Maheshwari Silk Cotton Handloom Saree by Thenmozhi Designs. Crafted from premium silk cotton fabric, this handloom saree beautifully blends traditional craftsmanship with modern elegance. The rich dark wine shade, adorned with intricate block prints and faux zari, makes it perfect for weddings, festive wear, and special occasions. Lightweight yet luxurious, this saree drapes gracefully and ensures all-day comfort. It comes with an unstitched pink blouse piece (70 cm x 1.1 m) that complements the saree’s design. A must-have silk cotton saree for women who love authentic handloom sarees with a touch of sophistication.",
         product_specs: {

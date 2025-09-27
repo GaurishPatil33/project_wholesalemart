@@ -1,0 +1,16 @@
+{
+  "name": "Gajlaxmi",
+  "logo": "/logos/gajlaxmi.jpg",
+  "colors": {
+    "primary": "#42000c",
+    "secondary": "#fff9c9",
+    "text": "#333333",
+    "background": "#ffffff"
+  },
+  "shades": {
+    "primary-10": "#5a0014",
+    "primary-20": "#71001f",
+    "secondary-10": "#fffccf",
+    "secondary-20": "#fffddf"
+  }
+}

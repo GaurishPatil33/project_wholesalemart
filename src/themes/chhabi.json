@@ -1,0 +1,16 @@
+{
+  "name": "Chhabi",
+  "logo": "/logos/chabi.png",
+  "colors": {
+    "primary": "#900001",
+    "secondary": "#FF4D4D",
+    "text": "#333333",
+    "background": "#FFF5F5"
+  },
+  "shades": {
+    "primary-10": "#A10001",
+    "primary-20": "#B30001",
+    "secondary-10": "#FF6666",
+    "secondary-20": "#FF8080"
+  }
+}

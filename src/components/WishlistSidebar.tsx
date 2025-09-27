@@ -12,7 +12,7 @@ type CartSidebarProps = {
   onClose: () => void;
 };
 
-const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
+const WishlistSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   const {
     cart,
     wishlist,
@@ -60,7 +60,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
       key={p.id}
       className="flex items-center justify-between gap-2 md:gap-3 bg-gray-50 p-2 rounded-lg shadow-sm w-full"
     >
-      <div className=" relative flex items-center gap-2  w-20 h-22 rounded overflow-hidden shadow-md">
+      <div className=" relative flex items-center gap-2  w-20 h-full rounded overflow-hidden shadow-md">
         <img
           src={p.images[0]}
           alt={p.title}
@@ -71,14 +71,14 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
       <div className=" w-full h-full space-y-2 flex  justify-between flex-col">
         <div className=" space-y-1 mt-1">
           <p
-            className="text-xs  line-clamp-3"
+            className="text-xs md:text-lg  line-clamp-3"
             onClick={() => router.push(`/product/${p.id}`)}
           >
             {p.title}
           </p>
           <div className=" text-sm text-gray-500"> ₹{p.price}</div>
         </div>
-        <div className=" flex items-center gap-3 w-full border-dotted border-t border-gray-200  py-1 md:py-2">
+        <div className=" flex items-center gap-3  w-full border-dotted border-t border-gray-200  py-1 md:py-2">
           <button
             onClick={() => {
               addToCart(p);
@@ -98,7 +98,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           >
             <Trash2 className="size-3 md:size-4 text-red-500" />
             Delete
-            <div className=" hidden lg:block">From Wishlist</div>
+            <div className=" hidden md:block">From Wishlist</div>
           </button>
         </div>
       </div>
@@ -127,7 +127,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed top-0 right-0 h-full w-72 sm:w-96 bg-white shadow-xl z-50 flex flex-col"
+            className="fixed top-0 right-0 h-full md:w-120 w-72 bg-white shadow-xl z-50 flex flex-col"
           >
             {/* Header */}
             <div className="w-full bg-gray-50 text-white py-2 font-semibold text-sm flex border-b border-gray-500 items-center justify-between px-4">
@@ -162,7 +162,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                     exit={{ opacity: 0 }}
                     className="text-gray-500 text-sm text-center mt-10"
                   >
-                    Your cart is empty
+                    Your Wishlist 💔 is empty
                   </motion.p>
                 )}
               </AnimatePresence>
@@ -174,4 +174,4 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   );
 };
 
-export default CartSidebar;
+export default WishlistSidebar;

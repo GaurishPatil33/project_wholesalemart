@@ -13,7 +13,7 @@ const Toast = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed md:bottom-6  bottom-3  w-full flex items-center justify-center"
+          className="fixed md:bottom-6  bottom-15  w-full flex items-center justify-center"
         >
           <div className=" bg-black/75 text-white text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg z-50">
             {message}

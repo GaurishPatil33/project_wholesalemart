@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 const placeholder = ["Sarees", "Kurtas", "Dresses", "Dupattas"];
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [index, setIndex] = useState(0);
@@ -13,7 +13,7 @@ const SearchBar = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev === placeholder.length - 1 ? 0 : prev + 1));
-    }, 2000);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -21,6 +21,7 @@ const SearchBar = () => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
     router.push(`/listingPage?search=${encodeURIComponent(searchTerm)}`);
+    onSearch?.();
   };
 
   return (

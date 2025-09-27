@@ -15,14 +15,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Search from "./Search";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cartStore";
 import { FaWhatsapp } from "react-icons/fa";
 import { Categories } from "@/lib/data";
 import CartSidebar from "./CartSidebar";
 import WishlistSidebar from "./WishlistSidebar";
+import SearchBar from "./Search";
 
 const Navbar = () => {
   const router = useRouter();
@@ -31,6 +32,15 @@ const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const { cart, wishlist } = useCartStore();
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const pathname = usePathname();
+  const isCheckout = pathname === "/checkout";
+
+  // const theme=useTheme()
+
+  // useEffect(() => {
+  //   setMobileSearchOpen(false);
+  // }, [pathname]);
 
   // Motion variants
   const headerVariants: Variants = {
@@ -64,7 +74,7 @@ const Navbar = () => {
   };
 
   return (
-    <>
+    <div className={`${isCheckout ? " hidden md:block" : " block"}`}>
       {/* HEADER */}
       <motion.header
         variants={headerVariants}
@@ -96,11 +106,11 @@ const Navbar = () => {
                 whileHover={{ scale: 1.05 }}
               >
                 <img
-                  src="/logo1.png"
+                  src="logos/chabi.png"
                   alt="Logo"
                   // width={48}
                   // height={48}
-                  className=" w-8 h-8 mb-0.5"
+                  className=" w-8 h-8 rounded-full object-contain "
                   // priority
                 />
               </motion.div>
@@ -117,6 +127,11 @@ const Navbar = () => {
                 key={i}
                 className="relative font-semibold text-gray-500 hover:text-red-700 transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-red-700 hover:after:w-full after:transition-all"
                 whileHover={{ y: -1 }}
+                onClick={() =>
+                  router.push(
+                    `${item === "Home" ? "/" : `/listingPage?cat=${item}`}`
+                  )
+                }
               >
                 {item}
               </motion.button>
@@ -129,10 +144,14 @@ const Navbar = () => {
               <Search />
             </div>
             <div className=" md:hidden text-primary ">
-              <SearchIcon
-                // onClick={handleSubmit}
-                className=" size-6"
-              />
+              <motion.button
+                onClick={() => setMobileSearchOpen(true)}
+                whileTap={{ scale: 0.95 }}
+                className="p-2 hover:bg-gray-50  rounded-lg"
+                aria-label="Open search"
+              >
+                <SearchIcon className="size-6" />
+              </motion.button>
             </div>
             {/* Cart & Wishlist */}
             <div className="flex items-center gap-1 md:gap-2">
@@ -196,7 +215,65 @@ const Navbar = () => {
           </div>
         </div>
       </motion.header>
+      {/* MOBILE SEARCH OVERLAY */}
+      <AnimatePresence>
+        {mobileSearchOpen && (
+          <>
+            {/* Overlay background */}
+            <motion.div
+              className="fixed inset-0 bg-black/40 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileSearchOpen(false)}
+            />
 
+            {/* Full-screen search panel */}
+            <motion.div
+              className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white flex flex-col p-4"
+              initial={{ y: "-100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <SearchBar onSearch={() => setMobileSearchOpen(false)} />
+                <button
+                  onClick={() => setMobileSearchOpen(false)}
+                  className="p-2 rounded-full hover:bg-gray-100"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+
+              {/* Optional: Recent searches or categories */}
+              <div className="flex flex-col gap-3 mt-4">
+                <h3 className="text-sm font-semibold text-gray-600">
+                  Popular Searches
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {["Sarees", "Kurtas", "Dresses", "Dupattas"].map(
+                    (item, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          router.push(
+                            `/listingPage?search=${encodeURIComponent(item)}`
+                          );
+                          setMobileSearchOpen(false);
+                        }}
+                        className="px-3 py-1 text-xs bg-gray-100 rounded-full hover:bg-red-100 transition"
+                      >
+                        {item}
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
       {/* MOBILE MENU */}
       <AnimatePresence>
         {mobileMenu && (
@@ -223,13 +300,14 @@ const Navbar = () => {
                 <Link href="/" aria-label="Go to homepage">
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/logo1.png"
+                      src="/logos/chabi.png"
                       alt="Logo"
                       width={28}
                       height={28}
                       loading="lazy"
+                      className=" rounded-full object-cover"
                     />
-                    <h1 className="text-xl font-bold text-red-700">Name</h1>
+                    <h1 className="text-xl font-bold text-red-700">CHHABI</h1>
                   </div>
                 </Link>
                 <motion.button
@@ -256,11 +334,12 @@ const Navbar = () => {
                           ? "bg-gradient-to-r from-red-100 to-red-400 text-red-700"
                           : "hover:bg-gray-50 text-gray-800"
                       }`}
-                      onClick={() =>
+                      onClick={() => {
                         setActiveCategory(
                           activeCategory === cat.slug ? "" : cat.slug
-                        )
-                      }
+                        );
+                        router.push(`/listingPage?cat=${cat.slug}`);
+                      }}
                       aria-expanded={activeCategory === cat.slug}
                     >
                       <span className="font-medium">{cat.title}</span>
@@ -343,7 +422,7 @@ const Navbar = () => {
         isOpen={wishlistOpen}
         onClose={() => setWishlistOpen(false)}
       />
-    </>
+    </div>
   );
 };
 

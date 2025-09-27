@@ -1,7 +1,9 @@
 @import "tailwindcss";
+
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
+
 
 :root {
   --background: #ffffff;
@@ -35,7 +37,13 @@ body {
 
 /* primary color */
 .text-primary {
-  color: #900001 !important;
+  color: #900001 !important ;
+}
+.bg-primary {
+  background-color: #900001 !important;
+}
+.border-primary {
+  border-color: #900001 !important;
 }
 
 /* custom scrollbar-hide */
@@ -70,6 +78,20 @@ body {
 .swiper-pagination-bullet-active {
   @apply w-3 h-2.5 bg-black;
 }
+
 .swiper-pagination {
   @apply flex items-center justify-center
+}
+
+
+/* Hide default password reveal button (Chrome, Edge, etc.) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-password-toggle-button,
+input[type="password"]::-webkit-clear-button {
+  display: none;
 }

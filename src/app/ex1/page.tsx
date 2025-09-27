@@ -1,471 +1,516 @@
-"use client";
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import {
-  ShoppingCart,
-  Heart,
-  Star,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
 
-// Mock product data with video URLs
-const products = [
-  {
-    id: 1,
-    name: "Wireless Headphones Pro",
-    price: 299.99,
-    originalPrice: 399.99,
-    rating: 4.5,
-    reviews: 128,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    badge: "Best Seller",
-    description:
-      "Premium noise-canceling wireless headphones with 30-hour battery life.",
-  },
-  {
-    id: 2,
-    name: "Smart Fitness Watch",
-    price: 249.99,
-    originalPrice: null,
-    rating: 4.8,
-    reviews: 89,
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    badge: "New",
-    description:
-      "Advanced fitness tracking with heart rate monitoring and GPS.",
-  },
-  {
-    id: 3,
-    name: "Minimalist Backpack",
-    price: 89.99,
-    originalPrice: 119.99,
-    rating: 4.3,
-    reviews: 203,
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    badge: "Sale",
-    description:
-      "Sleek design with laptop compartment and water-resistant material.",
-  },
-  {
-    id: 4,
-    name: "Ceramic Coffee Mug Set",
-    price: 34.99,
-    originalPrice: null,
-    rating: 4.6,
-    reviews: 156,
-    image:
-      "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=400&fit=crop",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    badge: null,
-    description:
-      "Handcrafted ceramic mugs perfect for your morning coffee ritual.",
-  },
-  {
-    id: 5,
-    name: "Wireless Charging Station",
-    price: 79.99,
-    originalPrice: 99.99,
-    rating: 4.4,
-    reviews: 94,
-    image:
-      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    badge: "Featured",
-    description: "Fast wireless charging for multiple devices simultaneously.",
-  },
-  {
-    id: 6,
-    name: "Bluetooth Speaker",
-    price: 149.99,
-    originalPrice: null,
-    rating: 4.7,
-    reviews: 67,
-    image:
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    badge: "Premium",
-    description:
-      "Portable speaker with 360-degree sound and waterproof design.",
-  },
-];
+"use client"
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, Filter, Grid, List, Star, Heart, ShoppingCart, Search } from 'lucide-react';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
+  brand: string;
+  category: string;
   price: number;
-  originalPrice: number | null;
+  originalPrice?: number;
   rating: number;
   reviews: number;
   image: string;
-  video: string;
-  badge: string | null;
-  description: string;
+  colors: string[];
+  sizes: string[];
+  isNew?: boolean;
+  discount?: number;
 }
 
-interface ProductCardProps {
-  product: Product;
-  isVideoVisible: boolean;
-  onVideoVisibilityChange: (id: number, isVisible: boolean) => void;
-  shouldPlay: boolean;
-  onVideoEnd: (id: number) => void;
+interface FilterOption {
+  id: string;
+  label: string;
+  count?: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  isVideoVisible,
-  onVideoVisibilityChange,
-  shouldPlay,
-  onVideoEnd,
-}) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, {
-    margin: " 0px",
-    amount: 0.5,
-    once: false,
-  });
+const WomensFashionListing: React.FC = () => {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState('popularity');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 5000 });
+  const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    onVideoVisibilityChange(product.id, inView);
-  }, [inView, product.id, onVideoVisibilityChange]);
-
-  //   useEffect(() => {
-  //   const video = videoRef.current;
-  //   if (!video) return;
-
-  //   if (shouldPlay && isVideoVisible && isVideoLoaded) {
-  //     video.play().catch(() => {});
-  //     setShowVideo(true);
-  //   } else {
-  //     video.pause();
-  //     setShowVideo(false); // force hide paused video
-  //   }
-  // }, [shouldPlay, isVideoVisible, isVideoLoaded]);
-
-  // const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
+  // Mock product data
+  const products: Product[] = [
+    {
+      id: '1',
+      name: 'Floral Print Maxi Dress',
+      brand: 'Zara',
+      category: 'dresses',
+      price: 2499,
+      originalPrice: 3299,
+      rating: 4.5,
+      reviews: 128,
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop',
+      colors: ['Red', 'Blue', 'Pink'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      isNew: true,
+      discount: 24
+    },
+    {
+      id: '2',
+      name: 'Casual Cotton T-Shirt',
+      brand: 'H&M',
+      category: 'tops',
+      price: 799,
+      rating: 4.2,
+      reviews: 256,
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop',
+      colors: ['White', 'Black', 'Grey'],
+      sizes: ['XS', 'S', 'M', 'L']
+    },
+    {
+      id: '3',
+      name: 'High Waist Skinny Jeans',
+      brand: 'Levis',
+      category: 'jeans',
+      price: 3299,
+      rating: 4.7,
+      reviews: 89,
+      image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&h=400&fit=crop',
+      colors: ['Blue', 'Black'],
+      sizes: ['28', '30', '32', '34']
+    },
+    {
+      id: '4',
+      name: 'Silk Blouse',
+      brand: 'Mango',
+      category: 'tops',
+      price: 1899,
+      originalPrice: 2499,
+      rating: 4.3,
+      reviews: 67,
+      image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop',
+      colors: ['Cream', 'Black', 'Navy'],
+      sizes: ['S', 'M', 'L'],
+      discount: 24
+    },
+    {
+      id: '5',
+      name: 'A-Line Midi Skirt',
+      brand: 'Forever21',
+      category: 'skirts',
+      price: 1299,
+      rating: 4.1,
+      reviews: 145,
+      image: 'https://images.unsplash.com/photo-1583496661160-fb5886a13d27?w=300&h=400&fit=crop',
+      colors: ['Black', 'Navy', 'Burgundy'],
+      sizes: ['XS', 'S', 'M', 'L', 'XL']
+    },
+    {
+      id: '6',
+      name: 'Leather Jacket',
+      brand: 'Zara',
+      category: 'jackets',
+      price: 4999,
+      rating: 4.8,
+      reviews: 234,
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=400&fit=crop',
+      colors: ['Black', 'Brown'],
+      sizes: ['S', 'M', 'L']
+    },
+    {
+      id: '7',
+      name: 'Summer Crop Top',
+      brand: 'H&M',
+      category: 'tops',
+      price: 699,
+      rating: 4.0,
+      reviews: 178,
+      image: 'https://images.unsplash.com/photo-1564257577-2b0e3de5b9b3?w=300&h=400&fit=crop',
+      colors: ['White', 'Pink', 'Yellow'],
+      sizes: ['XS', 'S', 'M']
+    },
+    {
+      id: '8',
+      name: 'Formal Blazer',
+      brand: 'Mango',
+      category: 'blazers',
+      price: 3799,
+      originalPrice: 4999,
+      rating: 4.6,
+      reviews: 92,
+      image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop',
+      colors: ['Black', 'Navy', 'Grey'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      discount: 24
+    },
+    {
+      id: '9',
+      name: 'Bohemian Wrap Dress',
+      brand: 'Free People',
+      category: 'dresses',
+      price: 2899,
+      rating: 4.4,
+      reviews: 156,
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop',
+      colors: ['Floral', 'Paisley'],
+      sizes: ['XS', 'S', 'M', 'L']
+    },
+    {
+      id: '10',
+      name: 'Wide Leg Trousers',
+      brand: 'Zara',
+      category: 'pants',
+      price: 2199,
+      rating: 4.2,
+      reviews: 203,
+      image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&h=400&fit=crop',
+      colors: ['Black', 'Beige', 'Navy'],
+      sizes: ['XS', 'S', 'M', 'L', 'XL']
     }
+  ];
 
-    if (shouldPlay && isVideoVisible && isVideoLoaded) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-      setShowVideo(true);
+  const categories: FilterOption[] = [
+    { id: 'dresses', label: 'Dresses', count: 2 },
+    { id: 'tops', label: 'Tops', count: 3 },
+    { id: 'jeans', label: 'Jeans', count: 1 },
+    { id: 'skirts', label: 'Skirts', count: 1 },
+    { id: 'jackets', label: 'Jackets', count: 1 },
+    { id: 'blazers', label: 'Blazers', count: 1 },
+    { id: 'pants', label: 'Pants', count: 1 }
+  ];
 
-      // stop after 4s
-      timerRef.current = setTimeout(() => {
-        video.pause();
-        setShowVideo(false);
+  const brands: FilterOption[] = [
+    { id: 'zara', label: 'Zara', count: 3 },
+    { id: 'hm', label: 'H&M', count: 2 },
+    { id: 'levis', label: 'Levis', count: 1 },
+    { id: 'mango', label: 'Mango', count: 2 },
+    { id: 'forever21', label: 'Forever21', count: 1 },
+    { id: 'free-people', label: 'Free People', count: 1 }
+  ];
 
-        // 🚀 tell parent this product finished playing
-        onVideoEnd(product.id);
-      }, 4000);
-    } else {
-      video.pause();
-      setShowVideo(false);
-    }
+  // Filter products based on selections
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.brand.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand.toLowerCase().replace(/\s+/g, '-'));
+      const matchesPrice = product.price >= priceRange.min && product.price <= priceRange.max;
+      
+      return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
+    });
+  }, [products, searchQuery, selectedCategories, selectedBrands, priceRange]);
 
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [shouldPlay, isVideoVisible, isVideoLoaded]);
-
-  const handleVideoLoad = () => {
-    setIsVideoLoaded(true);
+  const toggleCategory = (categoryId: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
   };
 
-  const handleMouseEnter = () => {
-    if (!showVideo && isVideoLoaded) {
-      setShowVideo(true);
-    }
+  const toggleBrand = (brandId: string) => {
+    setSelectedBrands(prev => 
+      prev.includes(brandId)
+        ? prev.filter(id => id !== brandId)
+        : [...prev, brandId]
+    );
   };
 
-  const handleMouseLeave = () => {
-    if (!shouldPlay) {
-      setShowVideo(false);
-    }
-  };
-
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
-
-      // Pause others when unmuted
-      if (!videoRef.current.muted) {
-        document.querySelectorAll("video").forEach((v) => {
-          if (v !== videoRef.current) v.pause();
-        });
-      }
-    }
-  };
-
-  const badgeColors = {
-    "Best Seller": "bg-yellow-500 text-yellow-900",
-    New: "bg-green-500 text-green-900",
-    Sale: "bg-red-500 text-red-900",
-    Featured: "bg-blue-500 text-blue-900",
-    Premium: "bg-purple-500 text-purple-900",
-  };
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {/* Badge */}
-      {product.badge && (
-        <div
-          className={`absolute top-4 left-4 z-10 px-2 py-1 rounded-full text-xs font-semibold ${
-            badgeColors[product.badge as keyof typeof badgeColors]
-          }`}
-        >
-          {product.badge}
-        </div>
-      )}
-
-      {/* Like Button */}
-      <button
-        onClick={() => setIsLiked(!isLiked)}
-        className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200"
-      >
-        <Heart
-          className={`w-5 h-5 transition-colors duration-200 ${
-            isLiked ? "fill-red-500 text-red-500" : "text-gray-600"
-          }`}
-        />
-      </button>
-
-      {/* Media Container */}
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
-        {/* Static Image */}
-        <motion.img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover"
-          animate={{
-            opacity: showVideo ? 0 : 1,
-          }}
-          transition={{ duration: 0.3 }}
-        />
-
-        {/* Video */}
-        <motion.video
-          ref={videoRef}
-          src={product.video}
-          className="absolute inset-0 w-full h-full object-cover"
-          muted={isMuted}
-          loop
-          autoPlay
-          playsInline
-          preload="metadata"
-          onLoadedData={handleVideoLoad}
-          animate={{
-            opacity: showVideo ? 1 : 0,
-          }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        />
-
-        {/* Video Controls Overlay */}
-        <AnimatePresence>
-          {showVideo && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute bottom-4 right-4 flex gap-2"
-            >
+  // Filter Banner Component
+  const FilterBanner: React.FC<{ index: number }> = ({ index }) => {
+    const bannerTypes = [
+      {
+        title: "Shop by Category",
+        content: (
+          <div className="flex flex-wrap gap-2">
+            {categories.slice(0, 4).map(category => (
               <button
-                onClick={toggleMute}
-                className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors duration-200"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-4 h-4" />
-                ) : (
-                  <Volume2 className="w-4 h-4" />
-                )}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Play Icon Overlay */}
-        {!showVideo && (
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="p-3 rounded-full bg-white/90 backdrop-blur-sm">
-              <Play className="w-6 h-6 text-gray-800" />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Product Info */}
-      <div className="p-6">
-        <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-          {product.name}
-        </h3>
-
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {product.description}
-        </p>
-
-        {/* Rating */}
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`w-4 h-4 ${
-                  i < Math.floor(product.rating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
+                key={category.id}
+                onClick={() => toggleCategory(category.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedCategories.includes(category.id)
+                    ? 'bg-pink-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:border-pink-300'
                 }`}
-              />
+              >
+                {category.label} ({category.count})
+              </button>
             ))}
           </div>
-          <span className="text-sm text-gray-600">
-            {product.rating} ({product.reviews})
-          </span>
-        </div>
+        )
+      },
+      {
+        title: "Filter by Brand",
+        content: (
+          <div className="flex flex-wrap gap-2">
+            {brands.slice(0, 4).map(brand => (
+              <button
+                key={brand.id}
+                onClick={() => toggleBrand(brand.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedBrands.includes(brand.id)
+                    ? 'bg-pink-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:border-pink-300'
+                }`}
+              >
+                {brand.label}
+              </button>
+            ))}
+          </div>
+        )
+      },
+      {
+        title: "Price Range",
+        content: (
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">₹</span>
+              <input
+                type="number"
+                value={priceRange.min}
+                onChange={(e) => setPriceRange(prev => ({ ...prev, min: parseInt(e.target.value) || 0 }))}
+                className="w-20 px-2 py-1 text-sm border rounded"
+                placeholder="Min"
+              />
+              <span className="text-gray-400">-</span>
+              <input
+                type="number"
+                value={priceRange.max}
+                onChange={(e) => setPriceRange(prev => ({ ...prev, max: parseInt(e.target.value) || 5000 }))}
+                className="w-20 px-2 py-1 text-sm border rounded"
+                placeholder="Max"
+              />
+            </div>
+            <button
+              onClick={() => setPriceRange({ min: 0, max: 5000 })}
+              className="px-3 py-1 text-sm text-pink-600 border border-pink-300 rounded hover:bg-pink-50"
+            >
+              Reset
+            </button>
+          </div>
+        )
+      }
+    ];
 
-        {/* Price */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl font-bold text-gray-900">
-            ${product.price}
-          </span>
+    const bannerType = bannerTypes[index % bannerTypes.length];
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="col-span-full my-6 p-6 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-100"
+      >
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">{bannerType.title}</h3>
+        {bannerType.content}
+      </motion.div>
+    );
+  };
+
+  // Product Card Component
+  const ProductCard: React.FC<{ product: Product; index: number }> = ({ product, index }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      className="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+    >
+      <div className="relative">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        {product.discount && (
+          <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+            {product.discount}% OFF
+          </div>
+        )}
+        {product.isNew && (
+          <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+            NEW
+          </div>
+        )}
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button className="p-2 bg-white rounded-full shadow-md hover:bg-pink-50">
+            <Heart size={16} className="text-gray-600" />
+          </button>
+        </div>
+      </div>
+      
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-gray-500 font-medium">{product.brand}</span>
+          <div className="flex items-center">
+            <Star size={14} className="text-yellow-400 fill-current" />
+            <span className="text-sm text-gray-600 ml-1">{product.rating}</span>
+            <span className="text-xs text-gray-400 ml-1">({product.reviews})</span>
+          </div>
+        </div>
+        
+        <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{product.name}</h3>
+        
+        <div className="flex items-center mb-3">
+          <span className="text-lg font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
           {product.originalPrice && (
-            <span className="text-lg text-gray-500 line-through">
-              ${product.originalPrice}
-            </span>
+            <span className="text-sm text-gray-500 line-through ml-2">₹{product.originalPrice.toLocaleString()}</span>
           )}
         </div>
-
-        {/* Add to Cart Button */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full bg-gray-900 text-white py-3 px-4 rounded-xl font-semibold hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
-        >
-          <ShoppingCart className="w-5 h-5" />
-          Add to Cart
-        </motion.button>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex gap-1">
+            {product.colors.slice(0, 3).map((color, idx) => (
+              <div
+                key={idx}
+                className="w-4 h-4 rounded-full border-2 border-gray-200"
+                style={{ backgroundColor: color.toLowerCase() }}
+                title={color}
+              />
+            ))}
+            {product.colors.length > 3 && (
+              <span className="text-xs text-gray-500">+{product.colors.length - 3}</span>
+            )}
+          </div>
+          
+          <button className="flex items-center gap-1 px-3 py-1 bg-pink-600 text-white rounded-md text-sm hover:bg-pink-700 transition-colors">
+            <ShoppingCart size={14} />
+            Add
+          </button>
+        </div>
       </div>
     </motion.div>
   );
-};
-
-const ProductListingPage: React.FC = () => {
-  const [visibleVideos, setVisibleVideos] = useState<Set<number>>(new Set());
-  const [currentPlayingVideo, setCurrentPlayingVideo] = useState<number | null>(
-    null
-  );
-  const handleVideoEnd = (id: number) => {
-    if (currentPlayingVideo === id) {
-      setCurrentPlayingVideo(null);
-    }
-  };
-
-  const handleVideoVisibilityChange = useCallback(
-    (id: number, isVisible: boolean) => {
-      setVisibleVideos((prev) => {
-        const newSet = new Set(prev);
-        if (isVisible) {
-          newSet.add(id);
-        } else {
-          newSet.delete(id);
-        }
-        return newSet;
-      });
-    },
-    []
-  );
-
-  // Determine which video should play (first visible video)
-  useEffect(() => {
-    const sortedVisibleVideos = Array.from(visibleVideos).sort((a, b) => a - b);
-    const newPlayingVideo =
-      sortedVisibleVideos.length > 0 ? sortedVisibleVideos[0] : null;
-
-    if (newPlayingVideo !== currentPlayingVideo) {
-      setCurrentPlayingVideo(newPlayingVideo);
-    }
-  }, [visibleVideos, currentPlayingVideo]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white shadow-sm border-b border-gray-200"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="bg-white shadow-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Featured Products
-            </h1>
-            <p className="text-gray-600">{products.length} products found</p>
+            <h1 className="text-2xl font-bold text-gray-900">Women's Fashion</h1>
+            
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-80 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                />
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-pink-600 text-white' : 'text-gray-600'}`}
+                >
+                  <Grid size={20} />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-pink-600 text-white' : 'text-gray-600'}`}
+                >
+                  <List size={20} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </motion.header>
+      </div>
 
-      {/* Product Grid */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              isVideoVisible={visibleVideos.has(product.id)}
-              onVideoVisibilityChange={handleVideoVisibilityChange}
-              shouldPlay={currentPlayingVideo === product.id}
-              onVideoEnd={handleVideoEnd}
-            />
+      {/* Filters & Sort Bar */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-gray-600" />
+                <span className="text-sm text-gray-600">
+                  {filteredProducts.length} products found
+                </span>
+              </div>
+              
+              {(selectedCategories.length > 0 || selectedBrands.length > 0) && (
+                <div className="flex items-center gap-2">
+                  {selectedCategories.map(categoryId => {
+                    const category = categories.find(c => c.id === categoryId);
+                    return (
+                      <span
+                        key={categoryId}
+                        className="px-2 py-1 bg-pink-100 text-pink-700 text-xs rounded-full flex items-center gap-1"
+                      >
+                        {category?.label}
+                        <button onClick={() => toggleCategory(categoryId)} className="ml-1">×</button>
+                      </span>
+                    );
+                  })}
+                  {selectedBrands.map(brandId => {
+                    const brand = brands.find(b => b.id === brandId);
+                    return (
+                      <span
+                        key={brandId}
+                        className="px-2 py-1 bg-pink-100 text-pink-700 text-xs rounded-full flex items-center gap-1"
+                      >
+                        {brand?.label}
+                        <button onClick={() => toggleBrand(brandId)} className="ml-1">×</button>
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Sort by:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+              >
+                <option value="popularity">Popularity</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Customer Rating</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product, index) => (
+            <React.Fragment key={product.id}>
+              <ProductCard product={product} index={index} />
+              {/* Insert filter banner after every 4 products */}
+              {(index + 1) % 3 === 0 && index < filteredProducts.length - 1 && (
+                <FilterBanner index={Math.floor(index / 3)} />
+              )}
+            </React.Fragment>
           ))}
         </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">
-            © 2025 E-Commerce Store. Premium products with video previews.
-          </p>
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Filter size={48} className="mx-auto" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">No products found</h3>
+            <p className="text-gray-500">Try adjusting your filters or search terms</p>
+          </div>
+        )}
+      </div>
+
+      {/* Load More Button */}
+      {filteredProducts.length > 0 && (
+        <div className="text-center py-8">
+          <button className="px-8 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors">
+            Load More Products
+          </button>
         </div>
-      </footer>
+      )}
     </div>
   );
 };
 
-export default ProductListingPage;
+export default WomensFashionListing;

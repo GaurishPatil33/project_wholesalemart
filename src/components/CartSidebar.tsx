@@ -57,36 +57,39 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
     exit: { x: 80, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } },
   };
 
+  const handleCheckOut = () => {
+    router.push(`/checkout`);
+    onClose();
+  };
+
   const CartProductCard = ({ p }: { p: CartItem }) => (
-    <motion.div
+    <div
       key={p.product.id}
       className="flex items-center justify-between gap-2 md:gap-3 bg-gray-50 p-2 rounded-lg shadow-sm w-full"
     >
-      <div className=" relative flex items-center gap-2  w-20 h-22 rounded overflow-hidden shadow-md">
+      <div className="relative flex items-center gap-2 w-20 h-full rounded shadow-md">
         <input
           type="checkbox"
           checked={p.selected}
           onChange={() => toggleSelect(p.product.id)}
-          name=""
-          id=""
-          className="absolute top-1 left-1 size-3 md:size-4 text-blue-600 rounded border-gray-300 focus:ring-blue-700"
+          className=" absolute top-1.5 left-1 accent-blue-500     "
         />
         <img
           src={p.product.images[0]}
           alt={p.product.title}
-          className="w-full h-full object-cover "
+          className="w-full h-full object-cover rounded"
         />
       </div>
 
-      <div className=" w-full h-full space-y-2">
+      <div className=" w-full h-full space-y-2 pt-1">
         <div className=" space-y-1">
           <p
-            className="text-xs  line-clamp-3"
+            className="text-xs  md:text-sm line-clamp-3"
             onClick={() => router.push(`/product/${p.product.id}`)}
           >
             {p.product.title}
           </p>
-          <div className=" flex items-center gap-4 ">
+          <div className=" flex items-center gap-3 md:gap-5 ">
             <div className=" flex items-center border rounded-md">
               <button
                 disabled={p.quantity <= 1}
@@ -106,13 +109,13 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                 <Plus className="size-2 md:size-3" />
               </button>
             </div>
-            <div className=" text-sm text-gray-500">
+            <div className=" text-xs md:text-sm text-gray-500">
               {" "}
               ₹{p.price * p.quantity}
             </div>
           </div>
         </div>
-        <div className=" flex items-center gap-3 w-full border-dotted border-t border-gray-200  py-1 md:py-2">
+        <div className=" flex items-center gap-3  w-full border-dotted border-t border-gray-200  py-1 md:py-2">
           <button
             onClick={() => {
               addToWishlist(p.product);
@@ -122,7 +125,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
             className=" py-0.5 md:py-1.5 px-2  rounded-full flex items-center gap-1 bg-pink-200 text-xs text-pink-500 hover:bg-gray-200"
           >
             <HeartPlus className="size-3 md:size-4 text-pink-500" />
-            <div className=" hidden lg:block">Move to</div>
+            <div className=" hidden md:block">Move to</div>
             Wishlist
           </button>
           <button
@@ -132,15 +135,15 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           >
             <Trash2 className="size-3 md:size-4 text-red-500" />
             Delete
-            <div className=" hidden lg:block">From Cart</div>
+            <div className=" hidden md:block">From Cart</div>
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
-    <AnimatePresence>
+    <>
       {isOpen && (
         <>
           {/* Overlay */}
@@ -161,7 +164,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed top-0 right-0 h-full w-72 sm:w-96 bg-white shadow-xl z-50 flex flex-col"
+            className="fixed top-0 right-0 h-full md:w-120 w-72 bg-white shadow-xl z-50 flex flex-col"
           >
             {/* Header */}
             <div className="w-full bg-gray-50 text-white py-2 font-semibold text-sm flex border-b border-gray-500 items-center justify-between px-4">
@@ -175,33 +178,31 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden py-2 px-1 bg-gradient-to-b from-[#900002]/20 to-white scrollbar-hide">
-              <AnimatePresence>
-                {cart.length > 0 ? (
-                  <div className="space-y-2 w-full px-1 md:px-3">
-                    {cart.map((p) => (
-                      <motion.div
-                        // initial={{ x: 80, opacity: 0 }}
-                        // animate={{ x: 0, opacity: 1 }}
-                        // exit={{ x: 80, opacity: 0 }}
-                        // transition={{ duration: 0.2, ease: "easeIn" }}
-                        variants={itemVariants}
-                        key={p.product.id}
-                      >
-                        <CartProductCard p={p} />
-                      </motion.div>
-                    ))}
-                  </div>
-                ) : (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="text-gray-500 text-sm text-center mt-10"
-                  >
-                    Your cart is empty
-                  </motion.p>
-                )}
-              </AnimatePresence>
+              {cart.length > 0 ? (
+                <div className="space-y-2 w-full px-1 md:px-3">
+                  {cart.map((p) => (
+                    <motion.div
+                      // initial={{ x: 80, opacity: 0 }}
+                      // animate={{ x: 0, opacity: 1 }}
+                      // exit={{ x: 80, opacity: 0 }}
+                      // transition={{ duration: 0.2, ease: "easeIn" }}
+                      variants={itemVariants}
+                      key={p.product.id}
+                    >
+                      <CartProductCard p={p} />
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-gray-500 text-sm text-center mt-10"
+                >
+                  Your Cart 🛒 is empty
+                </motion.p>
+              )}
             </div>
 
             <div className=" w-full">
@@ -227,7 +228,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                         onClick={removeSelected}
                       >
                         <Trash2 className="size-3 md:size-4" />
-                        <p className="hidden md:block">Remove</p>(
+                        <p className="hidden md:block">Remove All</p>(
                         {selectedCartItems().length})
                       </button>
                       <button
@@ -250,7 +251,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                   <span>₹{selectedCartTotal()}</span>
                 </div>
                 <button
-                  onClick={() => router.push(`/checkout`)}
+                  onClick={handleCheckOut}
                   disabled={selectedCartItems().length === 0}
                   className="w-full bg-gradient-to-r from-[#900001]/90 to-[#900000]/60 text-white py-2 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -261,7 +262,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </>
   );
 };
 

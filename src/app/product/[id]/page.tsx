@@ -63,14 +63,38 @@ const ProductPage = () => {
   //     );
   // };
 
-  const { addToCart, toggleWishlist, isInWishlist } = useCartStore();
+  const { addToCart, toggleWishlist, isInWishlist, buyNow, isInCart } =
+    useCartStore();
   const { showToast } = useToast();
+
   const handleAddToCart = () => {
-    if (product) {
+    if (!product) return;
+
+    const alreadyInCart = isInCart(product.id);
+
+    if (alreadyInCart) {
+      showToast("Product already in your Cart 🛒");
+    } else {
       addToCart(product, quantity);
       showToast(`Added to Cart 🛒 ${quantity ? `Qty (${quantity})` : ""}`);
     }
   };
+
+  const handleWishlistToggle = () => {
+    if (!product) return;
+    const alreadyInWishlist = isInWishlist(product.id);
+    toggleWishlist(product);
+    showToast(
+      alreadyInWishlist ? "Removed from Wishlist 💔" : "Added to Wishlist ❤️"
+    );
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    buyNow(product, quantity);
+    router.push(`/checkout`);
+  };
+
   // const handleCartToggle = () => {
   //   if (isInCart(product.id)) {
   //     showToast("Removed from Cart 🛒");
@@ -86,10 +110,6 @@ const ProductPage = () => {
   if (!product)
     return <div className="text-center mt-10">Product not found</div>;
 
-  const slides = [
-    ...product.images.map((img: string) => ({ type: "image", src: img })),
-    ...(product.video ? [{ type: "video", src: product.video }] : []),
-  ];
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -132,7 +152,7 @@ const ProductPage = () => {
                   </div>
                   <div className=" flex justify-between gap-3">
                     <button
-                      onClick={() => toggleWishlist(product)}
+                      onClick={handleWishlistToggle}
                       className={` ${
                         isInWishlist(product.id)
                           ? " text-red-500"
@@ -236,7 +256,7 @@ const ProductPage = () => {
                   )}
                 </button>
                 <button
-                  onClick={() => router.push(`/checkout`)}
+                  onClick={handleBuyNow}
                   disabled={product.stock === 0}
                   className="flex-1 bg-gradient-to-r from-[#900001]/90 to-[#900000]/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
                 >
@@ -327,7 +347,7 @@ const ProductPage = () => {
                     {Object.entries(product.product_specs).map(([key, val]) => (
                       <div
                         key={key}
-                        className="flex items-center justify-between border-b border-[#900000]/40  bg-[#900001]/20 "
+                        className="flex items-center justify-between border-b border-[#900000]/40  bg-[#900001]/10 "
                       >
                         <span className=" px-2  font-medium w-[50%] h-full py-1 bg-white ">
                           {key}
@@ -352,20 +372,11 @@ const ProductPage = () => {
 
           {/* relatedProducts*/}
           <div className="mt-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            <h3 className="text-2xl font-bold text-gray-900 ">
               Similar Products
             </h3>
-            {/* <div className="flex overflow-x-auto scrollbar-hide scroll-smooth gap-4 p-2">
-              {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> */}
-            {/* {relatedProducts
-                ?.filter((r) => r.id !== product.id)
-                .map((p) => (
-                  <div key={p.id} className="min-w-44  ">
-                    <Productcard product={p} />
-                  </div>
-                ))}
-            </div> */}
-            <ProductList products={relatedProducts} title="Related Products" />
+
+            <ProductList products={relatedProducts} />
           </div>
 
           {/* sticky cart button for mobile View */}
@@ -399,7 +410,7 @@ const ProductPage = () => {
                   )}
                 </button>
                 <button
-                  onClick={() => router.push(`/checkout`)}
+                  onClick={handleBuyNow}
                   disabled={product.stock === 0}
                   className="flex-1 bg-gradient-to-r from-[#900001]/90 to-[#900000]/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
                 >

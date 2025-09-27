@@ -34,7 +34,7 @@ export interface CartItem {
     product: Product
     price: number
     quantity: number
-    attributes: { name: string, value: string }[]
+    attributes?: { name: string, value: string }[]
     sku?: string
     selected?: boolean
 }

@@ -21,7 +21,7 @@ const ProductList = ({
   title,
 }: {
   products: Product[];
-  title: string;
+  title?: string;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
@@ -88,7 +88,7 @@ const ProductList = ({
           {/* Section Title */}
           <motion.h2
             variants={fadeInUp}
-            className="text-xl md:text-2xl font-bold text-center mb-3 md:mb-4 bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent"
+            className="text-xl md:text-2xl font-bold text-center  md:mb-4 bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent"
           >
             {title}
           </motion.h2>
