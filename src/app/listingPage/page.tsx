@@ -17,8 +17,8 @@ import { Check } from "lucide-react";
 import {
   FilterModal,
   SortModal,
-} from "@/components/Filters&Sort/MobileFilterAndSort";
-import { DesktopFilters } from "@/components/Filters&Sort/DesktopFiltersAndSort";
+} from "@/app/listingPage/components/MobileFilterAndSort";
+import { DesktopFilters } from "@/app/listingPage/components/DesktopFiltersAndSort";
 import Paginations from "@/components/Paginations";
 import Productcard from "@/components/ProductCard";
 import {
@@ -27,7 +27,8 @@ import {
   searchProduct,
 } from "@/lib/productfetching";
 import ProductCard from "@/components/ProductCard";
-import FilterBanner from "./FilterBanner";
+import FilterBanner from "./components/FilterBanner";
+import MobileFilterSortBar from "./components/mobileFilterSortBar";
 
 interface FilterProps {
   id: string;
@@ -418,7 +419,7 @@ const ListingPageContent = () => {
             <div className=" relative w-full mt-5 flex items-center">
               <div className=" absolute h-2 w-full bg-gray-200 rounded-lg" />
               <div
-                className=" absolute h-2 bg-gradient-to-r from-red-400 to-purple-400 rounded-lg"
+                className=" absolute h-2 bg-gradient-to-r from-[#900001]/30 to-[#900001] rounded-lg"
                 style={{
                   left: `${(priceRange.min / 50000) * 100}%`,
                   right: `${100 - (priceRange.max / 50000) * 100}%`,
@@ -447,7 +448,7 @@ const ListingPageContent = () => {
                     }
                   );
                 }}
-                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-red ${
+                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-primary ${
                   activeSlider === "min" ? "z-20 " : "z-10"
                 }`}
               />
@@ -461,7 +462,7 @@ const ListingPageContent = () => {
                   setActiveSlider("max");
                   let newMax = parseInt(e.target.value);
                   if (newMax <= priceRange.min) {
-                    newMax = priceRange.min + 50;
+                    newMax = priceRange.min + 150;
                   }
                   const newPriceRange = { min: priceRange.min, max: newMax };
                   setPriceRange(newPriceRange);
@@ -473,7 +474,7 @@ const ListingPageContent = () => {
                     }
                   );
                 }}
-                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-purple ${
+                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-primary ${
                   activeSlider === "max" ? "z-20" : "z-10"
                 }`}
               />
@@ -536,11 +537,11 @@ const ListingPageContent = () => {
                     <div
                       className={`w-5 h-5 border-2 rounded ${
                         checked
-                          ? "bg-red-400 border-red-500"
+                          ? "bg-[#900001]/20 border-[#900001]/60"
                           : "border-gray-300"
                       } flex items-center justify-center`}
                     >
-                      {checked && <Check className="w-3 h-3 text-white" />}
+                      {checked && <Check className="w-3 h-3 text-[#900001]" />}
                     </div>
                   </div>
                   <span className="text-gray-700">{opt.label}</span>
@@ -572,12 +573,12 @@ const ListingPageContent = () => {
                     <div
                       className={`w-5 h-5 border-2 rounded-full ${
                         checked
-                          ? "bg-red-400 border-pink-500"
+                          ? "bg-[#900001]/30 border-[#900001]/60"
                           : "border-gray-300"
                       } flex items-center justify-center`}
                     >
                       {checked && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
+                        <div className="w-2 h-2 bg-[#900001]/50 rounded-full" />
                       )}
                     </div>
                   </div>
@@ -592,7 +593,7 @@ const ListingPageContent = () => {
 
   // paginated products
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 30;
+  const productsPerPage = 8;
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * productsPerPage,
@@ -600,44 +601,65 @@ const ListingPageContent = () => {
   );
   useEffect(() => {
     if (paginatedProducts?.length <= 0 && currentPage > 1) setCurrentPage(1);
+    scrollToTop();
   }, [paginatedProducts, currentPage]);
 
   console.log(filterOptions);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="relative px-1 md:px-6 xl:px-10 mb-8 pt-3 md:pt-6">
-      <h1 className=" text-xl font-semibold">
-        {search
-          ? `Search results for "${search}"`
-          : category
-          ? `Products in category "${category}"`
-          : "All Products"}
+    <div className="relative  md:px-6 xl:px-10 mb-8 pt-3 md:pt-6">
+      <h1 className="text-lg md:hidden px-2 font-semibold">
+        {search ? (
+          <>
+            Search results for "
+            <span className="font-bold text-[#900001]">{search}</span>"
+          </>
+        ) : category ? (
+          <>
+            Products in Category "
+            <span className="font-bold text-[#900001]">{category}</span>"
+          </>
+        ) : (
+          "All Products"
+        )}
       </h1>
 
-      {/* mobile filter and sort option */}
-      <div className=" flex justify-between items-center gap-2">
+      {/* Mobile Filter and Sort Bar */}
+      <MobileFilterSortBar
+        setMobileFilters={setMobileFilters}
+        setMobileSort={setMobileSort}
+      />
+      {/* <div className="flex md:hidden justify-between items-center gap-3 mb-4 sticky top-[3.5rem] bg-white z-30 py-2 px-2 border-b">
         <button
           onClick={() => {
             setMobileFilters((prev) => !prev);
             setMobileSort(false);
           }}
-          className="md:hidden w-1/2 mb-4 px-4 py-2 bg-gray-100 border rounded"
+          className="flex items-center justify-center flex-1 gap-2 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-white shadow-sm active:scale-95 transition"
         >
-          Filters
+          <span className="material-icons text-gray-500 text-base">
+            filter_list
+          </span>
+          <span className="text-sm">Filters</span>
         </button>
         <button
           onClick={() => {
             setMobileSort((prev) => !prev);
             setMobileFilters(false);
           }}
-          className="md:hidden w-1/2 mb-4 px-4 py-2 bg-gray-100 border rounded"
+          className="flex items-center justify-center flex-1 gap-2 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-white shadow-sm active:scale-95 transition"
         >
-          Sort by
+          <span className="material-icons text-gray-500 text-base">sort</span>
+          <span className="text-sm">Sort</span>
         </button>
-      </div>
+      </div> */}
 
-      <div className="flex flex-col md:flex-row gap-4 ">
-        <div className="hidden lg:block gap-3 w-2/5 lg:w-1/4 ">
+      <div className="flex flex-col md:flex-row gap-4 mt-1 ">
+        <div className="hidden md:block gap-3 w-2/5 lg:w-1/4 ">
           <DesktopFilters
             onClearAll={clearAll}
             filters={filters}
@@ -646,18 +668,33 @@ const ListingPageContent = () => {
           />
         </div>
         <div className=" w-full h-full flex flex-col justify-between">
-          <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 md:gap-3">
+          <h1 className=" hidden md:block text-lg px-2 font-semibold">
+            {search ? (
+              <>
+                Search results for "
+                <span className="font-bold text-[#900001]">{search}</span>"
+              </>
+            ) : category ? (
+              <>
+                Products in Category "
+                <span className="font-bold text-[#900001]">{category}</span>"
+              </>
+            ) : (
+              "All Products"
+            )}
+          </h1>
+          <div className=" grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7  gap-1 md:gap-3">
             {paginatedProducts.flatMap((product, index) => {
               const elements: React.ReactNode[] = [
                 <ProductCard key={`p-${index}`} product={product} />,
               ];
 
               // Determine screen width (responsive insertion)
-              const isClient = typeof window !== "undefined";
-              const isMdUp = isClient && window.innerWidth >= 768;
+              // const isClient = typeof window !== "undefined";
+              // const isMdUp = isClient && window.innerWidth >= 768;
 
+              // const interval = isMdUp ? 3 : 2; // md+ -> after 3 products, mobile -> after 2
               // Set insertion interval based on screen size
-              const interval = isMdUp ? 3 : 2; // md+ -> after 3 products, mobile -> after 2
               const bannerInsertions = [
                 { index: 1, type: "category", key: "banner-category" },
                 { index: 3, type: "brand", key: "banner-brand" },

@@ -71,11 +71,11 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                     onClick={() => setActiveFilter(opt.id)}
                     className={` w-full p-4 text-left border-b flex items-center ${
                       activeFilter === opt.id
-                        ? "bg-white border-r border-r-red-500 "
+                        ? "bg-[#900001]/6  border-r-3 border-[#900001] "
                         : ""
                     }`}
                   >
-                    <div className={` font-bold ${activeFilter===opt.id?" bg-gradient-to-r from-red-500 to-purple-500 text-transparent  bg-clip-text":"text-gray-600 "}`}>
+                    <div className={` font-bold ${activeFilter===opt.id?" text-[#900001]/70  bg-clip-text":"text-gray-600 "}`}>
                       {opt.label}
                     </div>
                   </button>
@@ -107,7 +107,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 py-3 bg-gradient-to-r font-bold from-red-400 to-purple-500 rounded-lg text-white "
+                className="flex-1 py-3 bg-gradient-to-r font-bold from-[#900001]/80 to-[#900001]/40 rounded-lg text-white "
               >
                 APPLY
               </button>
@@ -164,7 +164,7 @@ export const SortModal: React.FC<SortModalProps> = ({
                   }}
                   className={` w-full text-left font-bold text-sm py-1 px-4 rounded-lg ${
                     activeSort === opt.value
-                      ? "bg-blue-50 text-blue-600"
+                      ? "bg-[#900001]/10 text-[#900001]/70"
                       : "hover:bg-gray-50"
                   }`}
                 >

@@ -132,7 +132,7 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="block lg:hidden col-span-full py-1.5 pb-2 px-3 bg-[#900001]/10 rounded-lg border border-pink-100"
+      className="block md:hidden mx-1 col-span-full py-1.5 pb-2 px-3 bg-[#900001]/10 rounded-lg border border-pink-100"
     >
       <h3 className="text-md font-semibold text-[#900001]/70 mb-1">{title}</h3>
       {content}
