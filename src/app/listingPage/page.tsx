@@ -13,7 +13,7 @@ import Skeleton from "@/components/Skeleton";
 // import Filter from "@/components/FilterSidebar";
 import { Product } from "@/lib/types";
 
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
 import {
   FilterModal,
   SortModal,
@@ -36,7 +36,7 @@ interface FilterProps {
   options?: { label: string; value: string | number }[];
 }
 
-const ListingPage = () => {
+const ListingPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -664,7 +664,6 @@ const ListingPage = () => {
                 { index: 5, type: "price", key: "banner-price" },
               ];
 
-           
               const bannerToInsert = bannerInsertions.find(
                 (b) => b.index === index
               );
@@ -760,4 +759,10 @@ const ListingPage = () => {
   );
 };
 
-export default ListingPage;
+export default function ListingPage() {
+  return (
+    <Suspense fallback={<Skeleton />}>
+      <ListingPageContent />
+    </Suspense>
+  );
+}
