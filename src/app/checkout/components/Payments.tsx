@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Building2,
   Calendar,
@@ -8,9 +8,6 @@ import {
   LucideIcon,
   Package,
   Shield,
-  Smartphone,
-  Truck,
-  Wallet,
   Lock,
   EyeOff,
   Eye,
@@ -259,7 +256,7 @@ const Payments: React.FC<PaymentProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleBlur = (field: keyof FormData) => {
+  const handleBlur = (field?: keyof FormData) => {
     validate();
   };
 

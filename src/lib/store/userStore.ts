@@ -91,7 +91,7 @@ export const useUserStore = create<UserStore>()(
                 const u = get().user;
                 if (!u) return
 
-                let update = u.address?.filter((_, i) => i !== index) || []
+                const update = u.address?.filter((_, i) => i !== index) || []
 
                 if (update.length > 0 && !update.some(a => a.isDefault)) update[0].isDefault = true
 

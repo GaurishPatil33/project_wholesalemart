@@ -2,8 +2,8 @@ import { useCartStore } from "@/lib/store/cartStore";
 import { BadgePercent } from "lucide-react";
 import React from "react";
 
-const priceSummary = () => {
-  const { selectedCartItems, selectedCartTotal } = useCartStore();
+const PriceSummary = () => {
+  const { selectedCartItems} = useCartStore();
 
   const totalPrice = selectedCartItems().reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -45,7 +45,7 @@ const priceSummary = () => {
       <div className="w-full flex items-center justify-center mt-1 px-2">
         <div className="w-full flex items-center flex-wrap justify-center  px-2 py-1 gap-1 rounded-md bg-green-100 text-green-600 text-xs ">
           <BadgePercent className="size-4 " />
-          You'll save
+          You&apos;ll save
           <div className=" font-semibold"> ₹{discount} </div>
           on this order!
         </div>
@@ -54,4 +54,4 @@ const priceSummary = () => {
   );
 };
 
-export default priceSummary;
+export default PriceSummary;

@@ -383,7 +383,7 @@ const WomensFashionListing: React.FC = () => {
       <div className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Women's Fashion</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Women&apos;s Fashion</h1>
             
             <div className="flex items-center gap-4">
               <div className="relative">

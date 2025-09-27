@@ -1,6 +1,7 @@
 import { useCartStore } from "@/lib/store/cartStore";
 import { motion } from "framer-motion";
 import { Minus, Plus, HeartPlus, Trash2, ShoppingCart } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 const CheckoutProductList = () => {
@@ -22,7 +23,7 @@ const CheckoutProductList = () => {
             className="flex items-center px-2  gap-2 md:gap-3 w-full"
           >
             <div className=" relative flex items-center gap-2 w-20  rounded overflow-hidden shadow-md">
-              <img
+              <Image
                 src={p.product.images[0]}
                 alt={p.product.title}
                 className="w-full h-full object-cover "

@@ -5,7 +5,7 @@ import { useOrderStore } from "@/lib/store/orderStore";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import ProgressBar, { Step } from "./components/progressBar";
 import PriceSummary from "./components/priceSummary";
 import { useIsMobile } from "@/lib/hooks/useIsMobile";
@@ -17,10 +17,10 @@ import CheckoutProductList from "./components/CheckoutProductList";
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const { selectedCartItems, selectedCartTotal, clearCart, removeSelected } =
+  const { selectedCartItems, selectedCartTotal, removeSelected } =
     useCartStore();
-  const { addOrderFromCart, clearOrders, getLatestOrder } = useOrderStore();
-  const { user, login } = useUserStore();
+  const { addOrderFromCart, getLatestOrder } = useOrderStore();
+  const { user } = useUserStore();
   const isMobile = useIsMobile();
   const [showAuth, setShowAuth] = useState(false);
 
@@ -239,7 +239,7 @@ const CheckoutPage = () => {
         </button>
       </div>
 
-      {!user ? (
+      {/* {!user ? (
         <div className="">
           LogIn Please
           <button onClick={() => setShowAuth(true)} className=" bg-red-400">
@@ -256,7 +256,7 @@ const CheckoutPage = () => {
         }}
       >
         clear Orders
-      </div>
+      </div> */}
 
       {showAuth && <AuthForm onClose={() => setShowAuth(false)} />}
     </div>

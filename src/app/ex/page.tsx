@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ArrowLeft,
   CreditCard,
@@ -11,12 +11,11 @@ import {
   Phone,
   Lock,
   Check,
-  Gift,
-  Percent,
   Calendar,
   Eye,
   EyeOff,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 // TypeScript interfaces
 interface CartItem {
@@ -101,53 +100,6 @@ const buttonVariants = {
 const progressVariants = {
   initial: { scaleX: 0 },
   animate: { scaleX: 1 },
-};
-
-// Add Framer Motion import simulation (since we can't actually import it)
-const motion = {
-  div: ({
-    children,
-    variants,
-    initial,
-    animate,
-    exit,
-    transition,
-    whileHover,
-    whileTap,
-    className,
-    ...props
-  }: any) => (
-    <div className={className} {...props}>
-      {children}
-    </div>
-  ),
-  button: ({
-    children,
-    variants,
-    whileHover,
-    whileTap,
-    className,
-    ...props
-  }: any) => (
-    <button className={className} {...props}>
-      {children}
-    </button>
-  ),
-  form: ({
-    children,
-    variants,
-    initial,
-    animate,
-    className,
-    ...props
-  }: any) => (
-    <form className={className} {...props}>
-      {children}
-    </form>
-  ),
-  input: ({ variants, whileFocus, className, ...props }: any) => (
-    <input className={className} {...props} />
-  ),
 };
 
 const CheckoutPage: React.FC = () => {
@@ -339,7 +291,7 @@ const CheckoutPage: React.FC = () => {
         type={type}
         placeholder={placeholder}
         value={String(formData[field])}
-        onChange={(e: any) => handleInputChange(field, e.target.value)}
+        onChange={(e) => handleInputChange(field, e.target.value)}
         className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
           errors[field] ? "border-red-500" : "border-gray-300"
         }`}
@@ -786,7 +738,7 @@ const CheckoutPage: React.FC = () => {
                         type="text"
                         placeholder="1234 5678 9012 3456"
                         value={formData.cardNumber}
-                        onChange={(e: any) =>
+                        onChange={(e) =>
                           handleInputChange(
                             "cardNumber",
                             formatCardNumber(e.target.value)
@@ -826,7 +778,7 @@ const CheckoutPage: React.FC = () => {
                           type="text"
                           placeholder="MM/YY"
                           value={formData.expiryDate}
-                          onChange={(e: any) =>
+                          onChange={(e) =>
                             handleInputChange("expiryDate", e.target.value)
                           }
                           maxLength={5}
@@ -862,7 +814,7 @@ const CheckoutPage: React.FC = () => {
                             type={showCardDetails ? "text" : "password"}
                             placeholder="123"
                             value={formData.cvv}
-                            onChange={(e: any) =>
+                            onChange={(e) =>
                               handleInputChange("cvv", e.target.value)
                             }
                             maxLength={4}
@@ -1241,7 +1193,7 @@ const CheckoutPage: React.FC = () => {
                     type="text"
                     placeholder="Promo code"
                     value={formData.promoCode}
-                    onChange={(e: any) =>
+                    onChange={(e) =>
                       handleInputChange("promoCode", e.target.value)
                     }
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
