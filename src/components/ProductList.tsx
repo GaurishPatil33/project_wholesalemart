@@ -84,7 +84,7 @@ const ProductList = ({
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
       >
-        <div className="bg-white py-3 md:py-6 mx-auto px-2 md:px-6">
+        <div className="bg-white py-3 md:py-6 mx-auto px-2 ">
           {/* Section Title */}
           <motion.h2
             variants={fadeInUp}
@@ -111,7 +111,7 @@ const ProductList = ({
           {showLeft && (
             <button
               onClick={() => scroll("left")}
-              className="flex absolute top-1/2 left-2 -translate-y-1/2 bg-white/30 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
+              className="flex absolute top-1/2 left-2 -translate-y-1/2 bg-white/60 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
             >
               <ChevronLeft className="w-5 h-5 text-black" />
             </button>
@@ -119,7 +119,7 @@ const ProductList = ({
           {showRight && (
             <button
               onClick={() => scroll("right")}
-              className="flex absolute top-1/2 right-2 -translate-y-1/2 bg-white/30 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
+              className="flex absolute top-1/2 right-2 -translate-y-1/2 bg-white/60 shadow-md rounded-full p-1 md:p-2 hover:bg-gray-100"
             >
               <ChevronRight className="w-5 h-5 text-black" />
             </button>

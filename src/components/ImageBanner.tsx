@@ -51,7 +51,7 @@ const ImageBanner = () => {
 
   return (
     <section
-      className="relative w-full -mt-8 md:-mt-2 min-h-[500px]  max-h-[600px] "
+      className="relative w-full mt-2 md:mt-2 min-h-[500px]  max-h-[600px] "
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

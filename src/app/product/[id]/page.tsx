@@ -112,7 +112,7 @@ const ProductPage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-1">
         {/* product info */}
         <div className="max-w-full mx-auto px-2 sm:px-6 lg:px-8 py-2 md:py-8 bg-white">
           <div className=" w-full flex  md:gap-3 flex-col md:flex-row justify-between">

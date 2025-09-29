@@ -20,7 +20,6 @@ import {
 } from "@/app/listingPage/components/MobileFilterAndSort";
 import { DesktopFilters } from "@/app/listingPage/components/DesktopFiltersAndSort";
 import Paginations from "@/components/Paginations";
-import Productcard from "@/components/ProductCard";
 import {
   fetchAllProducts,
   fetchProductByCategory,
@@ -593,7 +592,7 @@ const ListingPageContent = () => {
 
   // paginated products
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8;
+  const productsPerPage = 10;
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * productsPerPage,

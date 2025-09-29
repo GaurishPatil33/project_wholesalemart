@@ -1,5 +1,6 @@
 "use client";
 import CategoryList from "@/components/CategoryList";
+import CategoryStories from "@/components/CategoryStories";
 import FeatureStrip from "@/components/FeaturesStrip";
 import ImageBanner from "@/components/ImageBanner";
 import ProductList from "@/components/ProductList";
@@ -41,8 +42,11 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-gray-100 gap-3 md:gap-6">
-      <div className=""></div>
+    <div className="flex flex-col h-full pt-4 gap-3 md:gap-6">
+      <div className="">
+        {" "}
+        <CategoryStories />
+      </div>
       <ImageBanner />
 
       <FeatureStrip />

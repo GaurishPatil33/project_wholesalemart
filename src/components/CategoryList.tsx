@@ -125,7 +125,7 @@ const CategoryList = ({
               animate="center"
               exit="exit"
               ref={scrollRef}
-              className="flex items-center  overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth scrollbar-hide"
+              className="flex items-center justify overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth scrollbar-hide"
             >
               {data.map((cat) => (
                 <motion.div

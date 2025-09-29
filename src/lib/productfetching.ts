@@ -1,14 +1,14 @@
-import { products } from "./data";
+import { Categories, products } from "./data";
 import { Product } from "./types";
 
 export function fetchAllProducts() {
     const product = products
-    console.log(product)
+    // console.log(product)
     return product
 }
-export function fetchProductById(id: number | string):Product|undefined {
+export function fetchProductById(id: number | string): Product | undefined {
     const product = products.find(p => p.id === Number(id))
-    
+
     return product
 
 }
@@ -24,6 +24,13 @@ export function searchProduct(query: string) {
 
 export function fetchProductByCategory(query: string) {
     const res = products.filter((p) => p.category === query)
+    // console.log("from fech", res)
     return res
 
+}
+
+export function fetchCategories() {
+    const cat = Categories
+    // console.log(cat)
+    return cat
 }

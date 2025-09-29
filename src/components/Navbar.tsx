@@ -140,7 +140,7 @@ const Navbar = () => {
 
           <div className="flex items-center justify-between gap-1 w-fit md:gap-4">
             {/* Search */}
-            <div className="hidden md:block w-full lg:min-w-80 ">
+            <div className="hidden md:block w-full   right-0">
               <Search />
             </div>
             <div className=" md:hidden text-primary ">
@@ -215,6 +215,7 @@ const Navbar = () => {
           </div>
         </div>
       </motion.header>
+
       {/* MOBILE SEARCH OVERLAY */}
       <AnimatePresence>
         {mobileSearchOpen && (
@@ -240,9 +241,10 @@ const Navbar = () => {
                 <SearchBar onSearch={() => setMobileSearchOpen(false)} />
                 <button
                   onClick={() => setMobileSearchOpen(false)}
-                  className="p-2 rounded-full hover:bg-gray-100"
+                  className="p-1 px-2 text-xs  text-[#900001] rounded-full hover:bg-gray-100 flex items-center gap-0.5 ring-1 ring-[#900001] bg-[#900001]/50"
                 >
-                  <X className="w-5 h-5 text-gray-600" />
+                  CLOSE
+                  <X className=" size-4 " />
                 </button>
               </div>
 
