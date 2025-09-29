@@ -54,7 +54,7 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
     case "category":
       title = "Shop by Category";
       content = (
-        <div className="flex w-full gap-2 overflow-x-auto">
+        <div className="flex w-full gap-2 overflow-x-auto flex-wrap">
           {categories.map((category, i) => (
             <button
               key={i}
@@ -75,7 +75,7 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
     case "brand":
       title = "Filter by Brand";
       content = (
-        <div className="flex gap-2 overflow-x-auto">
+        <div className="flex gap-2 overflow-x-auto flex-wrap">
           {brands.map((brand, i) => (
             <button
               key={i}
@@ -103,7 +103,7 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
         { min: 25000, max: 50000, label: "₹25000+" },
       ];
       content = (
-        <div className="flex w-full gap-2 overflow-x-auto">
+        <div className="flex w-full gap-2 overflow-x-auto flex-wrap">
           {ranges.map((opt, i) => {
             const isActive =
               filters.priceRange.min === opt.min &&

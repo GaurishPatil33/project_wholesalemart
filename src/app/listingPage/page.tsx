@@ -78,6 +78,7 @@ const ListingPageContent = () => {
   const [mobileFilters, setMobileFilters] = useState(false);
   const [mobileSort, setMobileSort] = useState(false);
   const [pendingParams, setPendinParams] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [filters, setFilters] = useState<Record<string, string[]>>({
     category: [],
@@ -187,6 +188,7 @@ const ListingPageContent = () => {
   useEffect(() => {
     const fetchproducts = async () => {
       try {
+        setLoading(true);
         let fetchproducts: Product[] = [];
         if (search) {
           fetchproducts = await searchProduct(search);
@@ -196,11 +198,13 @@ const ListingPageContent = () => {
           fetchproducts = await fetchAllProducts();
         }
         setproducts(fetchproducts);
-
+        setLoading(false);
         // setFilterProducts(fetchproducts);
       } catch (error) {
         console.error("Error :", error);
         setproducts([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -683,83 +687,94 @@ const ListingPageContent = () => {
               "All Products"
             )}
           </h1>
-          <div className=" grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7  gap-1 md:gap-3">
-            {paginatedProducts.flatMap((product, index) => {
-              const elements: React.ReactNode[] = [
-                <ProductCard key={`p-${index}`} product={product} />,
-              ];
+          <div className="">
+            {paginatedProducts && !loading ? (
+              <div className=" grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7  gap-1 md:gap-3">
+                {paginatedProducts.flatMap((product, index) => {
+                  const elements: React.ReactNode[] = [
+                    <ProductCard key={`p-${index}`} product={product} />,
+                  ];
 
-              // Determine screen width (responsive insertion)
-              // const isClient = typeof window !== "undefined";
-              // const isMdUp = isClient && window.innerWidth >= 768;
+                  // Determine screen width (responsive insertion)
+                  // const isClient = typeof window !== "undefined";
+                  // const isMdUp = isClient && window.innerWidth >= 768;
 
-              // const interval = isMdUp ? 3 : 2; // md+ -> after 3 products, mobile -> after 2
-              // Set insertion interval based on screen size
-              const bannerInsertions = [
-                { index: 1, type: "category", key: "banner-category" },
-                { index: 3, type: "brand", key: "banner-brand" },
-                { index: 5, type: "price", key: "banner-price" },
-              ];
+                  // const interval = isMdUp ? 3 : 2; // md+ -> after 3 products, mobile -> after 2
+                  // Set insertion interval based on screen size
+                  const bannerInsertions = [
+                    { index: 1, type: "category", key: "banner-category" },
+                    { index: 3, type: "brand", key: "banner-brand" },
+                    { index: 5, type: "price", key: "banner-price" },
+                  ];
 
-              const bannerToInsert = bannerInsertions.find(
-                (b) => b.index === index
-              );
-              if (bannerToInsert) {
-                elements.push(
-                  <FilterBanner
-                    key={bannerToInsert.key}
-                    type={bannerToInsert.type as "category" | "brand" | "price"}
-                    categories={
-                      filterOptions
-                        .find((p) => p.id === "category")
-                        ?.options?.map((opt) => String(opt.value)) || []
-                    }
-                    brands={
-                      filterOptions
-                        .find((p) => p.id === "brands")
-                        ?.options?.map((opt) => String(opt.value)) || []
-                    }
-                    filters={{
-                      category: filters.category,
-                      brands: filters.brands,
-                      priceRange: priceRange, // assuming FilterBanner reads priceRange for price
-                      discount: [],
-                      rating: [],
-                      availabilityStatus: [],
-                    }}
-                    onChange={(newFilters) => {
-                      const updatedFilters: Record<string, string[]> = {
-                        ...filters,
-                        ...(newFilters.category && {
-                          category: newFilters.category,
-                        }),
-                        ...(newFilters.brands && { brands: newFilters.brands }),
-                        ...(newFilters.discount && {
-                          discount: newFilters.discount.map(String),
-                        }),
-                        ...(newFilters.rating && {
-                          rating: newFilters.rating.map(String),
-                        }),
-                        ...(newFilters.availabilityStatus && {
-                          availability: newFilters.availabilityStatus,
-                        }),
-                        // Don't include priceRange here!
-                      };
+                  const bannerToInsert = bannerInsertions.find(
+                    (b) => b.index === index
+                  );
+                  if (bannerToInsert) {
+                    elements.push(
+                      <FilterBanner
+                        key={bannerToInsert.key}
+                        type={
+                          bannerToInsert.type as "category" | "brand" | "price"
+                        }
+                        categories={
+                          filterOptions
+                            .find((p) => p.id === "category")
+                            ?.options?.map((opt) => String(opt.value)) || []
+                        }
+                        brands={
+                          filterOptions
+                            .find((p) => p.id === "brands")
+                            ?.options?.map((opt) => String(opt.value)) || []
+                        }
+                        filters={{
+                          category: filters.category,
+                          brands: filters.brands,
+                          priceRange: priceRange, // assuming FilterBanner reads priceRange for price
+                          discount: [],
+                          rating: [],
+                          availabilityStatus: [],
+                        }}
+                        onChange={(newFilters) => {
+                          const updatedFilters: Record<string, string[]> = {
+                            ...filters,
+                            ...(newFilters.category && {
+                              category: newFilters.category,
+                            }),
+                            ...(newFilters.brands && {
+                              brands: newFilters.brands,
+                            }),
+                            ...(newFilters.discount && {
+                              discount: newFilters.discount.map(String),
+                            }),
+                            ...(newFilters.rating && {
+                              rating: newFilters.rating.map(String),
+                            }),
+                            ...(newFilters.availabilityStatus && {
+                              availability: newFilters.availabilityStatus,
+                            }),
+                            // Don't include priceRange here!
+                          };
 
-                      setFilters(updatedFilters);
+                          setFilters(updatedFilters);
 
-                      // Update URL params separately for priceRange
-                      updateUrlParams(updatedFilters, {
-                        minPrice: newFilters.priceRange?.min.toString() || "0",
-                        maxPrice:
-                          newFilters.priceRange?.max.toString() || "50000",
-                      });
-                    }}
-                  />
-                );
-              }
-              return elements;
-            })}
+                          // Update URL params separately for priceRange
+                          updateUrlParams(updatedFilters, {
+                            minPrice:
+                              newFilters.priceRange?.min.toString() || "0",
+                            maxPrice:
+                              newFilters.priceRange?.max.toString() || "50000",
+                          });
+                        }}
+                      />
+                    );
+                  }
+                  return elements;
+                })}
+              </div>
+            ) : (
+              <Skeleton />
+            )}
           </div>
 
           {/* pagination */}

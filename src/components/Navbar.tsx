@@ -281,7 +281,7 @@ const Navbar = () => {
         {mobileMenu && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed inset-0 bg-black/50 z-40 h-screen"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -355,64 +355,67 @@ const Navbar = () => {
                 ))}
               </div>
 
-              {/* Login */}
-              <div className="px-2">
-                <motion.button
-                  variants={itemVariants}
-                  className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-700 text-white"
-                >
-                  LOG IN
-                  <LogInIcon className="w-5 h-5" />
-                </motion.button>
-              </div>
-
-              {/* Help Section */}
-              <motion.div
-                variants={itemVariants}
-                className="mt-4 bg-red-50 p-3 rounded space-y-2"
-              >
-                <h2 className="text-lg font-medium text-gray-800">
-                  Need Help?
-                </h2>
-                <p className="text-xs text-gray-500 text-center">
-                  Can’t find the answers you are looking for? Contact us below:
-                </p>
-                <motion.button
-                  variants={itemVariants}
-                  className="w-full flex justify-center items-center gap-2 py-2 rounded-full bg-red-700 text-white text-sm"
-                >
-                  <FaWhatsapp className="w-5 h-5" />
-                  Chat with us
-                </motion.button>
-
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <PhoneCallIcon className="w-4 h-4 text-red-700" />
-                    <div>
-                      <div className="text-xs font-bold">Contact Us</div>
-                      <a
-                        href="tel:8888888888"
-                        className="text-red-700 text-sm underline"
-                      >
-                        88-8888-8888
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-red-700" />
-                    <div>
-                      <div className="text-xs font-bold">Email Us</div>
-                      <a
-                        href="mailto:abc@gmail.com"
-                        className="text-red-700 text-sm underline"
-                      >
-                        abc@gmail.com
-                      </a>
-                    </div>
-                  </div>
+              <div className=" flex flex-col justify-end  ">
+                {/* Login */}
+                <div className="px-2">
+                  <motion.button
+                    variants={itemVariants}
+                    className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-700 text-white"
+                  >
+                    LOG IN
+                    <LogInIcon className="w-5 h-5" />
+                  </motion.button>
                 </div>
-              </motion.div>
+
+                {/* Help Section */}
+                <motion.div
+                  variants={itemVariants}
+                  className="mt-4 bg-red-50 p-3 rounded space-y-2"
+                >
+                  <h2 className="text-lg font-medium text-gray-800">
+                    Need Help?
+                  </h2>
+                  <p className="text-xs text-gray-500 text-center">
+                    Can’t find the answers you are looking for? Contact us
+                    below:
+                  </p>
+                  <motion.button
+                    variants={itemVariants}
+                    className="w-full flex justify-center items-center gap-2 py-2 rounded-full bg-red-700 text-white text-sm"
+                  >
+                    <FaWhatsapp className="w-5 h-5" />
+                    Chat with us
+                  </motion.button>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <PhoneCallIcon className="w-4 h-4 text-red-700" />
+                      <div>
+                        {/* <div className="text-xs font-bold">Contact Us</div> */}
+                        <a
+                          href="tel:8888888888"
+                          className="text-red-700 text-sm underline"
+                        >
+                          88-8888-8888
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-red-700" />
+                      <div>
+                        {/* <div className="text-xs font-bold">Email Us</div> */}
+                        <a
+                          href="mailto:abc@gmail.com"
+                          className="text-red-700 text-sm underline"
+                        >
+                          abc@gmail.com
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
             </motion.div>
           </>
         )}

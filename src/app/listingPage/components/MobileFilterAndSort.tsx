@@ -165,7 +165,7 @@ export const SortModal: React.FC<SortModalProps> = ({
                   className={` w-full text-left font-bold text-sm py-1 px-4 rounded-lg ${
                     activeSort === opt.value
                       ? "bg-[#900001]/10 text-[#900001]/70"
-                      : "hover:bg-gray-50"
+                      : "hover:bg-gray-50 text-gray-700"
                   }`}
                 >
                   {opt.label}

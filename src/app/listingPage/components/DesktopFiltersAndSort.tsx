@@ -62,7 +62,7 @@ export const DesktopFilters: React.FC<FilterModalProps> = ({
               onClick={() => toggleSection(opt.id)}
               className="flex items-center justify-between w-full text-left group"
             >
-              <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-gray-900 group-hover:text-[#900001]/40 transition-colors">
                 {opt.label}
               </h3>
               <div
