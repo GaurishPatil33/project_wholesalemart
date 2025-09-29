@@ -56,7 +56,7 @@ const CategoryStories = () => {
     setShowVideo(false);
 
     if (products[currentProductIndex]?.video) {
-      const timer = setTimeout(() => setShowVideo(true), 2000);
+      const timer = setTimeout(() => setShowVideo(true), 1100);
       return () => clearTimeout(timer);
     }
   }, [currentProductIndex, products]);
