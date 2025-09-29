@@ -614,13 +614,13 @@ const ListingPageContent = () => {
       <h1 className="text-lg md:hidden px-2 font-semibold">
         {search ? (
           <>
-            Search results for "
-            <span className="font-bold text-[#900001]">{search}</span>"
+            Search results for &quot;
+            <span className="font-bold text-[#900001]">{search}</span>&quot;
           </>
         ) : category ? (
           <>
-            Products in Category "
-            <span className="font-bold text-[#900001]">{category}</span>"
+            Products in Category &quot;
+            <span className="font-bold text-[#900001]">{category}</span>&quot;
           </>
         ) : (
           "All Products"
@@ -670,13 +670,14 @@ const ListingPageContent = () => {
           <h1 className=" hidden md:block text-lg px-2 font-semibold">
             {search ? (
               <>
-                Search results for "
-                <span className="font-bold text-[#900001]">{search}</span>"
+                Search results for &quot;
+                <span className="font-bold text-[#900001]">{search}</span>&quot;
               </>
             ) : category ? (
               <>
-                Products in Category "
-                <span className="font-bold text-[#900001]">{category}</span>"
+                Products in Category &quot;
+                <span className="font-bold text-[#900001]">{category}</span>
+                &quot;
               </>
             ) : (
               "All Products"

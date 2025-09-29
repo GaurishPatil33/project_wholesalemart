@@ -2,12 +2,10 @@ import { Address, useUserStore } from "@/lib/store/userStore";
 import { motion } from "framer-motion";
 import {
   Check,
-  Edit2,
   MapPin,
   Pencil,
   Phone,
   Plus,
-  Trash,
   Trash2,
 } from "lucide-react";
 import React, { useState } from "react";

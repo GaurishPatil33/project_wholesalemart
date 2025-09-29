@@ -256,7 +256,7 @@ const Payments: React.FC<PaymentProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleBlur = (field?: keyof FormData) => {
+  const handleBlur = () => {
     validate();
   };
 
