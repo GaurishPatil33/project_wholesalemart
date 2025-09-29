@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import { BsTelegram } from "react-icons/bs";
+import { FaTelegram, FaTelegramPlane } from "react-icons/fa";
 
 interface Category {
   title: string;
@@ -168,14 +170,16 @@ const CategoryStories = () => {
       <AnimatePresence>
         {selectedCategory && products.length > 0 && (
           <motion.div
-            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/5 flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeModal}
           >
             <motion.div
-              className="relative bg-white rounded-2xl max-w-md w-[80%] md:w-full max-h-[90vh] mx-1 overflow-hidden flex flex-col"
+              className="relative md:rounded-2xl max-w-md h-full md:w-full md:max-h-[90vh] 
+ overflow-hidden flex flex-col
+bg-white/10 opacity-5 backdrop-blur-md border border-[#900001]/30 shadow-xl"
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
@@ -183,13 +187,20 @@ const CategoryStories = () => {
             >
               {/* header */}
               <div className="flex items-center justify-between px-4 pt-2">
-                <div>
-                  <h3 className="font-semibold text-gray-800">
-                    Trending {selectedCategory.title} 🔥
+                <div className="flex gap-4 justify-between items-center  py-1">
+                  <div className="size-12  rounded-full overflow-hidden border-spacing-1.5 border border-[#900001]">
+                    <img
+                      src={selectedCategory.image}
+                      alt={selectedCategory.title}
+                      className="w-full h-full  object-cover"
+                    />
+                  </div>
+                  <h3 className="font-semibold text-2xl ">
+                    {selectedCategory.title}
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  {/* <p className="text-sm text-gray-500">
                     {currentProductIndex + 1} of {products.length}
-                  </p>
+                  </p> */}
                 </div>
                 <button
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -212,12 +223,12 @@ const CategoryStories = () => {
                         key={i + "-active"}
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
-                        transition={{ duration:9, ease: "linear" }}
-                        className="h-full bg-[#900001]/60"
+                        transition={{ duration: 9, ease: "linear" }}
+                        className="h-full bg-[#900001]/80"
                       />
                     )}
                     {i < currentProductIndex && (
-                      <div className="h-full w-full bg-[#900001]/20" />
+                      <div className="h-full w-full bg-[#900001]/60" />
                     )}
                   </div>
                 ))}
@@ -241,7 +252,7 @@ const CategoryStories = () => {
                       onTouchStart={handleHoldStart}
                       onTouchEnd={handleHoldEnd}
                     >
-                      <div className="relative w-full aspect-[3/4] overflow-hidden flex items-center justify-center">
+                      <div className="relative w-full h-full aspect-[9/17] overflow-hidden flex items-center justify-center">
                         {products[currentProductIndex]?.video ? (
                           <AnimatePresence mode="wait">
                             {!showVideo ? (
@@ -307,6 +318,31 @@ const CategoryStories = () => {
                     )}
                   </>
                 )}
+
+                {/* share btn */}
+                <div className=" absolute top-3 right-3 ">
+                  <button
+                    onClick={() => {
+                      const product = products[currentProductIndex];
+
+                      const url = `${window.location.origin}/product/${product.id}`;
+                      if (navigator.share) {
+                        navigator.share({
+                          title: product.title,
+                          text: "Checkout this product!",
+                          url,
+                        });
+                      } else {
+                        navigator.clipboard.writeText(url);
+                        alert("product link copied to clipboard");
+                      }
+                    }}
+                    className="flex items-center justify-between gap-1 bg-black/20 hover:bg-white/30 text-white text-sm px-3 py-1 rounded-full transition-colors"
+                  >
+                    <FaTelegramPlane/>
+                    Share
+                  </button>
+                </div>
               </div>
 
               {/* product info overlay */}
@@ -328,6 +364,7 @@ const CategoryStories = () => {
                   <div className="text-white/80 font-semibold">
                     ₹ {products[currentProductIndex]?.price}
                   </div>
+
                   <button
                     onClick={() =>
                       router.push(

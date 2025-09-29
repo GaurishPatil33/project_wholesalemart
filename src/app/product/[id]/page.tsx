@@ -165,7 +165,22 @@ const ProductPage = () => {
                         }`}
                       />
                     </button>
-                    <button className=" ">
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}/product/${product.id}`;
+                        if (navigator.share) {
+                          navigator.share({
+                            title: product.title,
+                            text: "Checkout this product!",
+                            url,
+                          });
+                        } else {
+                          navigator.clipboard.writeText(url);
+                          alert("product link copied to clipboard");
+                        }
+                      }}
+                      className=" "
+                    >
                       <Share2 className="size-4 md:size-5" />
                     </button>
                   </div>
