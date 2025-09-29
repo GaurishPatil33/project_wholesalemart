@@ -212,7 +212,7 @@ const CategoryStories = () => {
                         key={i + "-active"}
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
-                        transition={{ duration, ease: "linear" }}
+                        transition={{ duration:9, ease: "linear" }}
                         className="h-full bg-[#900001]/60"
                       />
                     )}
@@ -224,7 +224,7 @@ const CategoryStories = () => {
               </div>
 
               {/* product content */}
-              <div className="relative overflow-y-hidden h-full flex items-center justify-center scrollbar-hide">
+              <div className="relative overflow-y-hidden  min-h-full flex items-center justify-center scrollbar-hide bg-black/50">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentProductIndex}
@@ -232,52 +232,54 @@ const CategoryStories = () => {
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -300, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="w-full relative"
+                    className="w-full relative bg-black"
                   >
                     <div
-                      className="relative overflow-hidden flex items-center justify-center"
+                      className="relative w-full flex items-center justify-center bg-black"
                       onMouseDown={handleHoldStart}
                       onMouseUp={handleHoldEnd}
                       onTouchStart={handleHoldStart}
                       onTouchEnd={handleHoldEnd}
                     >
-                      {products[currentProductIndex]?.video ? (
-                        <AnimatePresence mode="wait">
-                          {!showVideo ? (
-                            <motion.img
-                              key="preview-img"
-                              src={products[currentProductIndex]?.images[0]}
-                              alt={products[currentProductIndex]?.title}
-                              className="w-fit h-full object-cover"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ duration: 0.5 }}
-                            />
-                          ) : (
-                            <motion.video
-                              key="video"
-                              ref={videoRef}
-                              src={products[currentProductIndex]?.video}
-                              className="object-cover w-full"
-                              autoPlay
-                              muted
-                              playsInline
-                              onEnded={nextProduct}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ duration: 0.5 }}
-                            />
-                          )}
-                        </AnimatePresence>
-                      ) : (
-                        <img
-                          src={products[currentProductIndex]?.images[0]}
-                          alt={products[currentProductIndex]?.title}
-                          className="w-fit h-full object-cover"
-                        />
-                      )}
+                      <div className="relative w-full aspect-[3/4] overflow-hidden flex items-center justify-center">
+                        {products[currentProductIndex]?.video ? (
+                          <AnimatePresence mode="wait">
+                            {!showVideo ? (
+                              <motion.img
+                                key="preview-img"
+                                src={products[currentProductIndex]?.images[0]}
+                                alt={products[currentProductIndex]?.title}
+                                className="w-full h-full object-cover"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.5 }}
+                              />
+                            ) : (
+                              <motion.video
+                                key="video"
+                                ref={videoRef}
+                                src={products[currentProductIndex]?.video}
+                                className="w-full h-full object-cover"
+                                autoPlay
+                                muted
+                                playsInline
+                                onEnded={nextProduct}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.5 }}
+                              />
+                            )}
+                          </AnimatePresence>
+                        ) : (
+                          <img
+                            src={products[currentProductIndex]?.images[0]}
+                            alt={products[currentProductIndex]?.title}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
