@@ -33,7 +33,7 @@ const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
         type="text"
         onChange={(e) => setSearchTerm(e.target.value)}
         value={searchTerm}
-        className=" outline-none text-xs md:text-sm "
+        className=" outline-none text-xs md:text-sm w-full "
         // placeholder="Search for ..."
       />
 

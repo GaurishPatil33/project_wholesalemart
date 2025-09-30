@@ -108,7 +108,7 @@ const ProductCard = ({
             }
           }, 6000);
         }
-      }, 1800);
+      }, 1100);
     } else {
       // Reset when out of view
       if (activeId === product.id) {

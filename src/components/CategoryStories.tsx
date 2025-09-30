@@ -1,5 +1,6 @@
 "use client";
 
+import { useShare } from "@/lib/hooks/helperFunctions";
 import { fetchCategories, fetchProductByCategory } from "@/lib/productfetching";
 import { Product } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,7 +25,7 @@ const CategoryStories = () => {
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
-
+  const share = useShare();
   /** ───── Fetch Categories ───── */
   useEffect(() => {
     const fetch = async () => {
@@ -131,7 +132,7 @@ const CategoryStories = () => {
     <div className="w-full py-2 md:py-4 bg-gradient-to-b from-[#900002]/5 to-[#900001]/20">
       {/* heading */}
       <div className="w-full px-4">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent">
+        <h2 className="text-sm md:text-lg font-semibold bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent">
           Discover our trending products{" "}
         </h2>
       </div>
@@ -170,72 +171,69 @@ const CategoryStories = () => {
       <AnimatePresence>
         {selectedCategory && products.length > 0 && (
           <motion.div
-            className="fixed inset-0 bg-black/5 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeModal}
           >
             <motion.div
-              className="relative md:rounded-2xl max-w-md h-full md:w-full md:max-h-[90vh] 
- overflow-hidden flex flex-col
-bg-white/10 opacity-5 backdrop-blur-md border border-[#900001]/30 shadow-xl"
+              className="relative md:rounded  h-full w-screen md:h-[600px] md:w-[400px]  bg-black  overflow-hidden "
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* header */}
-              <div className="flex items-center justify-between px-4 pt-2">
-                <div className="flex gap-4 justify-between items-center  py-1">
-                  <div className="size-12  rounded-full overflow-hidden border-spacing-1.5 border border-[#900001]">
-                    <img
-                      src={selectedCategory.image}
-                      alt={selectedCategory.title}
-                      className="w-full h-full  object-cover"
-                    />
-                  </div>
-                  <h3 className="font-semibold text-2xl ">
-                    {selectedCategory.title}
-                  </h3>
-                  {/* <p className="text-sm text-gray-500">
-                    {currentProductIndex + 1} of {products.length}
-                  </p> */}
+              {/* top overlay */}
+              <div className=" absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/60 to-transparent">
+                {/* progress bars */}
+                <div className="flex space-x-1 py-0.5">
+                  {products.map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-1 flex-1 bg-gray-200 overflow-hidden"
+                    >
+                      {i === currentProductIndex && (
+                        <motion.div
+                          key={i + "-active"}
+                          initial={{ width: "0%" }}
+                          animate={{ width: "100%" }}
+                          transition={{ duration, ease: "linear" }}
+                          className="h-full bg-[#900001]/80"
+                        />
+                      )}
+                      {i < currentProductIndex && (
+                        <div className="h-full w-full bg-[#900001]/60" />
+                      )}
+                    </div>
+                  ))}
                 </div>
-                <button
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  onClick={closeModal}
-                  aria-label="Close"
-                >
-                  <X className="size-5 text-gray-600" />
-                </button>
-              </div>
-
-              {/* progress bars */}
-              <div className="flex space-x-1 py-0.5">
-                {products.map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-1 flex-1 bg-gray-200 overflow-hidden"
-                  >
-                    {i === currentProductIndex && (
-                      <motion.div
-                        key={i + "-active"}
-                        initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
-                        transition={{ duration: 9, ease: "linear" }}
-                        className="h-full bg-[#900001]/80"
+                {/* header */}
+                <div className=" flex items-center justify-between px-4 pt-2">
+                  <div className="flex gap-4 justify-between items-center  py-1">
+                    {/* <div className="size-12  rounded-full overflow-hidden border-spacing-1.5 border border-[#900001]">
+                      <img
+                        src={selectedCategory.image}
+                        alt={selectedCategory.title}
+                        className="w-full h-full  object-cover"
                       />
-                    )}
-                    {i < currentProductIndex && (
-                      <div className="h-full w-full bg-[#900001]/60" />
-                    )}
+                    </div> */}
+                    <h3 className="font-semibold text-2xl bg-gradient-to-r from-[#900001]/90 to-[#900001]/70 text-transparent bg-clip-text">
+                      {selectedCategory.title}
+                    </h3>
                   </div>
-                ))}
+                  <button
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    onClick={closeModal}
+                    aria-label="Close"
+                  >
+                    <X className="size-5 text-white" />
+                  </button>
+                </div>
               </div>
 
               {/* product content */}
-              <div className="relative overflow-y-hidden  min-h-full flex items-center justify-center scrollbar-hide bg-black/50">
+              <div className="absolute  top-0 overflow-y-hidden h-full w-full flex items-center justify-center scrollbar-hide bg-black/30">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentProductIndex}
@@ -243,107 +241,58 @@ bg-white/10 opacity-5 backdrop-blur-md border border-[#900001]/30 shadow-xl"
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -300, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="w-full relative bg-black"
+                    className="w-full h-full  flex items-center  justify-center bg-black/30 backdrop-blur-2xl"
                   >
-                    <div
-                      className="relative w-full flex items-center justify-center bg-black"
-                      onMouseDown={handleHoldStart}
-                      onMouseUp={handleHoldEnd}
-                      onTouchStart={handleHoldStart}
-                      onTouchEnd={handleHoldEnd}
-                    >
-                      <div className="relative w-full h-full aspect-[9/17] overflow-hidden flex items-center justify-center">
-                        {products[currentProductIndex]?.video ? (
-                          <AnimatePresence mode="wait">
-                            {!showVideo ? (
-                              <motion.img
-                                key="preview-img"
-                                src={products[currentProductIndex]?.images[0]}
-                                alt={products[currentProductIndex]?.title}
-                                className="w-full h-full object-cover"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.5 }}
-                              />
-                            ) : (
-                              <motion.video
-                                key="video"
-                                ref={videoRef}
-                                src={products[currentProductIndex]?.video}
-                                className="w-full h-full object-cover"
-                                autoPlay
-                                muted
-                                playsInline
-                                onEnded={nextProduct}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.5 }}
-                              />
-                            )}
-                          </AnimatePresence>
-                        ) : (
-                          <img
-                            src={products[currentProductIndex]?.images[0]}
-                            alt={products[currentProductIndex]?.title}
-                            className="w-full h-full object-cover"
-                          />
-                        )}
-                      </div>
-                    </div>
+                    {products[currentProductIndex]?.video && showVideo ? (
+                      <motion.video
+                        ref={videoRef}
+                        src={products[currentProductIndex].video}
+                        autoPlay
+                        muted
+                        playsInline
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className=" w-full h-full object-cover"
+                      />
+                    ) : (
+                      <motion.img
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        src={products[currentProductIndex].images[0]}
+                        className=" w-full h-full object-cover"
+                      />
+                    )}
                   </motion.div>
                 </AnimatePresence>
-
-                {/* nav buttons */}
-                {products.length > 1 && (
-                  <>
-                    {currentProductIndex > 0 && (
-                      <button
-                        onClick={prevProduct}
-                        className="z-20 absolute left-2 top-1/2 -translate-y-1/2 size-9 bg-white/50 rounded-full flex items-center justify-center shadow-lg hover:bg-white/80 transition-colors"
-                        aria-label="Previous product"
-                      >
-                        <ChevronLeft className="size-5 text-gray-700" />
-                      </button>
-                    )}
-                    {currentProductIndex < products.length - 1 && (
-                      <button
-                        onClick={nextProduct}
-                        className="z-20 absolute right-2 top-1/2 -translate-y-1/2 size-9 bg-white/50 rounded-full flex items-center justify-center shadow-lg hover:bg-white/80 transition-colors"
-                        aria-label="Next product"
-                      >
-                        <ChevronRight className="size-5 text-gray-700" />
-                      </button>
-                    )}
-                  </>
-                )}
-
-                {/* share btn */}
-                <div className=" absolute top-3 right-3 ">
-                  <button
-                    onClick={() => {
-                      const product = products[currentProductIndex];
-
-                      const url = `${window.location.origin}/product/${product.id}`;
-                      if (navigator.share) {
-                        navigator.share({
-                          title: product.title,
-                          text: "Checkout this product!",
-                          url,
-                        });
-                      } else {
-                        navigator.clipboard.writeText(url);
-                        alert("product link copied to clipboard");
-                      }
-                    }}
-                    className="flex items-center justify-between gap-1 bg-black/20 hover:bg-white/30 text-white text-sm px-3 py-1 rounded-full transition-colors"
-                  >
-                    <FaTelegramPlane/>
-                    Share
-                  </button>
-                </div>
               </div>
+
+              {/* nav buttons */}
+              {products.length > 1 && (
+                <>
+                  {currentProductIndex > 0 && (
+                    <button
+                      onClick={prevProduct}
+                      className="z-20 absolute left-2 top-1/2 -translate-y-1/2 size-9 bg-white/50 rounded-full flex items-center justify-center shadow-lg hover:bg-white/80 transition-colors"
+                      aria-label="Previous product"
+                    >
+                      <ChevronLeft className="size-5 text-gray-700" />
+                    </button>
+                  )}
+                  {currentProductIndex < products.length - 1 && (
+                    <button
+                      onClick={nextProduct}
+                      className="z-20 absolute right-2 top-1/2 -translate-y-1/2 size-9 bg-white/50 rounded-full flex items-center justify-center shadow-lg hover:bg-white/80 transition-colors"
+                      aria-label="Next product"
+                    >
+                      <ChevronRight className="size-5 text-gray-700" />
+                    </button>
+                  )}
+                </>
+              )}
 
               {/* product info overlay */}
               <div
@@ -351,6 +300,24 @@ bg-white/10 opacity-5 backdrop-blur-md border border-[#900001]/30 shadow-xl"
                 bg-gradient-to-t from-black/90 via-black/70 to-transparent 
                 px-3 py-4 flex flex-col gap-2 justify-end"
               >
+                {/* share btn */}
+                <div className=" w-full flex justify-end">
+                  <button
+                    onClick={() => {
+                      const product = products[currentProductIndex];
+
+                      share(
+                        product.title,
+                        `/product/${product.id}`,
+                        "check out this product!"
+                      );
+                    }}
+                    className="flex items-center justify-between gap-1 bg-black/20 hover:bg-white/30 text-white text-sm px-3 py-1 rounded-full transition-colors"
+                  >
+                    <FaTelegramPlane />
+                    Share
+                  </button>
+                </div>
                 <div className="flex justify-between gap-2 mb-2">
                   <div className="text-white/90 text-md font-medium line-clamp-2">
                     {products[currentProductIndex]?.title}

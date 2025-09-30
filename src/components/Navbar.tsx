@@ -84,24 +84,22 @@ const Navbar = () => {
       >
         <div className="max-w-screen mx-auto px-2 md:px-8 my-1 md:py-2 flex items-center justify-between w-full gap-2">
           {/* Mobile menu button + Logo */}
-          <div className="md:hidden flex w-fit items-center justify-between  gap-2">
+          <div className=" flex w-fit items-center justify-between  gap-3">
             <motion.button
               onClick={() => setMobileMenu(true)}
               whileTap={{ scale: 0.95 }}
-              className=" p-2 hover:bg-gray-50 border border-gray-200 rounded-lg"
+              className="md:hidden p-2 hover:bg-gray-50 border border-gray-200 rounded-lg"
               aria-label="Open mobile menu"
             >
               <Menu className="size-4 " />
             </motion.button>
-          </div>
-          <div className="flex  items-center justify-between  gap-1 md:gap-3">
             <Link
               href="/"
               aria-label="Go to homepage"
               className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
             >
               <motion.div
-                className="cursor-pointer max-w-14 max-h-14 flex items-center gap-1 md:gap-2"
+                className="cursor-pointer size-12  flex items-center py-0.5 gap-1 md:gap-2"
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
               >
@@ -110,11 +108,11 @@ const Navbar = () => {
                   alt="Logo"
                   // width={48}
                   // height={48}
-                  className=" w-8 h-8 rounded-full object-contain "
+                  className=" size-full rounded-full object-contain "
                   // priority
                 />
               </motion.div>
-              <span className=" md:hidden lg:block  text-md md:text-2xl text-primary font-semibold">
+              <span className=" hidden lg:block  text-md md:text-2xl text-primary font-semibold">
                 CHHABI
               </span>
             </Link>

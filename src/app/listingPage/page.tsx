@@ -13,7 +13,7 @@ import Skeleton from "@/components/Skeleton";
 // import Filter from "@/components/FilterSidebar";
 import { Product } from "@/lib/types";
 
-import { Check } from "lucide-react";
+import { Check, Icon, TrendingUp } from "lucide-react";
 import {
   FilterModal,
   SortModal,
@@ -28,6 +28,12 @@ import {
 import ProductCard from "@/components/ProductCard";
 import FilterBanner from "./components/FilterBanner";
 import MobileFilterSortBar from "./components/mobileFilterSortBar";
+import { TbCircleDashedPercentage } from "react-icons/tb";
+import { FaArrowTrendUp } from "react-icons/fa6";
+import { LuBadgeIndianRupee } from "react-icons/lu";
+import { FaFire } from "react-icons/fa";
+import { MdFiberNew } from "react-icons/md";
+import { color } from "framer-motion";
 
 interface FilterProps {
   id: string;
@@ -670,6 +676,48 @@ const ListingPageContent = () => {
             filterContent={filterContent}
           />
         </div>
+
+        {/* mobile capsule filters */}
+        <div className="md:hidden flex items-center pl-2 mt-1 justify overflow-x-auto gap-2 snap-x snap-mandatory scroll-smooth scrollbar-hide -mb-2">
+          {[
+            {
+              title: "Crazy Deal",
+              icon: TbCircleDashedPercentage,
+              color: "text-purple-400 border-purple-300 bg-purple-100",
+            },
+            {
+              title: "New Arrivals",
+              icon: MdFiberNew,
+              color: "text-blue-400 border-blue-300 bg-blue-100",
+            },
+            {
+              title: "Best Sellers",
+              icon: FaFire,
+              color: "text-orange-400 border-orange-300 bg-orange-100",
+            },
+            {
+              title: "Under 5000",
+              icon: LuBadgeIndianRupee,
+              color: "text-green-400 border-green-300 bg-green-100",
+            },
+            {
+              title: "Trending",
+              icon: FaArrowTrendUp,
+              color: "text-red-400 border-red-300 bg-red-100",
+            },
+          ].map((item, i) => (
+            <div
+              className={` flex items-center w-full justify-center  rounded-full border ${item.color} px-2 py-1 cursor-pointer gap-1`}
+              key={i}
+            >
+              <item.icon className="size-4" />
+              <div className=" text-xs font-semibold truncate">
+                {item.title}
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className=" w-full h-full flex flex-col justify-between">
           <h1 className=" hidden md:block text-lg px-2 font-semibold">
             {search ? (
@@ -689,89 +737,93 @@ const ListingPageContent = () => {
           </h1>
           <div className="">
             {paginatedProducts && !loading ? (
-              <div className=" grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7  gap-1 md:gap-3">
-                {paginatedProducts.flatMap((product, index) => {
-                  const elements: React.ReactNode[] = [
-                    <ProductCard key={`p-${index}`} product={product} />,
-                  ];
+              <>
+                <div className="md:hidden grid grid-cols-2  gap-1">
+                  {paginatedProducts.flatMap((product, index) => {
+                    const elements: React.ReactNode[] = [
+                      <ProductCard key={`p-${index}`} product={product} />,
+                    ];
+                    const bannerInsertions = [
+                      { index: 3, type: "category", key: "banner-category" },
+                      { index: 7, type: "price", key: "banner-price" },
+                      { index: 5, type: "brand", key: "banner-brand" },
+                    ];
 
-                  // Determine screen width (responsive insertion)
-                  // const isClient = typeof window !== "undefined";
-                  // const isMdUp = isClient && window.innerWidth >= 768;
-
-                  // const interval = isMdUp ? 3 : 2; // md+ -> after 3 products, mobile -> after 2
-                  // Set insertion interval based on screen size
-                  const bannerInsertions = [
-                    { index: 1, type: "category", key: "banner-category" },
-                    { index: 3, type: "brand", key: "banner-brand" },
-                    { index: 5, type: "price", key: "banner-price" },
-                  ];
-
-                  const bannerToInsert = bannerInsertions.find(
-                    (b) => b.index === index
-                  );
-                  if (bannerToInsert) {
-                    elements.push(
-                      <FilterBanner
-                        key={bannerToInsert.key}
-                        type={
-                          bannerToInsert.type as "category" | "brand" | "price"
-                        }
-                        categories={
-                          filterOptions
-                            .find((p) => p.id === "category")
-                            ?.options?.map((opt) => String(opt.value)) || []
-                        }
-                        brands={
-                          filterOptions
-                            .find((p) => p.id === "brands")
-                            ?.options?.map((opt) => String(opt.value)) || []
-                        }
-                        filters={{
-                          category: filters.category,
-                          brands: filters.brands,
-                          priceRange: priceRange, // assuming FilterBanner reads priceRange for price
-                          discount: [],
-                          rating: [],
-                          availabilityStatus: [],
-                        }}
-                        onChange={(newFilters) => {
-                          const updatedFilters: Record<string, string[]> = {
-                            ...filters,
-                            ...(newFilters.category && {
-                              category: newFilters.category,
-                            }),
-                            ...(newFilters.brands && {
-                              brands: newFilters.brands,
-                            }),
-                            ...(newFilters.discount && {
-                              discount: newFilters.discount.map(String),
-                            }),
-                            ...(newFilters.rating && {
-                              rating: newFilters.rating.map(String),
-                            }),
-                            ...(newFilters.availabilityStatus && {
-                              availability: newFilters.availabilityStatus,
-                            }),
-                            // Don't include priceRange here!
-                          };
-
-                          setFilters(updatedFilters);
-
-                          // Update URL params separately for priceRange
-                          updateUrlParams(updatedFilters, {
-                            minPrice:
-                              newFilters.priceRange?.min.toString() || "0",
-                            maxPrice:
-                              newFilters.priceRange?.max.toString() || "50000",
-                          });
-                        }}
-                      />
+                    const bannerToInsert = bannerInsertions.find(
+                      (b) => b.index === index
                     );
-                  }
-                  return elements;
-                })}
-              </div>
+                    if (bannerToInsert) {
+                      elements.push(
+                        <FilterBanner
+                          key={bannerToInsert.key}
+                          type={
+                            bannerToInsert.type as
+                              | "category"
+                              | "brand"
+                              | "price"
+                          }
+                          categories={
+                            filterOptions
+                              .find((p) => p.id === "category")
+                              ?.options?.map((opt) => String(opt.value)) || []
+                          }
+                          brands={
+                            filterOptions
+                              .find((p) => p.id === "brands")
+                              ?.options?.map((opt) => String(opt.value)) || []
+                          }
+                          filters={{
+                            category: filters.category,
+                            brands: filters.brands,
+                            priceRange: priceRange, // assuming FilterBanner reads priceRange for price
+                            discount: [],
+                            rating: [],
+                            availabilityStatus: [],
+                          }}
+                          onChange={(newFilters) => {
+                            const updatedFilters: Record<string, string[]> = {
+                              ...filters,
+                              ...(newFilters.category && {
+                                category: newFilters.category,
+                              }),
+                              ...(newFilters.brands && {
+                                brands: newFilters.brands,
+                              }),
+                              ...(newFilters.discount && {
+                                discount: newFilters.discount.map(String),
+                              }),
+                              ...(newFilters.rating && {
+                                rating: newFilters.rating.map(String),
+                              }),
+                              ...(newFilters.availabilityStatus && {
+                                availability: newFilters.availabilityStatus,
+                              }),
+                              // Don't include priceRange here!
+                            };
+
+                            setFilters(updatedFilters);
+
+                            // Update URL params separately for priceRange
+                            updateUrlParams(updatedFilters, {
+                              minPrice:
+                                newFilters.priceRange?.min.toString() || "0",
+                              maxPrice:
+                                newFilters.priceRange?.max.toString() ||
+                                "50000",
+                            });
+                          }}
+                        />
+                      );
+                    }
+                    return elements;
+                  })}
+                </div>
+                <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-3">
+                  {paginatedProducts.map((p) => (
+                    <ProductCard product={p} key={p.id} />
+                  ))}
+                </div>
+              </>
             ) : (
               <Skeleton />
             )}
