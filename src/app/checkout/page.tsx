@@ -8,14 +8,14 @@ import { useRouter } from "next/navigation";
 import React, {  useState } from "react";
 import ProgressBar, { Step } from "./components/progressBar";
 import PriceSummary from "./components/priceSummary";
-import { useIsMobile } from "@/lib/hooks/useIsMobile";
+import { useIsMobile } from "@/lib/hooks/helperFunctions";
 import { useUserStore } from "@/lib/store/userStore";
 import AuthForm from "../auth/AuthForm";
 import AddressModal from "./components/AddressModal";
 import Payments, { PaymentMethod } from "./components/Payments";
 import CheckoutProductList from "./components/CheckoutProductList";
 
-const CheckoutPage = () => {
+const CheckoutPage = () => {   
   const router = useRouter();
   const { selectedCartItems, selectedCartTotal, removeSelected } =
     useCartStore();
