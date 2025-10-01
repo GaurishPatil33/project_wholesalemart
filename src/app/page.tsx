@@ -1,11 +1,12 @@
 "use client";
-import CategoryList from "@/components/CategoryList";
+import { CategoryList, CategoryListType2 } from "@/components/CategoryList";
 import CategoryStories from "@/components/CategoryStories";
 import FeatureStrip from "@/components/FeaturesStrip";
 import ImageBanner from "@/components/ImageBanner";
 import ProductList from "@/components/ProductList";
-import { Categories, occasions } from "@/lib/data";
-import { fetchAllProducts } from "@/lib/productfetching";
+import { Categories, Products } from "@/lib/data";
+// import { Categories, data1 } from "@/lib/data";
+import { fetchAllProducts, fetchCategories } from "@/lib/productfetching";
 import { Product } from "@/lib/types";
 import { useState, useEffect } from "react";
 
@@ -27,9 +28,10 @@ const fadeInUp = {
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
 
-  const sarees = products.filter((s) => s.category === "sarees");
-  const kurtas = products.filter((s) => s.category === "kurtas");
+  // const sarees = products.filter((s) => s.category === "sarees");
+  // const kurtas = products.filter((s) => s.category === "kurtas");
   const [isMobile, setIsMobile] = useState(false);
+  const [categories, setCategories] = useState();
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -37,8 +39,10 @@ export default function Home() {
 
   useEffect(() => {
     const fetch = () => fetchAllProducts();
-    console.log(fetch);
-    setProducts(fetch);
+    const fetchCategory = () => fetchCategories();
+    console.log("fetch", fetch);
+    console.log("fetch", fetchCategory);
+    setProducts(Products);
   }, []);
 
   return (
@@ -58,16 +62,26 @@ export default function Home() {
         displayType={isMobile ? "grid" : "slider"}
       />
 
-      {/* Shop by Occasion */}
-      <CategoryList
-        data={occasions}
-        title="Shop by Occasion"
+      {/* <ProductList products={sarees} title="Best Seller - Sarees" /> */}
+
+      <CategoryListType2
+        data={
+          Categories.find((cat) => cat.slug === "wall_art")
+            ?.subCategories || []
+        }
+        title="Photo frames"
         displayType="slider"
       />
 
       {/* products */}
-      <ProductList products={sarees} title="Best Seller - Sarees" />
-      <ProductList products={kurtas} title="Best Seller - Kurtas/Salwars" />
+      {/* <ProductList products={kurtas} title="Best Seller - Kurtas/Salwars" /> */}
+      {/* {Products.length} */}
+      {Products.map((p, i) => (
+        <div className=" flex gap-3" key={p.id} >
+          {p.id},{p.category},{p.subcategory}:{i}
+        <img src={p.images[0]} alt=""  className=" size-20 object-cover"/>
+        </div>
+      ))}
     </div>
   );
 }

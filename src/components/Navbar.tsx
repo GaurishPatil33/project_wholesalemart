@@ -99,21 +99,21 @@ const Navbar = () => {
               className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
             >
               <motion.div
-                className="cursor-pointer size-12  flex items-center py-0.5 gap-1 md:gap-2"
+                className="cursor-pointer size-14 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
               >
                 <img
-                  src="logos/chabi.png"
+                  src="/logos/ram.png"
                   alt="Logo"
                   // width={48}
                   // height={48}
-                  className=" size-full rounded-full object-contain "
+                  className=" size-full rounded-full object-cover  "
                   // priority
                 />
               </motion.div>
               <span className=" hidden lg:block  text-md md:text-2xl text-primary font-semibold">
-                CHHABI
+                {/* RAM */}
               </span>
             </Link>
           </div>
@@ -136,12 +136,12 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="flex items-center justify-between gap-1 w-fit md:gap-4">
+          <div className="flex items-center justify-between gap-1 w-full md:w-fit md:gap-4">
             {/* Search */}
-            <div className="hidden md:block w-full   right-0">
+            <div className=" md:block w-full   right-0">
               <Search />
             </div>
-            <div className=" md:hidden text-primary ">
+            {/* <div className=" md:hidden text-primary ">
               <motion.button
                 onClick={() => setMobileSearchOpen(true)}
                 whileTap={{ scale: 0.95 }}
@@ -150,7 +150,7 @@ const Navbar = () => {
               >
                 <SearchIcon className="size-6" />
               </motion.button>
-            </div>
+            </div> */}
             {/* Cart & Wishlist */}
             <div className="flex items-center gap-1 md:gap-2">
               <motion.button
@@ -181,7 +181,7 @@ const Navbar = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
                   >
                     {wishlist.length}
                   </motion.span>
@@ -203,7 +203,7 @@ const Navbar = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
                   >
                     {cart.length}
                   </motion.span>
@@ -274,6 +274,7 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
+    
       {/* MOBILE MENU */}
       <AnimatePresence>
         {mobileMenu && (
@@ -296,18 +297,18 @@ const Navbar = () => {
               className="fixed top-0 left-0 h-full w-64 bg-white z-50 overflow-y-auto"
             >
               {/* HEADER inside mobile menu */}
-              <div className="flex items-center justify-between border-b border-gray-300 px-3 py-2 mb-2">
+              <div className="flex items-center justify-between border-b border-gray-300 px-3 ">
                 <Link href="/" aria-label="Go to homepage">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 size-18">
                     <Image
-                      src="/logos/chabi.png"
+                      src="/logos/ram.png"
                       alt="Logo"
                       width={28}
                       height={28}
-                      loading="lazy"
-                      className=" rounded-full object-cover"
+                      // loading="lazy"
+                      className=" rounded-full size-full object-cover"
                     />
-                    <h1 className="text-xl font-bold text-red-700">CHHABI</h1>
+                    {/* <h1 className="text-xl font-bold text-red-700">RAM</h1> */}
                   </div>
                 </Link>
                 <motion.button
@@ -358,7 +359,7 @@ const Navbar = () => {
                 <div className="px-2">
                   <motion.button
                     variants={itemVariants}
-                    className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-700 text-white"
+                    className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-600 text-white"
                   >
                     LOG IN
                     <LogInIcon className="w-5 h-5" />
@@ -379,7 +380,7 @@ const Navbar = () => {
                   </p>
                   <motion.button
                     variants={itemVariants}
-                    className="w-full flex justify-center items-center gap-2 py-2 rounded-full bg-red-700 text-white text-sm"
+                    className="w-full flex justify-center items-center gap-2 py-2 rounded-full bg-red-600 text-white text-sm"
                   >
                     <FaWhatsapp className="w-5 h-5" />
                     Chat with us
@@ -387,12 +388,12 @@ const Navbar = () => {
 
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <PhoneCallIcon className="w-4 h-4 text-red-700" />
+                      <PhoneCallIcon className="w-4 h-4 text-red-600" />
                       <div>
                         {/* <div className="text-xs font-bold">Contact Us</div> */}
                         <a
                           href="tel:8888888888"
-                          className="text-red-700 text-sm underline"
+                          className="text-red-600 text-sm underline"
                         >
                           88-8888-8888
                         </a>
@@ -400,12 +401,12 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-red-700" />
+                      <Mail className="w-4 h-4 text-red-600" />
                       <div>
                         {/* <div className="text-xs font-bold">Email Us</div> */}
                         <a
                           href="mailto:abc@gmail.com"
-                          className="text-red-700 text-sm underline"
+                          className="text-red-600 text-sm underline"
                         >
                           abc@gmail.com
                         </a>

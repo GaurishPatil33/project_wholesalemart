@@ -1,36 +1,33 @@
-import { Categories, products } from "./data";
-import { Product } from "./types";
+import { Categories, Products } from "./data";
+import { Product, Category } from "./types";
 
-export function fetchAllProducts() {
-    const product = products
-    // console.log(product)
-    return product
+// Fetch all products
+export function fetchAllProducts(): Product[] {
+    return Products;
 }
+
+// Fetch a single product by ID
 export function fetchProductById(id: number | string): Product | undefined {
-    const product = products.find(p => p.id === Number(id))
-
-    return product
-
+    return Products.find(p => p.id === id);
 }
 
-export function searchProduct(query: string) {
-    const product = products.filter(p => p.title.toLowerCase().includes(query.toLowerCase()) ||
-        p.brand?.toLowerCase().includes(query.toLowerCase()) ||
-        p.description.toLowerCase().includes(query.toLowerCase()) ||
-        p.category.toLowerCase().includes(query.toLowerCase())
-    )
-    return product
+// Search products by query in title, brand, description, or category
+export function searchProduct(query: string): Product[] {
+    const lowerQuery = query.toLowerCase();
+    return Products.filter(p =>
+        p.title.toLowerCase().includes(lowerQuery) ||
+        p.brand?.toLowerCase().includes(lowerQuery) ||
+        p.description.toLowerCase().includes(lowerQuery) ||
+        p.category.toLowerCase().includes(lowerQuery)
+    );
 }
 
-export function fetchProductByCategory(query: string) {
-    const res = products.filter((p) => p.category === query)
-    // console.log("from fech", res)
-    return res
-
+// Fetch products by category
+export function fetchProductByCategory(category: string): Product[] {
+    return Products.filter(p => p.category === category);
 }
 
-export function fetchCategories() {
-    const cat = Categories
-    // console.log(cat)
-    return cat
+// Fetch all categories
+export function fetchCategories(): Category[] {
+    return Categories;
 }

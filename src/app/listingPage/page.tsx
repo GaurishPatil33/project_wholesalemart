@@ -74,6 +74,7 @@ const ListingPageContent = () => {
     () => searchParams.getAll("availability"),
     [searchParams]
   );
+  const badges = useMemo(() => searchParams.getAll("badges"), [searchParams]);
 
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
@@ -93,6 +94,7 @@ const ListingPageContent = () => {
     availability: [],
     // discount: discount ? [discount.toString()] : [],
     rating: [],
+    badges: [],
   });
 
   const [activeSlider, setActiveSlider] = useState<"min" | "max" | null>(null);
@@ -104,6 +106,7 @@ const ListingPageContent = () => {
       discount: discount || [],
       availability: availability || [],
       rating: rating ? [rating?.toString()] : [],
+      badges: badges || [],
     });
   }, [categories, brands, discount, rating]);
 
@@ -249,6 +252,36 @@ const ListingPageContent = () => {
       filtered = filtered.filter((p) => (p.discount || 0) >= minDiscount);
     }
 
+    if (filters.badges?.length > 0) {
+      filters.badges.forEach((badge) => {
+        switch (badge) {
+          case "crazyDeal":
+            filtered = filtered.filter((p) => p.discount > 30);
+            break;
+
+          case "newArriwals":
+            filtered = filtered.sort(
+              (a, b) =>
+                new Date(a.updatedAt).getTime() -
+                new Date(b.updatedAt).getTime()
+            );
+            break;
+
+          case "bestSellers":
+            filtered = filtered.filter((p) => p.sales && p.sales > 150);
+            break;
+
+          case "under5000":
+            filtered = filtered.filter((p) => p.price < 5000);
+            break;
+
+          case "trending":
+            filtered = filtered.filter((p) => p.isTrending);
+            break;
+        }
+      });
+    }
+
     if (sort) {
       switch (sort) {
         case "price-low":
@@ -362,8 +395,11 @@ const ListingPageContent = () => {
     updateUrlParams(updated, {});
   };
 
-  const filterContent = (filter?: FilterProps) => {
-    const currentFilter = filterOptions.find((f) => f.id === activeFilter);
+  const filterContent = (
+    filter?: FilterProps,
+    filterOptions?: FilterProps[]
+  ) => {
+    const currentFilter = filterOptions?.find((f) => f.id === activeFilter);
     if (!currentFilter) return null;
     // console.log(currentFilter);
     // console.log(filter);
@@ -620,7 +656,7 @@ const ListingPageContent = () => {
   };
 
   return (
-    <div className="relative  md:px-6 xl:px-10 mb-8 pt-3 md:pt-6">
+    <div className="relative  md:px-6 xl:px-10 mb-8 pt-4 md:pt-6">
       <h1 className="text-lg md:hidden px-2 font-semibold">
         {search ? (
           <>
@@ -678,44 +714,68 @@ const ListingPageContent = () => {
         </div>
 
         {/* mobile capsule filters */}
-        <div className="md:hidden flex items-center pl-2 mt-1 justify overflow-x-auto gap-2 snap-x snap-mandatory scroll-smooth scrollbar-hide -mb-2">
+        <div className="md:hidden flex  items-center pl-2 mt-1 py-1 justify overflow-x-auto gap-2 snap-x snap-mandatory scroll-smooth scrollbar-hide -mb-2">
           {[
             {
               title: "Crazy Deal",
+              key: "crazyDeal",
               icon: TbCircleDashedPercentage,
               color: "text-purple-400 border-purple-300 bg-purple-100",
             },
             {
               title: "New Arrivals",
+              key: "newArriwals",
               icon: MdFiberNew,
               color: "text-blue-400 border-blue-300 bg-blue-100",
             },
             {
               title: "Best Sellers",
+              key: "bestSellers",
               icon: FaFire,
               color: "text-orange-400 border-orange-300 bg-orange-100",
             },
             {
               title: "Under 5000",
+              key: "under5000",
               icon: LuBadgeIndianRupee,
               color: "text-green-400 border-green-300 bg-green-100",
             },
             {
               title: "Trending",
+              key: "trending",
               icon: FaArrowTrendUp,
               color: "text-red-400 border-red-300 bg-red-100",
             },
-          ].map((item, i) => (
-            <div
-              className={` flex items-center w-full justify-center  rounded-full border ${item.color} px-2 py-1 cursor-pointer gap-1`}
-              key={i}
-            >
-              <item.icon className="size-4" />
-              <div className=" text-xs font-semibold truncate">
-                {item.title}
-              </div>
-            </div>
-          ))}
+          ]
+            .reverse()
+            .map((item, i) => {
+              const isActive = filters.badges?.[0] === item.key;
+              return (
+                <div
+                  key={i}
+                  onClick={() => {
+                    const newBadges = isActive
+                      ? filters.badges.filter((b) => b !== item.key)
+                      : [...(filters.badges || []), item.key];
+
+                    const updatedFilters = {
+                      ...filters,
+                      badges: isActive ? [] : [item.key],
+                    };
+                    setFilters(updatedFilters);
+                    updateUrlParams(updatedFilters, {});
+                  }}
+                  className={` flex items-center w-full justify-center rounded-full border px-2 py-1 gap-1 transition-all duration-150 ${
+                    item.color
+                  } ${isActive ? "scale-105 " : "hover:scale-105"}`}
+                >
+                  <item.icon className="size-4" />
+                  <div className=" text-xs font-semibold truncate">
+                    {item.title}
+                  </div>
+                </div>
+              );
+            })}
         </div>
 
         <div className=" w-full h-full flex flex-col justify-between">
@@ -823,6 +883,11 @@ const ListingPageContent = () => {
                     <ProductCard product={p} key={p.id} />
                   ))}
                 </div>
+                {paginatedProducts.length <= 0 && !loading && (
+                  <div className=" p-3">
+                    Products not found! Try to adjust your filters{" "}
+                  </div>
+                )}
               </>
             ) : (
               <Skeleton />

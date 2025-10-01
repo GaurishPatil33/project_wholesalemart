@@ -45,7 +45,8 @@ const CategoryStories = () => {
       try {
         if (selectedCategory) {
           const product = await fetchProductByCategory(selectedCategory.slug);
-          setProducts(product.slice(0, 3));
+          setProducts(product.slice(1, 5));
+          console.log(product);
         }
       } catch (err) {
         console.log(err);
@@ -129,17 +130,17 @@ const CategoryStories = () => {
     );
 
   return (
-    <div className="w-full py-2 md:py-4 bg-gradient-to-b from-[#900002]/5 to-[#900001]/20">
+    <div className="w-full pt-2 md:py-4 bg-gradient-to-b from-[#900002]/5 to-[#900001]/20 -mb-5">
       {/* heading */}
       <div className="w-full px-4">
-        <h2 className="text-sm md:text-lg font-semibold bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent">
+        <h2 className="text-md md:text-lg font-semibold bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent">
           Discover our trending products{" "}
         </h2>
       </div>
 
       {/* categories */}
       <div className="max-w-6xl px-4 py-2 overflow-x-auto scrollbar-hide">
-        <div className="flex space-x-3 pb-4">
+        <div className="flex space-x-3 ">
           {categories?.map((cat, i) => (
             <motion.div
               key={cat.slug}
@@ -151,7 +152,7 @@ const CategoryStories = () => {
               whileTap={{ scale: 0.95 }}
               className="flex-shrink-0 cursor-pointer"
             >
-              <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-lg">
+              <div className="relative size-16 rounded-full overflow-hidden shadow-lg">
                 <img
                   src={cat.image}
                   alt={cat.title}
@@ -159,7 +160,7 @@ const CategoryStories = () => {
                 />
                 <div className="absolute inset-0 bg-black/20 w-full h-full" />
               </div>
-              <div className="text-sm font-medium text-gray-700 text-center max-w-20 truncate">
+              <div className="text-[11px] font-medium text-[#900001] text-center max-w-20 truncate">
                 {cat.title}
               </div>
             </motion.div>
@@ -296,7 +297,7 @@ const CategoryStories = () => {
 
               {/* product info overlay */}
               <div
-                className="absolute top-1/2 bottom-0 left-0 right-0 
+                className="absolute top-2/3 bottom-0 left-0 right-0 
                 bg-gradient-to-t from-black/90 via-black/70 to-transparent 
                 px-3 py-4 flex flex-col gap-2 justify-end"
               >

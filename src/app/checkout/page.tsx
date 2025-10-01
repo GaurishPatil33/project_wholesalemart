@@ -5,7 +5,7 @@ import { useOrderStore } from "@/lib/store/orderStore";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import ProgressBar, { Step } from "./components/progressBar";
 import PriceSummary from "./components/priceSummary";
 import { useIsMobile } from "@/lib/hooks/helperFunctions";
@@ -15,7 +15,7 @@ import AddressModal from "./components/AddressModal";
 import Payments, { PaymentMethod } from "./components/Payments";
 import CheckoutProductList from "./components/CheckoutProductList";
 
-const CheckoutPage = () => {   
+const CheckoutPage = () => {
   const router = useRouter();
   const { selectedCartItems, selectedCartTotal, removeSelected } =
     useCartStore();
@@ -181,6 +181,7 @@ const CheckoutPage = () => {
             className="flex h-full md:hidden items-center justify-between  text-gray-600 hover:text-gray-900 transition-colors text-sm absolute"
             whileHover={{ x: -5 }}
             transition={{ type: "spring", stiffness: 300 }}
+            onClick={() => router.push(`/`)}
           >
             <ArrowLeft size={16} />
             <span>Back</span>

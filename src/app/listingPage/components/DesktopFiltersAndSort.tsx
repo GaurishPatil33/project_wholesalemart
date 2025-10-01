@@ -15,7 +15,10 @@ interface FilterModalProps {
   filters: Record<string, string[]>;
   // activeFilter: string;
   // setActiveFilter: (id: string) => void;
-  filterContent: (filter: FilterProps) => React.ReactNode;
+  filterContent: (
+    filter: FilterProps,
+    filterOptions?: FilterProps[]
+  ) => React.ReactNode;
 }
 export const DesktopFilters: React.FC<FilterModalProps> = ({
   filters,
@@ -83,7 +86,7 @@ export const DesktopFilters: React.FC<FilterModalProps> = ({
                   transition={{ duration: 0.25 }}
                   className="mt-2 overflow-y-auto max-h-80 "
                 >
-                  {filterContent(opt)}
+                  {filterContent(opt, filterOptions)}
                 </motion.div>
               )}
             </AnimatePresence>

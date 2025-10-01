@@ -10,7 +10,7 @@ const CheckoutProductList = () => {
   return (
     <div className=" space-y-3 py-3 ">
       <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 ">
-        <ShoppingCart className="size-6" /> Items in your cart to Order
+        <ShoppingCart className="size-6" /> Items in your cart
       </h2>
       <div className=" space-y-2 max-h-100 overflow-y-auto overflow-x-hidden">
         {selectedCartItems().map((p) => (
@@ -23,7 +23,7 @@ const CheckoutProductList = () => {
             className="flex items-center px-2  gap-2 md:gap-3 w-full"
           >
             <div className=" relative flex items-center gap-2 w-20  rounded overflow-hidden shadow-md">
-              <Image
+              <img
                 src={p.product.images[0]}
                 alt={p.product.title}
                 className="w-full h-full object-cover "

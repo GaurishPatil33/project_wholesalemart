@@ -15,7 +15,10 @@ interface FilterModalProps {
   filterOptions: FilterProps[];
   activeFilter: string;
   setActiveFilter: (id: string) => void;
-  filterContent: () => React.ReactNode;
+  filterContent: (
+    filter: FilterProps,
+    filterOptions?: FilterProps[]
+  ) => React.ReactNode;
 }
 interface SortModalProps {
   sortOptions: { value: string; label: string }[];
@@ -75,7 +78,13 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                         : ""
                     }`}
                   >
-                    <div className={` font-bold ${activeFilter===opt.id?" text-[#900001]/70  bg-clip-text":"text-gray-600 "}`}>
+                    <div
+                      className={` font-bold ${
+                        activeFilter === opt.id
+                          ? " text-[#900001]/70  bg-clip-text"
+                          : "text-gray-600 "
+                      }`}
+                    >
                       {opt.label}
                     </div>
                   </button>
@@ -91,7 +100,10 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      {filterContent()}
+                      {filterContent(
+                        filterOptions.find((f) => f.id === activeFilter)!,
+                        filterOptions
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>

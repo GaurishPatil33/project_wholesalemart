@@ -34,7 +34,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                 {/* Circle */}
                 <button
                   onClick={() => onStepClick?.(step.id)}
-                  className={` size-5 md:size-8 p-1 flex items-center justify-center rounded-full border-2 text-xs font-medium z-10
+                  className={` size-5 md:size-7 p-1 flex items-center justify-center rounded-full border-2 text-xs font-medium z-10
                     ${isCompleted ? "bg-blue-400 text-white border-white " : ""}
                     ${isActive ? "bg-blue-600 text-white border-blue-600" : ""}
                     ${
@@ -51,7 +51,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                 {index < steps.length - 1 && (
                   <div className="absolute top-1/2 left-1/2 w-full h-[2px] -translate-y-1/2">
                     {/* Gray base line */}
-                    <div className="absolute left-3 right-0 top-0 w-full h-[2px] bg-gray-300" />
+                    <div className="absolute left-0 right-0 top-0 w-full h-[2px] bg-gray-300" />
                     {/* Animated progress */}
                     <motion.div
                       initial={{ width: 0 }}

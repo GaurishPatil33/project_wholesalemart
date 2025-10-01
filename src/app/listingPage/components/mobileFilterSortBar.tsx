@@ -37,7 +37,7 @@ const MobileFilterSortBar = ({
       initial={{ y: -60 }}
       animate={{ y: showBar ? 0 : -60 }}
       transition={{ duration: 0.3 }}
-      className="flex md:hidden top-13 bg-gray-50 justify-between items-center gap-3 px-3 py-2 w-full border-b shadow-sm sticky  z-10"
+      className="flex md:hidden top-14 bg-gray-50 justify-between items-center gap-3 px-3 py-2 w-full border-b shadow-sm sticky  z-10"
     >
       {/* Filter Button */}
       <button
