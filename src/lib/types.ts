@@ -14,18 +14,18 @@ export interface Product {
   description: string;
   product_specs: Record<string, string | string[] | undefined>;
   rating: number;
-  reviews: any[];
+  reviews: Review[];
   sku: string;
   availabilityStatus: string;
   stock: number;
   shippingInformation: string;
   returnPolicy: string;
-  minimumOrderQuantity: any[];
-  sizes: any[];
+  minimumOrderQuantity: { qty: number, price: number }[];
+  sizes: { size: string, price: number }[];
   colors: string[];
   updatedAt: string
   sales: number
-  isTrending?: boolean|undefined
+  isTrending?: boolean | undefined
 }
 
 
