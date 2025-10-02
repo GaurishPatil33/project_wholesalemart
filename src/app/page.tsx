@@ -73,6 +73,7 @@ export default function Home() {
       </div>
 
       <ProductList products={products} title="New Arriwals" />
+      <ProductList products={products} title="Deals of Day" />
 
       <CategoryListType2
         data={
@@ -84,9 +85,7 @@ export default function Home() {
 
       {/* products */}
       {/* <ProductList products={kurtas} title="Best Seller - Kurtas/Salwars" /> */}
-    {products.map((p,i)=>(
-      <div className="">{p.id} "{i}</div>
-    ))}
+  
     </div>
   );
 }
