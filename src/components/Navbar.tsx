@@ -99,16 +99,16 @@ const Navbar = () => {
               className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
             >
               <motion.div
-                className="cursor-pointer size-14 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
+                className="cursor-pointer h-fit w-30 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
               >
                 <img
-                  src="/logos/ram.png"
+                  src="/logos/logo1.png"
                   alt="Logo"
                   // width={48}
                   // height={48}
-                  className=" size-full rounded-full object-cover  "
+                  className=" w-full   object-cover  "
                   // priority
                 />
               </motion.div>
@@ -274,7 +274,7 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
-    
+
       {/* MOBILE MENU */}
       <AnimatePresence>
         {mobileMenu && (
@@ -299,15 +299,16 @@ const Navbar = () => {
               {/* HEADER inside mobile menu */}
               <div className="flex items-center justify-between border-b border-gray-300 px-3 ">
                 <Link href="/" aria-label="Go to homepage">
-                  <div className="flex items-center gap-2 size-18">
+                  <div className="flex h-12 w-20 py-1  items-center gap-2 relative">
                     <Image
-                      src="/logos/ram.png"
+                      src="/logos/logo1.png"
                       alt="Logo"
-                      width={28}
-                      height={28}
-                      // loading="lazy"
-                      className=" rounded-full size-full object-cover"
-                    />
+                      fill
+                      sizes="48px"
+                      loading="lazy"
+                      // className=" w-full object-cover"
+                      className="object-contain"
+                      />
                     {/* <h1 className="text-xl font-bold text-red-700">RAM</h1> */}
                   </div>
                 </Link>

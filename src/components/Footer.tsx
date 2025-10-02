@@ -31,16 +31,16 @@ const Footer = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative mt-10">
       {/* Scroll to top button */}
       <button
         onClick={scrollToTop}
-        className="absolute -top-6 right-8 bg-gradient-to-r from-[#900001] to-red-600 hover:from-red-600 hover:to-[#900001] text-white p-3 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 z-10"
+        className="absolute -top-6 right-8 bg-gradient-to-r from-[#900001] to-red-600 hover:from-red-600 hover:to-[#900001] text-white p-3 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 z-10 "
       >
         <ChevronUp className="w-5 h-5" />
       </button>
 
-      <footer className="bg-gradient-to-br from-[#900001]/90 via-[#190001] to-gray-900/99 text-white relative overflow-hidden">
+      <footer className="bg-gradient-to-br from-[#900001]/90 via-[#190001] to-gray-900/99 text-white relative overflow-hidden mt-10">
         {/* Decorative background elements */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>

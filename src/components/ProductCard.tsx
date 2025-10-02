@@ -148,7 +148,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
     <div
       ref={cardRef}
       data-product-id={product.id}
-      className="min-w-40 h-fit  px-1 mt-2"
+      className="min-w-40 h-fit  px-1 mt-2 cursor-pointer"
       // onMouseEnter={handleStart}
       // onMouseLeave={handleStop}
       // onTouchStart={handleStart}
@@ -164,13 +164,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
             key="image"
             src={product.images[0]}
             alt={product.title}
-            loading="lazy"
             initial={{ opacity: 1 }}
             animate={{ opacity: showVideo ? 0 : 1 }}
             transition={{ duration: 0.4 }}
             className="absolute inset-0 w-full h-full object-cover "
           />
-          {product.video && (
+          {product.video &&  (
             <motion.video
               key="video"
               ref={videoRef}
@@ -391,7 +390,7 @@ export const ProductCardType2: React.FC<ProductCardProps> = ({
     <div
       ref={cardRef}
       data-product-id={product.id}
-      className="min-w-40 h-fit  px-1 mt-2"
+      className="min-w-40 h-fit  px-1 mt-2 cursor-pointer"
       // onMouseEnter={handleStart}
       // onMouseLeave={handleStop}
       // onTouchStart={handleStart}

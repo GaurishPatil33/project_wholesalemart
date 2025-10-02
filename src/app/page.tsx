@@ -63,7 +63,7 @@ export default function Home() {
         <CategoryList
           data={Categories}
           // title="Shop by Category"
-          displayType={isMobile ? "grid" : "slider"}
+          displayType={"grid"}
         />
         {/* <CategoryList
           data={Categories}
@@ -84,6 +84,9 @@ export default function Home() {
 
       {/* products */}
       {/* <ProductList products={kurtas} title="Best Seller - Kurtas/Salwars" /> */}
+    {products.map((p,i)=>(
+      <div className="">{p.id} "{i}</div>
+    ))}
     </div>
   );
 }

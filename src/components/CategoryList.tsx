@@ -49,7 +49,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
   data,
   basePath,
   displayType = "slider",
-  itemsPerPage = 4,
+  itemsPerPage: defaultItems = 4,
 }) => {
   // for md+ scroll
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -85,6 +85,22 @@ export const CategoryList: React.FC<CategoryListProps> = ({
     });
   };
 
+  const [itemsPerPage, setItemsPerPage] = useState(defaultItems);
+  useEffect(() => {
+    const updateItems = () => {
+      if (window.innerWidth >= 1024) {
+        setItemsPerPage(8);
+      } else if (window.innerWidth >= 768) {
+        setItemsPerPage(6);
+      } else {
+        setItemsPerPage(4);
+      }
+    };
+    updateItems();
+    window.addEventListener("resize", updateItems);
+    return () => window.removeEventListener("resize", updateItems);
+  }, []);
+
   // for sm pagination
   const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -117,7 +133,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
         </motion.h2>
 
         {/* sliderlayout */}
-        {displayType === "slider" && (
+        {/* {displayType === "slider" && (
           <div className="relative ">
             <motion.div
               variants={pageVariants}
@@ -147,21 +163,11 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                       transition={{ duration: 0.2, delay: 0.1, ease: "easeIn" }}
                       className="h-full w-full object-cover  hover:scale-110 transition-transform"
                     />
-                    {/* <div className="absolute inset-0 bg-black/30 rounded-tl-2xl rounded-br-2xl"></div>
-                    <motion.p
-                      initial={{ opacity: 0, scale: 1.09, x: -20 }}
-                      animate={{ opacity: 1, scale: 1, x: 0 }}
-                      transition={{ duration: 0.2, delay: 0.4, ease: "easeIn" }}
-                      className="absolute bottom-2 left-2  text-lg text-white font-semibold"
-                    >
-                      {cat.title}
-                    </motion.p> */}
                   </Link>
                 </motion.div>
               ))}
             </motion.div>
 
-            {/* Desktop arrows */}
             {showLeft && (
               <button
                 onClick={() => scroll("left")}
@@ -179,11 +185,11 @@ export const CategoryList: React.FC<CategoryListProps> = ({
               </button>
             )}
           </div>
-        )}
+        )} */}
 
         {/* gridlayout */}
         {displayType === "grid" && (
-          <div className="relative min-h-[200px] md:hidden">
+          <div className="relative min-h-[200px] ">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={page}
@@ -193,7 +199,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="grid grid-cols-2 md:grid-cols-3 gap-4 px-2"
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  px-2"
               >
                 {currentItems.map((cat) => (
                   <motion.div
@@ -201,7 +207,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
-                    className="relative flex-shrink-0 min-h-40 max-h-50 rounded-tl-2xl rounded-br-2xl overflow-hidden"
+                    className="min-w-48 h-60 overflow-hidden py-3"
                   >
                     <Link
                       href={`${basePath ? basePath : "/listingPage"}?cat=${
@@ -218,7 +224,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                           delay: 0.1,
                           ease: "easeIn",
                         }}
-                        className="w-full h-50 object-cover  hover:scale-110 transition-transform"
+                        className="w-full h-full object-contain  hover:scale-110 transition-transform"
                       />
                       {/* <div className="absolute inset-0 bg-black/30 rounded-tl-2xl rounded-br-2xl"></div>
                       <motion.p
@@ -358,19 +364,19 @@ export const CategoryListType2: React.FC<CategoryListProps> = ({
               animate="center"
               exit="exit"
               ref={scrollRef}
-              className="flex items-center justify overflow-x-auto gap-2 md:gap-3 px-2 snap-x snap-mandatory scroll-smooth scrollbar-hide"
+              className="flex items-center justify overflow-x-auto gap-2 md:gap-3 px-2 mt-2 snap-x snap-mandatory scroll-smooth scrollbar-hide"
             >
               {data.map((cat) => (
                 <motion.div
                   key={cat.slug}
                   variants={fadeInUp}
-                  className="flex flex-col items-end aspect-[4/4] size-45 p-2 justify-end  bg-gray-400"
+                  className="flex flex-col items-end aspect-[4/4] size-45  justify-end "
                 >
                   <Link
                     href={`${basePath ? basePath : "/listingPage"}?cat=${
                       cat.slug
                     }`}
-                    className="relative bg-black w-full h-full   "
+                    className="relative w-full h-full   "
                   >
                     <motion.img
                       src={cat.image}
@@ -378,7 +384,7 @@ export const CategoryListType2: React.FC<CategoryListProps> = ({
                       initial={{ opacity: 0, scale: 1.09 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.2, delay: 0.1, ease: "easeIn" }}
-                      className="w-full h-full  object-cover  hover:scale-110 transition-transform absolute bg-amber-50  left-0 right-0"
+                      className="w-full h-full  object-cover  hover:scale-110 transition-transform absolute left-0 right-0"
                     />
                     {/* <div className="absolute inset-0 bg-black/30 rounded-tl-2xl rounded-br-2xl"></div> */}
                     {/* <motion.p

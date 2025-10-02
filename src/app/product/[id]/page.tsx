@@ -57,6 +57,11 @@ const ProductPage = () => {
         100
     : 0;
 
+  const selectedPrice = product
+    ? (selectedProductConfig.price ?? product?.price) *
+      selectedProductConfig.quantity
+    : 0;
+
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
   const share = useShare();
@@ -326,12 +331,7 @@ const ProductPage = () => {
                     Total:{" "}
                     <span className="font-semibold text-gray-900 flex">
                       ₹
-                      <AnimatedNumber
-                        value={
-                          (selectedProductConfig.price || product.price) *
-                          selectedProductConfig.quantity
-                        }
-                      />
+                      <AnimatedNumber value={selectedPrice} />
                     </span>
                   </span>
                 </div>
@@ -540,7 +540,7 @@ const ProductPage = () => {
             <div className="flex items-center justify-between gap-2">
               <div>
                 <p className="text-sm font-bold text-gray-900">
-                  ₹{Math.round(product.price * quantity)}
+                  ₹{selectedPrice}
                 </p>
                 <p className="text-xs text-gray-600">
                   {product.stock > 0 ? "In Stock" : "Out of Stock"}

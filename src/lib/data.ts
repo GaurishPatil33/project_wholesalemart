@@ -4,7 +4,7 @@ export const Categories = [
     {
         title: "Photo Frames",
         slug: "wall_art",
-        image: "/categories/photoframes.png",
+        image: "/categories/photoframe.png",
         subCategories: [
             {
                 title: "Ch. Shivaji Maharaj",
@@ -36,12 +36,22 @@ export const Categories = [
                 slug: "spiritual-gods",
                 image: "/categories/frames/6.png",
             },
+            {
+                title: "Basweshwar Rani Chhanamma",
+                slug: "basweshwar_rani_Channama",
+                image: "/categories/frames/7.png",
+            },
+            {
+                title: "Jesus ",
+                slug: "jesus",
+                image: "/categories/frames/8.png",
+            },
         ],
     },
     {
         title: "Murti / Idols",
-        slug: "murti-idols",
-        image: "/categories/godidols.png",
+        slug: "murti_idols",
+        image: "/categories/godidol.png",
         subCategories: [], // keep consistent (empty array if no subcategories)
     },
     {
@@ -52,25 +62,25 @@ export const Categories = [
     },
     {
         title: "Soft Plush Toys",
-        slug: "soft-toys",
+        slug: "soft_toys",
         image: "/categories/softplushtoys.png",
         subCategories: [],
     },
     {
         title: "Flower Pots",
-        slug: "flower-pots",
-        image: "/categories/flowerpots.png",
+        slug: "flower_pots",
+        image: "/categories/flowerpot.png",
         subCategories: [],
     },
     {
         title: "Gift Items",
-        slug: "gift-item",
-        image: "/categories/giftitems.png",
+        slug: "gift_item",
+        image: "/categories/giftitem.png",
         subCategories: [],
     },
     {
         title: "Party decor",
-        slug: "party-decor",
+        slug: "party_decor",
         image: "/categories/partydecor.png",
         subCategories: [],
     },
@@ -185,8 +195,8 @@ export const Products = [
         "product_type": "Photo frame",
         "video": null,
         "images": [
-            "https://m.media-amazon.com/images/I/71HBqEj5CfL._SL1500_.jpg",
             "https://m.media-amazon.com/images/I/61j4vdC8dXL._SL1024_.jpg",
+            "https://m.media-amazon.com/images/I/71HBqEj5CfL._SL1500_.jpg",
             "https://m.media-amazon.com/images/I/81QWkTA4KnL._SL1500_.jpg",
             "https://m.media-amazon.com/images/I/61j4vdC8dXL._SL1024_.jpg", "https://m.media-amazon.com/images/I/61OoL7ISn9L._SL1500_.jpg",
         ],
