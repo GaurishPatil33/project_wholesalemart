@@ -55,7 +55,7 @@ export const useOrderStore = create<OrderStore>()(
 
         addOrder: (items, user, address, payment) => {
             const total = items.reduce(
-                (sum, item) => sum + item.price * item.quantity,
+                (sum, item) => sum + (item.ProductConfig.price??item.product.sizes[0].price )* item.ProductConfig.quantity,
                 0
             );
 
@@ -94,8 +94,8 @@ export const useOrderStore = create<OrderStore>()(
             return get().addOrder(
                 cartItems.map((item) => ({
                     product: item.product,
-                    quantity: item.quantity,
-                    price: item.price,
+                    ProductConfig:item.ProductConfig,
+                    totalprice: item.totalprice,
                 })),
                 user,
                 selectedAddress,
