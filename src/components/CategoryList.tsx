@@ -16,7 +16,7 @@ const fadeInUp = {
 };
 
 interface CategoryListProps {
-  title: string;
+  title?: string;
   data: { slug: string; title: string; image: string }[];
   basePath?: string;
   displayType?: "grid" | "slider";
@@ -193,7 +193,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="grid grid-cols-2 gap-4 px-2"
+                className="grid grid-cols-2 md:grid-cols-3 gap-4 px-2"
               >
                 {currentItems.map((cat) => (
                   <motion.div
@@ -220,7 +220,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                         }}
                         className="w-full h-50 object-cover  hover:scale-110 transition-transform"
                       />
-                      <div className="absolute inset-0 bg-black/30 rounded-tl-2xl rounded-br-2xl"></div>
+                      {/* <div className="absolute inset-0 bg-black/30 rounded-tl-2xl rounded-br-2xl"></div>
                       <motion.p
                         initial={{ opacity: 0, scale: 1.09, x: -20 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -232,7 +232,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                         className="absolute bottom-2 left-2  text-lg text-white font-semibold"
                       >
                         {cat.title}
-                      </motion.p>
+                      </motion.p> */}
                     </Link>
                   </motion.div>
                 ))}

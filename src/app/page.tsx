@@ -3,7 +3,7 @@ import { CategoryList, CategoryListType2 } from "@/components/CategoryList";
 import CategoryStories from "@/components/CategoryStories";
 import FeatureStrip from "@/components/FeaturesStrip";
 import ImageBanner from "@/components/ImageBanner";
-import ProductList from "@/components/ProductList";
+import { ProductList } from "@/components/ProductList";
 import { Categories, Products } from "@/lib/data";
 // import { Categories, data1 } from "@/lib/data";
 import { fetchAllProducts, fetchCategories } from "@/lib/productfetching";
@@ -32,7 +32,7 @@ export default function Home() {
   // const kurtas = products.filter((s) => s.category === "kurtas");
   const [isMobile, setIsMobile] = useState(false);
   const [categories, setCategories] = useState();
-
+  // const isMobile = window.innerWidth < 768;
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
   }, []);
@@ -46,7 +46,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full pt-4 gap-3 md:gap-6">
+    <div className="flex flex-col h-full  gap-3 md:gap-6">
       <div className="">
         {" "}
         <CategoryStories />
@@ -56,18 +56,27 @@ export default function Home() {
       <FeatureStrip />
 
       {/* Shop by Category */}
-      <CategoryList
-        data={Categories}
-        title="Shop by Category"
-        displayType={isMobile ? "grid" : "slider"}
-      />
+      <div className="">
+        <div className="w-full h-fit shadow-md -mb-3">
+          <img src="/cat-banner/category.png" alt="" />
+        </div>
+        <CategoryList
+          data={Categories}
+          // title="Shop by Category"
+          displayType={isMobile ? "grid" : "slider"}
+        />
+        {/* <CategoryList
+          data={Categories}
+          // title="Shop by Category"
+          displayType={"grid"}
+        /> */}
+      </div>
 
-      {/* <ProductList products={sarees} title="Best Seller - Sarees" /> */}
+      <ProductList products={products} title="New Arriwals" />
 
       <CategoryListType2
         data={
-          Categories.find((cat) => cat.slug === "wall_art")
-            ?.subCategories || []
+          Categories.find((cat) => cat.slug === "wall_art")?.subCategories || []
         }
         title="Photo frames"
         displayType="slider"
@@ -75,13 +84,6 @@ export default function Home() {
 
       {/* products */}
       {/* <ProductList products={kurtas} title="Best Seller - Kurtas/Salwars" /> */}
-      {/* {Products.length} */}
-      {Products.map((p, i) => (
-        <div className=" flex gap-3" key={p.id} >
-          {p.id},{p.category},{p.subcategory}:{i}
-        <img src={p.images[0]} alt=""  className=" size-20 object-cover"/>
-        </div>
-      ))}
     </div>
   );
 }

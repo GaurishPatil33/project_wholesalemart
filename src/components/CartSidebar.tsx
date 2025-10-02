@@ -92,26 +92,26 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           <div className=" flex items-center gap-3 md:gap-5 ">
             <div className=" flex items-center border rounded-md">
               <button
-                disabled={p.quantity <= 1}
+                disabled={p.ProductConfig.quantity <= 1}
                 className="px-1 hover:bg-gray-100 rounded-l-md"
-                onClick={() => updateQuantity(p.product.id, p.quantity - 1)}
+                onClick={() => updateQuantity(p.product.id, p.ProductConfig.quantity - 1)}
               >
                 <Minus className="size-2 md:size-3" />
               </button>
               <div className=" md:px-2 py-0.5 px-1 md:py-1 border-x text-[9px] ">
-                {p.quantity}
+                {p.ProductConfig.quantity}
               </div>
               <button
-                disabled={p.quantity >= 10}
+                disabled={p.ProductConfig.quantity >= 10}
                 className="px-1 hover:bg-gray-100 rounded-r-md"
-                onClick={() => updateQuantity(p.product.id, p.quantity + 1)}
+                onClick={() => updateQuantity(p.product.id, p.ProductConfig.quantity + 1)}
               >
                 <Plus className="size-2 md:size-3" />
               </button>
             </div>
             <div className=" text-xs md:text-sm text-gray-500">
               {" "}
-              ₹{p.price * p.quantity}
+              ₹{p.ProductConfig.price ?? p.product.price * p.ProductConfig.quantity}
             </div>
           </div>
         </div>

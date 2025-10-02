@@ -43,11 +43,15 @@ export interface Category {
   image: string
   subCategories?: Category[]
 }
-
 export interface CartItem {
   product: Product
-  price: number
-  quantity: number
+  totalprice: number
+  ProductConfig: {
+    color?: string;
+    size?: string;
+    price?: number;
+    quantity: number;
+  }
   attributes?: { name: string, value: string }[]
   sku?: string
   selected?: boolean

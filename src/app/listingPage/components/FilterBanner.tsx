@@ -51,26 +51,26 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
   let content: React.ReactNode = null;
 
   switch (type) {
-    case "category":
-      title = "Shop by Category";
-      content = (
-        <div className="flex w-full gap-2 overflow-x-auto flex-wrap">
-          {categories.map((category, i) => (
-            <button
-              key={i}
-              onClick={() => toggleCategory(category)}
-              className={`px-2 py-1 rounded-full text-sm font-medium transition-all ${
-                filters.category.includes(category)
-                  ? "bg-[#900001]/50 text-white"
-                  : "bg-white text-gray-700 border border-gray-300 hover:border-pink-300"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      );
-      break;
+    // case "category":
+    //   title = "Shop by Category";
+    //   content = (
+    //     <div className="flex w-full gap-2 overflow-x-auto flex-wrap">
+    //       {categories.map((category, i) => (
+    //         <button
+    //           key={i}
+    //           onClick={() => toggleCategory(category)}
+    //           className={`px-2 py-1 rounded-full text-sm font-medium transition-all ${
+    //             filters.category.includes(category)
+    //               ? "bg-[#900001]/50 text-white"
+    //               : "bg-white text-gray-700 border border-gray-300 hover:border-pink-300"
+    //           }`}
+    //         >
+    //           {category}
+    //         </button>
+    //       ))}
+    //     </div>
+    //   );
+    //   break;
 
     case "brand":
       title = "Filter by Brand";

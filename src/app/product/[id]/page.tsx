@@ -1,7 +1,8 @@
 "use client";
-import ProductList from "@/components/ProductList";
+import { ProductList } from "@/components/ProductList";
 import ProductMediaCorousal from "@/components/ProductMediaCorousal";
 import Reviews from "@/components/Reviews";
+import { useShare } from "@/lib/hooks/helperFunctions";
 import {
   fetchProductByCategory,
   fetchProductById,
@@ -9,6 +10,7 @@ import {
 import { useCartStore } from "@/lib/store/cartStore";
 import { useToast } from "@/lib/store/toast";
 import { Product } from "@/lib/types";
+import { number } from "framer-motion";
 import {
   Ban,
   BellIcon,
@@ -24,6 +26,14 @@ import {
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { AnimatedNumber } from "./components/AnimateNumber";
+
+interface ProductConfig {
+  color?: string;
+  size?: string;
+  price?: number;
+  quantity: number;
+}
 
 const ProductPage = () => {
   const params = useParams();
@@ -33,22 +43,52 @@ const ProductPage = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [selectedProductConfig, setSelectedProductConfig] =
+    useState<ProductConfig>({
+      color: product?.colors[0] || "",
+      size: product?.sizes[0].size || "",
+      price: product?.sizes[0].price ?? product?.price ?? 0,
+      quantity: 1,
+    });
   const basePrice = product
-    ? product?.price + (product?.price * product?.discount) / 100
+    ? (selectedProductConfig.price ?? product.price) +
+      ((selectedProductConfig.price ?? product.price) *
+        (product.discount ?? 0)) /
+        100
     : 0;
+
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
+  const share = useShare();
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
-    const getproduct = fetchProductById(id);
-    if (getproduct) {
-      setProduct(getproduct);
-      const getRelateProduct = fetchProductByCategory(getproduct.category);
-      setRelatedProducts(getRelateProduct);
-    }
-    setLoading(false);
+    const fetch = async () => {
+      try {
+        setLoading(true);
+        const getproduct = await fetchProductById(id);
+        console.log();
+        if (getproduct) {
+          setProduct(getproduct);
+          setSelectedProductConfig({
+            color: getproduct.colors[0],
+            size: getproduct.sizes[0].size,
+            price: getproduct.sizes[0].price,
+            quantity: 1,
+          });
+          const getRelateProduct = await fetchProductByCategory(
+            getproduct.category
+          );
+          setRelatedProducts(getRelateProduct);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+        console.log(selectedProductConfig);
+      }
+    };
+    fetch();
   }, [id]);
 
   // const nextImage = () => {
@@ -63,6 +103,31 @@ const ProductPage = () => {
   //     );
   // };
 
+  // Handle color change
+  const handleColorSelect = (color: string) => {
+    setSelectedProductConfig((prev) => ({
+      ...prev,
+      color: color,
+    }));
+  };
+
+  // Handle size selection
+  const handleSizeSelect = (size: string, price: number) => {
+    setSelectedProductConfig((prev) => ({
+      ...prev,
+      size: size,
+      price: price,
+    }));
+  };
+
+  // Handle quantity change
+  const handleQtyChange = (qty: number) => {
+    setSelectedProductConfig((prev) => ({
+      ...prev,
+      quantity: qty,
+    }));
+  };
+
   const { addToCart, toggleWishlist, isInWishlist, buyNow, isInCart } =
     useCartStore();
   const { showToast } = useToast();
@@ -75,8 +140,12 @@ const ProductPage = () => {
     if (alreadyInCart) {
       showToast("Product already in your Cart 🛒");
     } else {
-      addToCart(product, quantity);
-      showToast(`Added to Cart 🛒 ${quantity ? `Qty (${quantity})` : ""}`);
+      addToCart(product, selectedProductConfig);
+      showToast(
+        `Added to Cart 🛒 ${
+          selectedProductConfig.quantity ? `Qty (${quantity})` : ""
+        }`
+      );
     }
   };
 
@@ -91,7 +160,7 @@ const ProductPage = () => {
 
   const handleBuyNow = () => {
     if (!product) return;
-    buyNow(product, quantity);
+    buyNow(product, selectedProductConfig);
     router.push(`/checkout`);
   };
 
@@ -167,17 +236,11 @@ const ProductPage = () => {
                     </button>
                     <button
                       onClick={() => {
-                        const url = `${window.location.origin}/product/${product.id}`;
-                        if (navigator.share) {
-                          navigator.share({
-                            title: product.title,
-                            text: "Checkout this product!",
-                            url,
-                          });
-                        } else {
-                          navigator.clipboard.writeText(url);
-                          alert("product link copied to clipboard");
-                        }
+                        share(
+                          product.title,
+                          `/product/${product.id}`,
+                          "check out this product!"
+                        );
                       }}
                       className=" "
                     >
@@ -188,7 +251,7 @@ const ProductPage = () => {
 
                 <div className="flex items-center space-x-4 mb-1.5 md:mb-6">
                   <span className="text-xl  font-bold text-gray-900">
-                    ₹{Math.round(product.price)}
+                    ₹{Math.round(selectedProductConfig.price || product.price)}
                   </span>
                   {product.price && (
                     <>
@@ -218,26 +281,57 @@ const ProductPage = () => {
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center border-2 border-gray-200 rounded-xl bg-white shadow-sm">
                     <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      onClick={() =>
+                        handleQtyChange(selectedProductConfig.quantity - 1)
+                      }
+                      disabled={selectedProductConfig.quantity <= 1}
                       className="p-3 hover:bg-gray-50 transition-colors rounded-l-xl"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
-                    <span className="md:px-6 p-2 px-3 font-semibold text-sm">
+                    {/* <span className="md:px-6 p-2 px-3 font-semibold text-sm">
                       {quantity}
-                    </span>
+                    </span> */}
+                    <input
+                      type="text"
+                      name=""
+                      id=""
+                      min={1}
+                      max={10}
+                      className="w-8 px-1 text-center"
+                      onChange={(e) => {
+                        const value = Math.max(
+                          1,
+                          Math.min(10, Number(e.target.value) || 0)
+                        );
+                        handleQtyChange(value);
+                      }}
+                      value={selectedProductConfig.quantity}
+                      // disabled={
+                      //   selectedProductConfig.quantity > 10 ||
+                      //   selectedProductConfig.quantity < 2
+                      // }
+                    />
                     <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      disabled={quantity > 9}
+                      onClick={() =>
+                        handleQtyChange(selectedProductConfig.quantity + 1)
+                      }
+                      disabled={selectedProductConfig.quantity >= 10}
                       className="p-3 hover:bg-gray-50 transition-colors rounded-r-xl"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
-                  <span className="text-sm md:text-lg text-gray-500">
+                  <span className=" flex gap-2 text-lg md:text-lg text-gray-500">
                     Total:{" "}
-                    <span className="font-semibold text-gray-900">
-                      ₹{Math.round(product.price * quantity)}
+                    <span className="font-semibold text-gray-900 flex">
+                      ₹
+                      <AnimatedNumber
+                        value={
+                          (selectedProductConfig.price || product.price) *
+                          selectedProductConfig.quantity
+                        }
+                      />
                     </span>
                   </span>
                 </div>
@@ -251,8 +345,55 @@ const ProductPage = () => {
                 )}
               </div>
 
+              {/* product.colors && sizes */}
+              <div className="w-full  ">
+                <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                  Color
+                </h3>
+                <div className="flex gap-2">
+                  {product.colors.map((clr, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleColorSelect(clr)}
+                      className={`h-8 w-8 rounded-full border shadow cursor-pointer flex items-center justify-center ${
+                        selectedProductConfig.color === clr
+                          ? "border-2 border-white scale-110 ring ring-black"
+                          : ""
+                      } bg-${clr.toLowerCase()}-100 [bg-color:${clr}]`}
+                      style={{ backgroundColor: clr }}
+                      title={clr}
+                    >
+                      {/* {selectedProductConfig.color === clr && (
+                        <div className="">{clr}</div>
+                      )} */}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="w-full mb-3 ">
+                <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                  Size
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.sizes.map((opt, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSizeSelect(opt.size, opt.price)}
+                      className={`px-3 py-1 border rounded-lg text-sm font-medium hover:bg-gray-100
+                        ${
+                          selectedProductConfig.size === opt.size
+                            ? "border-2 border-white scale-102 ring ring-black"
+                            : ""
+                        }`}
+                    >
+                      {opt.size} - ₹{opt.price}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/*cart button */}
-              <div className="flex space-x-4">
+              <div className=" flex  space-x-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}

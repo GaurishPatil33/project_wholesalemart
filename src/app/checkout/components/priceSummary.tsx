@@ -3,15 +3,22 @@ import { BadgePercent } from "lucide-react";
 import React from "react";
 
 const PriceSummary = () => {
-  const { selectedCartItems} = useCartStore();
+  const { selectedCartItems } = useCartStore();
 
   const totalPrice = selectedCartItems().reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) =>
+      acc +
+      (item.ProductConfig.price ?? item.totalprice) *
+        item.ProductConfig.quantity,
     0
   );
   const discount = selectedCartItems().reduce(
     (sum, i) =>
-      sum + Math.round(i.price * (i.product.discount / 100)) * i.quantity,
+      sum +
+      Math.round(
+        (i.ProductConfig.price ?? i.product.price) * (i.product.discount / 100)
+      ) *
+        i.ProductConfig.quantity,
     0
   );
   const deliveryCharges =

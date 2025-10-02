@@ -8,7 +8,11 @@ export function fetchAllProducts(): Product[] {
 
 // Fetch a single product by ID
 export function fetchProductById(id: number | string): Product | undefined {
-    return Products.find(p => p.id === id);
+    console.log(id)
+    const numricId = Number(id)
+    const product = Products.find(p => p.id === numricId);
+    console.log(product)
+    return product
 }
 
 // Search products by query in title, brand, description, or category

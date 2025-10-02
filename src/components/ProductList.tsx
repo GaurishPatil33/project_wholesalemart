@@ -1,8 +1,8 @@
 import { Product } from "@/lib/types";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import ProductCard from "./ProductCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ProductCard } from "./ProductCard";
 // Example animations
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -16,12 +16,15 @@ const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
-const ProductList = ({
-  products,
-  title,
-}: {
+
+interface ProductListProps {
   products: Product[];
   title?: string;
+}
+
+export const ProductList: React.FC<ProductListProps> = ({
+  products,
+  title,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
@@ -103,7 +106,7 @@ const ProductList = ({
                 variants={fadeInUp}
                 className="relative snap-start h-fit max-w-50 flex-shrink-0"
               >
-                <ProductCard product={p}  />
+                <ProductCard product={p} />
               </motion.div>
             ))}
           </motion.div>
@@ -130,4 +133,4 @@ const ProductList = ({
   );
 };
 
-export default ProductList;
+// export default ProductList;

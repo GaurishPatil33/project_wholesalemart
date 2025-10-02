@@ -25,7 +25,6 @@ import {
   fetchProductByCategory,
   searchProduct,
 } from "@/lib/productfetching";
-import ProductCard from "@/components/ProductCard";
 import FilterBanner from "./components/FilterBanner";
 import MobileFilterSortBar from "./components/mobileFilterSortBar";
 import { TbCircleDashedPercentage } from "react-icons/tb";
@@ -34,6 +33,7 @@ import { LuBadgeIndianRupee } from "react-icons/lu";
 import { FaFire } from "react-icons/fa";
 import { MdFiberNew } from "react-icons/md";
 import { color } from "framer-motion";
+import { ProductCard, ProductCardType2 } from "@/components/ProductCard";
 
 interface FilterProps {
   id: string;
@@ -804,8 +804,8 @@ const ListingPageContent = () => {
                       <ProductCard key={`p-${index}`} product={product} />,
                     ];
                     const bannerInsertions = [
-                      { index: 3, type: "category", key: "banner-category" },
-                      { index: 7, type: "price", key: "banner-price" },
+                      // { index: 3, type: "category", key: "banner-category" },
+                      { index: 3, type: "price", key: "banner-price" },
                       { index: 5, type: "brand", key: "banner-brand" },
                     ];
 
@@ -880,7 +880,7 @@ const ListingPageContent = () => {
                 </div>
                 <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {paginatedProducts.map((p) => (
-                    <ProductCard product={p} key={p.id} />
+                    <ProductCardType2 product={p} key={p.id} />
                   ))}
                 </div>
                 {paginatedProducts.length <= 0 && !loading && (

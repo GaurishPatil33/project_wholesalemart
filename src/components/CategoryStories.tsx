@@ -263,7 +263,7 @@ const CategoryStories = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        src={products[currentProductIndex].images[0]}
+                        src={products[currentProductIndex].images[1]}
                         className=" w-full h-full object-cover"
                       />
                     )}
