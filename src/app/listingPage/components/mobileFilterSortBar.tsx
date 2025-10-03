@@ -45,7 +45,7 @@ const MobileFilterSortBar = ({
           setMobileFilters((prev) => !prev);
           setMobileSort(false);
         }}
-        className="flex items-center justify-center flex-1 gap-2 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-white shadow-sm active:scale-95 transition"
+        className="flex items-center justify-center flex-1 gap-2 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-white shadow-sm active:scale-95 transition cursor-pointer"
       >
         <Filter className="w-4 h-4 text-gray-500" />
         <span className="text-sm">Filters</span>
@@ -57,7 +57,7 @@ const MobileFilterSortBar = ({
           setMobileSort((prev) => !prev);
           setMobileFilters(false);
         }}
-        className="flex items-center justify-center flex-1 gap-2 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-white shadow-sm active:scale-95 transition"
+        className="flex items-center justify-center flex-1 gap-2 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-white shadow-sm active:scale-95 transition cursor-pointer"
       >
         <ArrowUpDown className="w-4 h-4 text-gray-500" />
         <span className="text-sm">Sort</span>

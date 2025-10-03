@@ -464,7 +464,7 @@ const ListingPageContent = () => {
             <div className=" relative w-full mt-5 flex items-center">
               <div className=" absolute h-2 w-full bg-gray-200 rounded-lg" />
               <div
-                className=" absolute h-2 bg-gradient-to-r from-[#900001]/30 to-[#900001] rounded-lg"
+                className=" absolute h-2 bg-gradient-to-r from-[#900001]/30 to-red-500 rounded-lg"
                 style={{
                   left: `${(priceRange.min / 50000) * 100}%`,
                   right: `${100 - (priceRange.max / 50000) * 100}%`,
@@ -493,7 +493,7 @@ const ListingPageContent = () => {
                     }
                   );
                 }}
-                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-primary ${
+                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-red ${
                   activeSlider === "min" ? "z-20 " : "z-10"
                 }`}
               />
@@ -519,7 +519,7 @@ const ListingPageContent = () => {
                     }
                   );
                 }}
-                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-primary ${
+                className={`absolute w-full h-2 bg-transparent appearance-none pointer-events-none thumb-red ${
                   activeSlider === "max" ? "z-20" : "z-10"
                 }`}
               />
@@ -582,11 +582,11 @@ const ListingPageContent = () => {
                     <div
                       className={`w-5 h-5 border-2 rounded ${
                         checked
-                          ? "bg-[#900001]/20 border-[#900001]/60"
+                          ? "bg-red-400/40 border-red-400"
                           : "border-gray-300"
                       } flex items-center justify-center`}
                     >
-                      {checked && <Check className="w-3 h-3 text-[#900001]" />}
+                      {checked && <Check className="w-3 h-3 text-red-700" />}
                     </div>
                   </div>
                   <span className="text-gray-700">{opt.label}</span>
@@ -618,12 +618,12 @@ const ListingPageContent = () => {
                     <div
                       className={`w-5 h-5 border-2 rounded-full ${
                         checked
-                          ? "bg-[#900001]/30 border-[#900001]/60"
+                          ? "bg-red-500/40 border-red-400"
                           : "border-gray-300"
                       } flex items-center justify-center`}
                     >
                       {checked && (
-                        <div className="w-2 h-2 bg-[#900001]/50 rounded-full" />
+                        <div className="w-2 h-2 bg-red-400/50 rounded-full" />
                       )}
                     </div>
                   </div>
@@ -765,7 +765,7 @@ const ListingPageContent = () => {
                     setFilters(updatedFilters);
                     updateUrlParams(updatedFilters, {});
                   }}
-                  className={` flex items-center w-full justify-center rounded-full border px-2 py-1 gap-1 transition-all duration-150 ${
+                  className={` flex items-center w-full justify-center rounded-full border px-2 py-1 gap-1 transition-all duration-150 cursor-pointer ${
                     item.color
                   } ${isActive ? "scale-105 " : "hover:scale-105"}`}
                 >

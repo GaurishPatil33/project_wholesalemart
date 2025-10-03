@@ -229,8 +229,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
         <span className=" text-gray-500 text-sm font-medium line-clamp-2 text-center">
           {product.title}
         </span>
-        <div className=" flex gap-2 items-center justify-center">
-          <div className=" text-gray-900 text-sm font-medium">
+        <div className=" flex gap-2 items-center ">
+          <div className=" text-gray-900 text-lg font-medium">
             ₹{product.sizes[0].price}
           </div>
           <span className=" text-gray-500 text-sm line-through ">
@@ -463,7 +463,7 @@ export const ProductCardType2: React.FC<ProductCardProps> = ({
             {product.brand}
           </span>
           <div className=" flex gap-2 items-center ">
-            <div className=" text-gray-900 text-sm font-medium">
+            <div className=" text-gray-900 text-lg font-medium">
               ₹{product.sizes[0].price}
             </div>
             <span className=" text-gray-500 text-sm line-through ">

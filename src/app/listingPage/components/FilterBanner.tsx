@@ -80,7 +80,7 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
             <button
               key={i}
               onClick={() => toggleBrand(brand)}
-              className={`px-2 py-1 rounded-full text-sm font-medium transition-all ${
+              className={`px-2 py-1 rounded-full text-sm font-medium transition-all cursor-pointer ${
                 filters.brands.includes(brand)
                   ? "bg-[#900001]/50 text-white"
                   : "bg-white text-gray-700 border border-gray-300 hover:border-pink-300"
@@ -113,7 +113,7 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
               <button
                 key={i}
                 onClick={() => updatePriceRange(opt.min, opt.max)}
-                className={`px-2 py-1 rounded-full text-xs font-medium transition-all ${
+                className={`px-2 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
                   isActive
                     ? "bg-[#900001]/50 text-white"
                     : "bg-white text-gray-700 border border-gray-300 hover:border-pink-300"
