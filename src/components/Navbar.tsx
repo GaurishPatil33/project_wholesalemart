@@ -82,7 +82,7 @@ const Navbar = () => {
         animate="visible"
         className="fixed top-0 left-0 right-0 z-30 transition-all duration-200 shadow-lg bg-white"
       >
-        <div className="max-w-screen mx-auto px-2 md:px-8 my-1 md:py-2 flex items-center justify-between w-full gap-2">
+        <div className="max-w-screen md:mx-auto px-2 md:px-8 my-1 md:py-2 flex items-center justify-between w-full gap-2">
           {/* Mobile menu button + Logo */}
           <div className=" flex w-fit items-center justify-between  gap-3">
             <motion.button
@@ -99,7 +99,7 @@ const Navbar = () => {
               className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
             >
               <motion.div
-                className="cursor-pointer h-fit w-30 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
+                className="cursor-pointer h-fit w-20 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
               >

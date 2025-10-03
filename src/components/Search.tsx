@@ -3,7 +3,7 @@ import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const placeholder = ["Sarees", "Kurtas", "Dresses", "Dupattas"];
+const placeholder = ["photo frames","toys","idols","murtis","flower pots"];
 
 const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full md:w-fit  relative flex justify-between items-center px-2 py-1 rounded-full ring-1 ring-red-700 "
+      className="w-full md:w-fit  relative flex justify-between items-center px-2 py-1 rounded-full ring-1 ring-red-700 overflow-x-hidden "
     >
       <input
         type="text"
@@ -38,7 +38,7 @@ const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
       />
 
       {!searchTerm && (
-        <div className=" absolute left-2 top-[50%] -translate-y-1/2 pointer-events-none text-gray-400 text-[10px] md:text-sm">
+        <div className=" absolute left-2 top-[50%] -translate-y-1/2 pointer-events-none text-gray-400 text-[10px] md:text-sm truncate overflow-hidden">
           Search for{" "}
           <AnimatePresence mode="wait">
             <motion.span
@@ -47,7 +47,7 @@ const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 1 }}
               transition={{ duration: 0.7 }}
-              className=" text-[10px] md:text-sm"
+              className=" text-[10px] md:text-sm truncate "
             >
               {placeholder[index]}...
             </motion.span>
