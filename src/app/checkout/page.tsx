@@ -169,7 +169,7 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-300 md:my-16 space-y-2 ">
+    <div className="min-h-screen bg-gradient-to-br md:my-16 space-y-2 ">
       <motion.div
         className="fixed inset-0 top-0 left-0 right-0 z-50 h-10 md:z-10 bg-white border-b border-gray-200 md:relative md:inset-auto md:top-auto md:left-auto md:right-auto"
         initial={{ y: -50, opacity: 0 }}
@@ -211,7 +211,7 @@ const CheckoutPage = () => {
             <div className=" hidden md:flex bg-white   items-center justify-between  py-2 md:px-7">
               <div className="">Total: ₹{selectedCartTotal()}</div>
               <button
-                className="px-8 py-1 bg-[#900001]/80 text-white rounded-lg"
+                className="px-8 py-1 bg-red-600/80 text-white rounded-lg"
                 onClick={onContinue}
               >
                 {currentStep === ProgrssSteps.length
@@ -232,7 +232,7 @@ const CheckoutPage = () => {
           ₹{selectedCartTotal()} ({selectedCartItems().length} Items)
         </div>
         <button
-          className="px-8 py-2 bg-[#900001]/80 text-white rounded-lg"
+          className="px-8 py-2 bg-red-600/80 text-white rounded-lg"
           onClick={onContinue}
         >
           {currentStep === ProgrssSteps.length ? "Place Order" : "Continue"}

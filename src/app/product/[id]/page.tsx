@@ -370,6 +370,8 @@ const ProductPage = () => {
   if (!product)
     return <div className="text-center mt-10">Product not found</div>;
 
+  console.log(basePrice > finalPrice, basePrice, finalPrice);
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-1">
@@ -378,7 +380,7 @@ const ProductPage = () => {
           <div className=" w-full flex  md:gap-3 flex-col md:flex-row justify-between">
             {/* Product Images */}
 
-            <div className=" flex items-center md:max-w-[50%] lg:w-[40%] xl:w-[30%] w-full flex-col px-2 sticky md:top-10">
+            <div className="md:sticky md:top-12 self-start flex items-center md:max-w-[50%] lg:w-[40%] xl:w-[30%] w-full flex-col px-2 ">
               <ProductMediaCorousal product={product} />
             </div>
 
@@ -441,18 +443,18 @@ const ProductPage = () => {
                 </div>
 
                 <div className="flex items-center space-x-4 mb-1.5 md:mb-6">
-                  <span className="text-xl  font-bold text-gray-900 ">
+                  <span className="text-2xl  font-bold text-gray-900 ">
                     ₹{Math.round(finalPrice)}
                   </span>
-                  {product.price && (
-                    <>
-                      <span className="text-lg text-gray-500 line-through">
-                        ₹{Math.round(basePrice)}
-                      </span>
-                      <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs  font-medium">
-                        {currentDiscount}% OFF
-                      </span>
-                    </>
+                  {basePrice > finalPrice && (
+                    <span className="text-lg text-gray-500 h-full  line-through">
+                      ₹{Math.round(basePrice)}
+                    </span>
+                  )}
+                  {currentDiscount > 0 && (
+                    <span className="bg-gradient-to-r h-fit from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs  font-medium">
+                      {currentDiscount}% OFF
+                    </span>
                   )}
                 </div>
                 {/* {totalSavings > 0 && (
@@ -478,7 +480,7 @@ const ProductPage = () => {
                   <h3 className="text-lg font-semibold mb-2 text-gray-800">
                     Color: <span>{selectedProductConfig.color}</span>
                   </h3>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="flex flex-wrap  gap-3">
                     {availableColors.map((color) => (
                       <motion.button
                         key={color.id}
@@ -490,7 +492,7 @@ const ProductPage = () => {
                             color: color.id,
                           }))
                         }
-                        className={`relative rounded-xl overflow-hidden transition-all ${
+                        className={`relative rounded-xl min-w-20 max-w-30 overflow-hidden transition-all ${
                           selectedProductConfig.color === color.id
                             ? "ring-4 ring-red-500/70 ring-offset-2 shadow-lg"
                             : "ring-2 ring-gray-200 hover:ring-red-300"
@@ -574,7 +576,7 @@ const ProductPage = () => {
                       name=""
                       id=""
                       min={1}
-                      max={10}
+                      max={product.stock}
                       className="w-8 px-1 text-center"
                       onChange={(e) => {
                         const value = Math.max(
@@ -593,7 +595,7 @@ const ProductPage = () => {
                       onClick={() =>
                         handleQtyChange(selectedProductConfig.quantity + 1)
                       }
-                      disabled={selectedProductConfig.quantity >= 10}
+                      disabled={selectedProductConfig.quantity >= product.stock}
                       className="p-3 hover:bg-gray-50 transition-colors rounded-r-xl"
                     >
                       <Plus className="w-4 h-4" />
@@ -637,11 +639,12 @@ const ProductPage = () => {
                         onClick={() => {
                           handleQtyChange(m.qty);
                         }}
+                        disabled={m.qty > product.stock}
                         className={`p-3 rounded-xl border-2 transition-all cursor-pointer ${
-                          selectedProductConfig.quantity >= m.qty
+                          selectedProductConfig.quantity === m.qty
                             ? "border-red-600 bg-red-50 shadow-md"
-                            : "border-gray-200 bg-gray-50 hover:border-purple-300 hover:bg-purple-50/50"
-                        }`}
+                            : "border-gray-200 bg-gray-50 hover:border-red-300 hover:bg-purple-50/50"
+                        } ${m.qty > product.stock && "hidden"}`}
                       >
                         <div className="flex w-full items-center justify-between">
                           <div className="flex gap-3">
@@ -680,7 +683,7 @@ const ProductPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-green-400 mt-3"
                   >
-                    You will save min. ₹{totalSavings}
+                    You will save ₹{totalSavings}
                   </motion.div>
                 )}
               </div>

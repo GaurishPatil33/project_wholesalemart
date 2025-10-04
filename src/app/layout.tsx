@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
         <Navbar />
-        <main className="mt-14 ">
+        <main className="mt-14 bg-gradient-to-l from-slate-50 to-slate-100 ">
           {children}
 
           <Toast />
