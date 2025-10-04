@@ -7,8 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { BsTelegram } from "react-icons/bs";
-import { FaTelegram, FaTelegramPlane } from "react-icons/fa";
+import {  FaTelegramPlane } from "react-icons/fa";
 
 interface Category {
   title: string;

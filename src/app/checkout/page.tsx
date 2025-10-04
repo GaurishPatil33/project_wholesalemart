@@ -71,10 +71,10 @@ const CheckoutPage = () => {
       return;
     }
 
-    const order = addOrderFromCart(items, user, {
-      method: paymentMethod.type,
-      status: paymentMethod.type === "cod" ? "pending" : "paid",
-    });
+    // const order = addOrderFromCart(items, user, {
+    //   method: paymentMethod.type,
+    //   status: paymentMethod.type === "cod" ? "pending" : "paid",
+    // });
 
     setOrderComplete(true);
     // clearCart(); // or deselect items instead if you want to keep them

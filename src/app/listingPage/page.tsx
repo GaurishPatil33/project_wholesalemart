@@ -13,7 +13,7 @@ import Skeleton from "@/components/Skeleton";
 // import Filter from "@/components/FilterSidebar";
 import { Product } from "@/lib/types";
 
-import { Check, Icon, TrendingUp } from "lucide-react";
+import { Check } from "lucide-react";
 import {
   FilterModal,
   SortModal,
@@ -32,7 +32,6 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import { LuBadgeIndianRupee } from "react-icons/lu";
 import { FaFire } from "react-icons/fa";
 import { MdFiberNew } from "react-icons/md";
-import { color } from "framer-motion";
 import { ProductCard, ProductCardType2 } from "@/components/ProductCard";
 
 interface FilterProps {
@@ -108,7 +107,7 @@ const ListingPageContent = () => {
       rating: rating ? [rating?.toString()] : [],
       badges: badges || [],
     });
-  }, [categories, brands, discount, rating]);
+  }, [categories, brands, discount, rating, availability, badges]);
 
   useEffect(() => {
     setPriceRange({ min: minPrice, max: maxPrice });
@@ -313,7 +312,7 @@ const ListingPageContent = () => {
     }
 
     return filtered;
-  }, [products, filters, minPrice, maxPrice, sort]);
+  }, [products, filters, minPrice, maxPrice, sort, priceRange]);
 
   const updateUrlParams = useCallback(
     (
@@ -754,9 +753,9 @@ const ListingPageContent = () => {
                 <div
                   key={i}
                   onClick={() => {
-                    const newBadges = isActive
-                      ? filters.badges.filter((b) => b !== item.key)
-                      : [...(filters.badges || []), item.key];
+                    // const newBadges = isActive
+                    //   ? filters.badges.filter((b) => b !== item.key)
+                    //   : [...(filters.badges || []), item.key];
 
                     const updatedFilters = {
                       ...filters,

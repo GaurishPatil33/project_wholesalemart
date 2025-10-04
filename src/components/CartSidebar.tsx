@@ -2,7 +2,7 @@
 
 import { useCartStore } from "@/lib/store/cartStore";
 import { CartItem } from "@/lib/types";
-import { AnimatePresence, motion, Variants } from "framer-motion";
+import {  motion, Variants } from "framer-motion";
 import { HeartPlus, Minus, Plus, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";

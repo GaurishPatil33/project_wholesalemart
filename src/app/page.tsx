@@ -10,20 +10,6 @@ import { fetchAllProducts, fetchCategories } from "@/lib/productfetching";
 import { Product } from "@/lib/types";
 import { useState, useEffect } from "react";
 
-// Parent container animation (controls stagger effect)
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }, // 👈 children animate one after another
-  },
-};
-
-// Child card animation
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -48,7 +34,6 @@ export default function Home() {
   return (
     <div className="flex flex-col h-full  gap-3 md:gap-6">
       <div className="">
-        {" "}
         <CategoryStories />
       </div>
       <ImageBanner />

@@ -10,7 +10,7 @@ import {
 import { useCartStore } from "@/lib/store/cartStore";
 import { useToast } from "@/lib/store/toast";
 import { Product } from "@/lib/types";
-import { motion, number } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Ban,
   BellIcon,
@@ -47,7 +47,7 @@ const ProductPage = () => {
   const id = params.id?.toString();
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [selectedProductConfig, setSelectedProductConfig] =
     useState<ProductConfig>({
@@ -334,7 +334,9 @@ const ProductPage = () => {
       addToCart(product, selectedProductConfig);
       showToast(
         `Added to Cart 🛒 ${
-          selectedProductConfig.quantity ? `Qty (${quantity})` : ""
+          selectedProductConfig.quantity
+            ? `Qty (${selectedProductConfig.quantity})`
+            : ""
         }`
       );
     }

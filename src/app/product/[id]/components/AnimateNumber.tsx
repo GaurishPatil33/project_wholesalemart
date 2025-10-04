@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
 
 export const AnimatedNumber = ({ value }: { value: number }) => {
   const digits = String(value).split(""); // split number into digits
