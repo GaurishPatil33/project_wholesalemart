@@ -45,8 +45,10 @@ export interface Category {
 }
 export interface CartItem {
   product: Product
-  totalprice: number
-  ProductConfig: {
+  basePrice: number,         // original per-piece price
+  finalPrice: number,        // discounted per-piece price
+  discount: number,          // applied discount %
+  totalprice: number,  ProductConfig: {
     color?: string;
     size?: string;
     price?: number;
