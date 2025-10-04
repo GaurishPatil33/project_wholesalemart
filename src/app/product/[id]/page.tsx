@@ -10,7 +10,7 @@ import {
 import { useCartStore } from "@/lib/store/cartStore";
 import { useToast } from "@/lib/store/toast";
 import { Product } from "@/lib/types";
-import { number } from "framer-motion";
+import { motion, number } from "framer-motion";
 import {
   Ban,
   BellIcon,
@@ -25,7 +25,7 @@ import {
   Truck,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnimatedNumber } from "./components/AnimateNumber";
 
 interface ProductConfig {
@@ -33,6 +33,12 @@ interface ProductConfig {
   size?: string;
   price?: number;
   quantity: number;
+}
+interface ColorOptions {
+  id: string;
+  name: string;
+  gradient: string;
+  border: string;
 }
 
 const ProductPage = () => {
@@ -50,17 +56,197 @@ const ProductPage = () => {
       price: product?.sizes[0].price ?? product?.price ?? 0,
       quantity: 1,
     });
-  const basePrice = product
-    ? (selectedProductConfig.price ?? product.price) +
-      ((selectedProductConfig.price ?? product.price) *
-        (product.discount ?? 0)) /
-        100
-    : 0;
 
-  const selectedPrice = product
-    ? (selectedProductConfig.price ?? product?.price) *
-      selectedProductConfig.quantity
-    : 0;
+  const moq = [
+    {
+      qty: 1,
+      discount: product?.discount,
+    },
+    {
+      qty: 5,
+      discount: (product?.discount ?? 0) + 5,
+    },
+    {
+      qty: 10,
+      discount: (product?.discount ?? 0) + 10,
+    },
+    {
+      qty: 25,
+      discount: (product?.discount ?? 0) + 15,
+    },
+    {
+      qty: 100,
+      discount: (product?.discount ?? 0) + 20,
+    },
+  ];
+
+  const basePrice = useMemo(() => {
+    return product
+      ? (selectedProductConfig.price ?? product.price) +
+          ((selectedProductConfig.price ?? product.price) *
+            (product.discount ?? 0)) /
+            100
+      : 0;
+  }, [selectedProductConfig.price, product]);
+
+  const currentDiscount = useMemo(() => {
+    const tier = [...moq]
+      .reverse()
+      .find((t) => selectedProductConfig.quantity >= t.qty);
+    return tier?.discount ?? product?.discount ?? 0;
+  }, [selectedProductConfig.quantity, moq, product?.discount]);
+
+  const finalPrice = useMemo(() => {
+    const price = selectedProductConfig.price ?? product?.price ?? 0;
+    return Math.round(price - (price * currentDiscount) / 100);
+  }, [selectedProductConfig.price, currentDiscount, product?.price]);
+
+  const totalPrice = useMemo(() => {
+    return Math.round(finalPrice * selectedProductConfig.quantity);
+  }, [finalPrice, selectedProductConfig.quantity]);
+
+  const totalSavings = useMemo(() => {
+    return Math.round(basePrice * selectedProductConfig.quantity - totalPrice);
+  }, [basePrice, selectedProductConfig.quantity, totalPrice]);
+
+  const colorOptions: ColorOptions[] = [
+    {
+      id: "Golden",
+      name: "Golden",
+      gradient:
+        "linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)",
+      border: "#B8860B",
+    },
+    {
+      id: "Silver",
+      name: "Silver",
+      gradient:
+        "linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 50%, #A8A8A8 100%)",
+      border: "#808080",
+    },
+    {
+      id: "Bronze",
+      name: "Bronze",
+      gradient:
+        "linear-gradient(135deg, #CD7F32 0%, #B87333 50%, #8B4513 100%)",
+      border: "#8B4513",
+    },
+    {
+      id: "Rose Gold",
+      name: "Rose Gold",
+      gradient:
+        "linear-gradient(135deg, #ECC5C0 0%, #E6A4B4 50%, #C9A0A0 100%)",
+      border: "#B76E79",
+    },
+    {
+      id: "Copper",
+      name: "Copper",
+      gradient:
+        "linear-gradient(135deg, #B87333 0%, #C77826 50%, #8B4513 100%)",
+      border: "#7D4A1E",
+    },
+    {
+      id: "Black",
+      name: "Black",
+      gradient:
+        "linear-gradient(135deg, #2C2C2C 0%, #000000 50%, #1A1A1A 100%)",
+      border: "#000000",
+    },
+    {
+      id: "White",
+      name: "White",
+      gradient:
+        "linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 50%, #E8E8E8 100%)",
+      border: "#D3D3D3",
+    },
+    {
+      id: "Red",
+      name: "Red",
+      gradient:
+        "linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 50%, #C92A2A 100%)",
+      border: "#A61E4D",
+    },
+    {
+      id: "Blue",
+      name: "Blue",
+      gradient:
+        "linear-gradient(135deg, #4DABF7 0%, #339AF0 50%, #1971C2 100%)",
+      border: "#1864AB",
+    },
+    {
+      id: "Green",
+      name: "Green",
+      gradient:
+        "linear-gradient(135deg, #51CF66 0%, #40C057 50%, #2F9E44 100%)",
+      border: "#2B8A3E",
+    },
+    {
+      id: "Brown",
+      name: "Brown",
+      gradient:
+        "linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #654321 100%)",
+      border: "#5D3A1A",
+    },
+    {
+      id: "Gray",
+      name: "Gray",
+      gradient:
+        "linear-gradient(135deg, #ADB5BD 0%, #868E96 50%, #495057 100%)",
+      border: "#343A40",
+    },
+  ];
+
+  // Filter color options to only show colors that the product has
+  const availableColors = useMemo<ColorOptions[]>(() => {
+    if (!product?.colors || product.colors.length === 0) {
+      return [];
+    }
+
+    // Match product colors with predefined options
+    const matched = colorOptions.filter((option) =>
+      product.colors.some(
+        (productColor) => productColor.toLowerCase() === option.id.toLowerCase()
+      )
+    );
+
+    // If no matches found, create generic color options from product colors
+    if (matched.length === 0) {
+      return product.colors.map((color) => ({
+        id: color,
+        name: color,
+        gradient: `linear-gradient(135deg, ${getColorHex(
+          color
+        )} 0%, ${getColorHex(color)} 100%)`,
+        border: getColorHex(color),
+      }));
+    }
+
+    return matched;
+  }, [product?.colors]);
+
+  // Helper function to get hex color from color name
+  const getColorHex = (colorName: string): string => {
+    const colorMap: Record<string, string> = {
+      golden: "#FFD700",
+      silver: "#C0C0C0",
+      bronze: "#CD7F32",
+      "rose gold": "#E6A4B4",
+      copper: "#B87333",
+      black: "#000000",
+      white: "#FFFFFF",
+      red: "#FF0000",
+      blue: "#0000FF",
+      green: "#00FF00",
+      brown: "#8B4513",
+      gray: "#808080",
+      grey: "#808080",
+      yellow: "#FFFF00",
+      pink: "#FFC0CB",
+      purple: "#800080",
+      orange: "#FFA500",
+    };
+    return colorMap[colorName.toLowerCase()] || "#CCCCCC";
+  };
 
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
@@ -192,7 +378,7 @@ const ProductPage = () => {
           <div className=" w-full flex  md:gap-3 flex-col md:flex-row justify-between">
             {/* Product Images */}
 
-            <div className=" flex items-center md:max-w-[50%] lg:w-[40%] xl:w-[30%] w-full   flex-col px-2 ">
+            <div className=" flex items-center md:max-w-[50%] lg:w-[40%] xl:w-[30%] w-full flex-col px-2 sticky md:top-10">
               <ProductMediaCorousal product={product} />
             </div>
 
@@ -255,8 +441,8 @@ const ProductPage = () => {
                 </div>
 
                 <div className="flex items-center space-x-4 mb-1.5 md:mb-6">
-                  <span className="text-xl  font-bold text-gray-900">
-                    ₹{Math.round(selectedProductConfig.price || product.price)}
+                  <span className="text-xl  font-bold text-gray-900 ">
+                    ₹{Math.round(finalPrice)}
                   </span>
                   {product.price && (
                     <>
@@ -264,11 +450,19 @@ const ProductPage = () => {
                         ₹{Math.round(basePrice)}
                       </span>
                       <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs  font-medium">
-                        {product.discount}% OFF
+                        {currentDiscount}% OFF
                       </span>
                     </>
                   )}
                 </div>
+                {/* {totalSavings > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    You save ₹{totalSavings}
+                  </motion.div>
+                )} */}
 
                 <div className="flex items-center space-x-2 mb-1 md:mb-4">
                   <Check className="w-5 h-5 text-green-500" />
@@ -276,6 +470,84 @@ const ProductPage = () => {
                     {product.availabilityStatus}
                   </span>
                   {/* <span className="text-gray-500">• SKU: {product.sku}</span> */}
+                </div>
+              </div>
+              {/* product.colors && sizes */}
+              {availableColors.length > 0 && (
+                <div className="w-full  ">
+                  <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                    Color: <span>{selectedProductConfig.color}</span>
+                  </h3>
+                  <div className="grid grid-cols-4 gap-3">
+                    {availableColors.map((color) => (
+                      <motion.button
+                        key={color.id}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() =>
+                          setSelectedProductConfig((prev) => ({
+                            ...prev,
+                            color: color.id,
+                          }))
+                        }
+                        className={`relative rounded-xl overflow-hidden transition-all ${
+                          selectedProductConfig.color === color.id
+                            ? "ring-4 ring-red-500/70 ring-offset-2 shadow-lg"
+                            : "ring-2 ring-gray-200 hover:ring-red-300"
+                        }`}
+                      >
+                        <div
+                          className="h-8 w-full"
+                          style={{
+                            background: color.gradient,
+                            borderBottom: `2px solid ${color.border}`,
+                          }}
+                        />
+                        <div className="py-2 px-2 bg-white">
+                          <p className="text-[9px] font-semibold text-gray-700 truncate">
+                            {color.name}
+                          </p>
+                        </div>
+                        {/* {selectedProductConfig.color === color.id && (
+                          <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md">
+                            <Check className="size-3 text-gray-600" />
+                          </div>
+                        )} */}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="w-full mb-3 ">
+                <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                  Size:{" "}
+                  <span className="text-gray-700">
+                    {selectedProductConfig.size}
+                  </span>
+                </h3>
+                <div className="gird grid-cols-3 space-x-3 space-y-2">
+                  {product.sizes.map((opt, i) => (
+                    <motion.button
+                      key={i}
+                      onClick={() => handleSizeSelect(opt.size, opt.price)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`px-4 py-2  rounded-xl border-2 transition-all  ${
+                        selectedProductConfig.size === opt.size
+                          ? "border-red-600/50 bg-red-50"
+                          : "border-gray-200 hover:border-red-300"
+                      }`}
+                    >
+                      <div className="md:flex items-center justify-center gap-2">
+                        <div className="font-semibold text-gray-900">
+                          {opt.size}
+                        </div>
+                        <div className="text-sm text-gray-600 mt-1">
+                          ₹{opt.price}
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
                 </div>
               </div>
               {/* quantity */}
@@ -295,8 +567,8 @@ const ProductPage = () => {
                       <Minus className="w-4 h-4" />
                     </button>
                     {/* <span className="md:px-6 p-2 px-3 font-semibold text-sm">
-                      {quantity}
-                    </span> */}
+                              {quantity}
+                            </span> */}
                     <input
                       type="text"
                       name=""
@@ -331,7 +603,7 @@ const ProductPage = () => {
                     Total:{" "}
                     <span className="font-semibold text-gray-900 flex">
                       ₹
-                      <AnimatedNumber value={selectedPrice} />
+                      <AnimatedNumber value={totalPrice} />
                     </span>
                   </span>
                 </div>
@@ -344,60 +616,80 @@ const ProductPage = () => {
                   </div>
                 )}
               </div>
+              {/* bulk selections */}
+              <div className="">
+                <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                  Buy more, Save more
+                </h3>
+                <div className="grid lg:grid-cols-2 gap-2">
+                  {moq.map((m, i) => {
+                    const price =
+                      selectedProductConfig.price ?? product?.price ?? 0;
+                    const tierFinalPrice = Math.round(
+                      price - (price * (m.discount ?? 0)) / 100
+                    );
 
-              {/* product.colors && sizes */}
-              <div className="w-full  ">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">
-                  Color
-                </h3>
-                <div className="flex gap-2">
-                  {product.colors.map((clr, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleColorSelect(clr)}
-                      className={`h-8 w-8 rounded-full border shadow cursor-pointer flex items-center justify-center ${
-                        selectedProductConfig.color === clr
-                          ? "border-2 border-white scale-110 ring ring-black"
-                          : ""
-                      } bg-${clr.toLowerCase()}-100 [bg-color:${clr}]`}
-                      style={{ backgroundColor: clr }}
-                      title={clr}
-                    >
-                      {/* {selectedProductConfig.color === clr && (
-                        <div className="">{clr}</div>
-                      )} */}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="w-full mb-3 ">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">
-                  Size
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((opt, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleSizeSelect(opt.size, opt.price)}
-                      className={`px-3 py-1 border rounded-lg text-sm font-medium hover:bg-gray-100
-                        ${
-                          selectedProductConfig.size === opt.size
-                            ? "border-2 border-white scale-102 ring ring-black"
-                            : ""
+                    return (
+                      <motion.button
+                        key={i}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 1.02 }}
+                        onClick={() => {
+                          handleQtyChange(m.qty);
+                        }}
+                        className={`p-3 rounded-xl border-2 transition-all cursor-pointer ${
+                          selectedProductConfig.quantity >= m.qty
+                            ? "border-red-600 bg-red-50 shadow-md"
+                            : "border-gray-200 bg-gray-50 hover:border-purple-300 hover:bg-purple-50/50"
                         }`}
-                    >
-                      {opt.size} - ₹{opt.price}
-                    </button>
-                  ))}
+                      >
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex gap-3">
+                            <div className="text-left">
+                              <div className="flex items-center space-x-2">
+                                <span className="font-semibold text-gray-900">
+                                  Purchase
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                Min. {m.qty} pieces
+                              </p>
+                            </div>
+                            {(m.discount ?? currentDiscount) > 0 && (
+                              <span className="bg-red-500/90 text-white text-xs px-2 py-1 h-fit rounded-full">
+                                Save {m.discount}%
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xl font-bold text-red-400">
+                              ₹{tierFinalPrice}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              per piece
+                            </div>
+                          </div>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
                 </div>
+                {totalSavings > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-green-400 mt-3"
+                  >
+                    You will save min. ₹{totalSavings}
+                  </motion.div>
+                )}
               </div>
-
               {/*cart button */}
               <div className=" flex  space-x-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
-                  className="flex-1  text-primary ring-[#900] ring-1  md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
+                  className="flex-1  text-red-600/70 ring-red-400 ring-1  md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
                 >
                   {product.stock === 0 ? (
                     <div className="flex items-center md:px-3 gap-1 ">
@@ -414,12 +706,11 @@ const ProductPage = () => {
                 <button
                   onClick={handleBuyNow}
                   disabled={product.stock === 0}
-                  className="flex-1 bg-gradient-to-r from-[#900001]/90 to-[#900000]/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
+                  className="flex-1 bg-gradient-to-r from-red-600/90 to-red-600/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
                 >
                   Buy Now
                 </button>
               </div>
-
               {/* shipping,return and Warranty */}
               <div className="grid grid-cols-2  p-2 md:p-6   border-y border-gray-400">
                 <div className="flex items-center justify-center space-x-3">
@@ -539,9 +830,7 @@ const ProductPage = () => {
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 py-2  md:hidden z-10">
             <div className="flex items-center justify-between gap-2">
               <div>
-                <p className="text-sm font-bold text-gray-900">
-                  ₹{selectedPrice}
-                </p>
+                <p className="text-sm font-bold text-gray-900">₹{finalPrice}</p>
                 <p className="text-xs text-gray-600">
                   {product.stock > 0 ? "In Stock" : "Out of Stock"}
                 </p>

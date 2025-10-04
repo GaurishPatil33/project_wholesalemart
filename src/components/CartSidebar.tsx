@@ -67,18 +67,20 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
       key={p.product.id}
       className="flex items-center justify-between gap-2 md:gap-3 bg-gray-50 p-2 rounded-lg shadow-sm w-full"
     >
-      <div className="relative flex items-center gap-2 w-20 h-full rounded shadow-md">
+      <div className="relative flex items-center gap-2 w-30 h-30  rounded overflow-hidden shadow-md">
         <input
           type="checkbox"
           checked={p.selected}
           onChange={() => toggleSelect(p.product.id)}
           className=" absolute top-1.5 left-1 accent-blue-500     "
         />
-        <img
-          src={p.product.images[0]}
-          alt={p.product.title}
-          className="w-full h-full object-cover rounded"
-        />
+        <div className=" aspect-[4/6] h-full">
+          <img
+            src={p.product.images[0]}
+            alt={p.product.title}
+            className="h-full object-cover"
+          />
+        </div>
       </div>
 
       <div className=" w-full h-full space-y-2 pt-1">
@@ -92,26 +94,29 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           <div className=" flex items-center gap-3 md:gap-5 ">
             <div className=" flex items-center border rounded-md">
               <button
-                disabled={p.ProductConfig.quantity <= 1}
+                disabled={(p.ProductConfig?.quantity ?? 1) <= 1}
                 className="px-1 hover:bg-gray-100 rounded-l-md"
-                onClick={() => updateQuantity(p.product.id, p.ProductConfig.quantity - 1)}
+                onClick={() =>
+                  updateQuantity(p.product.id, p.ProductConfig.quantity - 1)
+                }
               >
                 <Minus className="size-2 md:size-3" />
               </button>
               <div className=" md:px-2 py-0.5 px-1 md:py-1 border-x text-[9px] ">
-                {p.ProductConfig.quantity}
+                {p.ProductConfig?.quantity}
               </div>
               <button
-                disabled={p.ProductConfig.quantity >= 10}
+                disabled={p.ProductConfig?.quantity >= 10}
                 className="px-1 hover:bg-gray-100 rounded-r-md"
-                onClick={() => updateQuantity(p.product.id, p.ProductConfig.quantity + 1)}
+                onClick={() =>
+                  updateQuantity(p.product.id, p.ProductConfig?.quantity + 1)
+                }
               >
                 <Plus className="size-2 md:size-3" />
               </button>
             </div>
             <div className=" text-xs md:text-sm text-gray-500">
-              {" "}
-              ₹{p.ProductConfig.price ?? p.product.price * p.ProductConfig.quantity}
+              ₹{p.totalprice}
             </div>
           </div>
         </div>
@@ -180,14 +185,14 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
             <div className="flex-1 overflow-y-auto overflow-x-hidden py-2 px-1 bg-gradient-to-b from-[#900002]/20 to-white scrollbar-hide">
               {cart.length > 0 ? (
                 <div className="space-y-2 w-full px-1 md:px-3">
-                  {cart.map((p) => (
+                  {cart.map((p, i) => (
                     <motion.div
                       // initial={{ x: 80, opacity: 0 }}
                       // animate={{ x: 0, opacity: 1 }}
                       // exit={{ x: 80, opacity: 0 }}
                       // transition={{ duration: 0.2, ease: "easeIn" }}
                       variants={itemVariants}
-                      key={p.product.id}
+                      key={i}
                     >
                       <CartProductCard p={p} />
                     </motion.div>

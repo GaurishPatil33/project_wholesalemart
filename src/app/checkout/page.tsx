@@ -209,7 +209,7 @@ const CheckoutPage = () => {
               />
             )}
             <div className=" hidden md:flex bg-white   items-center justify-between  py-2 md:px-7">
-              <div className="">₹{selectedCartTotal()}</div>
+              <div className="">Total: ₹{selectedCartTotal()}</div>
               <button
                 className="px-8 py-1 bg-[#900001]/80 text-white rounded-lg"
                 onClick={onContinue}

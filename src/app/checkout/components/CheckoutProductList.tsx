@@ -13,13 +13,13 @@ const CheckoutProductList = () => {
         <ShoppingCart className="size-6" /> Items in your cart
       </h2>
       <div className=" space-y-2 max-h-100 overflow-y-auto overflow-x-hidden">
-        {selectedCartItems().map((p) => (
+        {selectedCartItems().map((p, i) => (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
-            transition={{duration:0.3,ease:"easeIn"}}
-            key={p.product.id}
+            transition={{ duration: 0.3, ease: "easeIn" }}
+            key={i}
             className="flex items-center px-2  gap-2 md:gap-3 w-full"
           >
             <div className=" relative flex items-center gap-2 w-20  rounded overflow-hidden shadow-md">
@@ -41,30 +41,41 @@ const CheckoutProductList = () => {
                 <div className=" flex items-center gap-3 md:gap-5 ">
                   <div className=" flex items-center border rounded-md">
                     <button
-                      disabled={p.ProductConfig.quantity <= 1}
+                      disabled={p.ProductConfig?.quantity <= 1}
                       className="px-1 hover:bg-gray-100 rounded-l-md"
                       onClick={() =>
-                        updateQuantity(p.product.id, p.ProductConfig.quantity - 1)
+                        updateQuantity(
+                          p.product.id,
+                          p.ProductConfig.quantity - 1
+                        )
                       }
                     >
                       <Minus className="size-2 md:size-3" />
                     </button>
                     <div className=" md:px-2 py-0.5 px-1 md:py-1 border-x text-[9px] ">
-                      {p.ProductConfig.quantity}
+                      {p.ProductConfig?.quantity}
                     </div>
                     <button
-                      disabled={p.ProductConfig.quantity >= 10}
+                      disabled={p.ProductConfig?.quantity >= 10}
                       className="px-1 hover:bg-gray-100 rounded-r-md"
                       onClick={() =>
-                        updateQuantity(p.product.id, p.ProductConfig.quantity + 1)
+                        updateQuantity(
+                          p.product.id,
+                          p.ProductConfig.quantity + 1
+                        )
                       }
                     >
                       <Plus className="size-2 md:size-3" />
                     </button>
                   </div>
                   <div className=" text-xs md:text-sm text-gray-500">
-                    {" "}
-                    ₹{(p.ProductConfig.price??p.totalprice) * p.ProductConfig.quantity}
+                    {/* <span className="line-through text-gray-400 text-[10px] md:text-xs">
+                      ₹{p.basePrice}
+                    </span>{" "} */}
+                    <span className="font-semibold text-gray-500">
+                      ₹{p.finalPrice} x {p.ProductConfig?.quantity} = ₹
+                      {p.totalprice}
+                    </span>
                   </div>
                 </div>
               </div>

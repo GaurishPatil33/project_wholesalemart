@@ -6,21 +6,17 @@ const PriceSummary = () => {
   const { selectedCartItems } = useCartStore();
 
   const totalPrice = selectedCartItems().reduce(
-    (acc, item) =>
-      acc +
-      (item.ProductConfig.price ?? item.totalprice) *
-        item.ProductConfig.quantity,
+    (acc, item) => acc + item.totalprice,
     0
   );
+
   const discount = selectedCartItems().reduce(
-    (sum, i) =>
+    (sum, item) =>
       sum +
-      Math.round(
-        (i.ProductConfig.price ?? i.product.price) * (i.product.discount / 100)
-      ) *
-        i.ProductConfig.quantity,
+      ((item.basePrice * item.discount) / 100) * item.ProductConfig?.quantity,
     0
   );
+
   const deliveryCharges =
     selectedCartItems.length === 0 ? 0 : totalPrice >= 200 ? 0 : 50;
 
