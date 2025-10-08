@@ -16,6 +16,7 @@ import {
   BellIcon,
   Check,
   Heart,
+  IndianRupee,
   Minus,
   Plus,
   RotateCcw,
@@ -27,6 +28,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatedNumber } from "./components/AnimateNumber";
+import { BsWhatsapp } from "react-icons/bs";
 
 interface ProductConfig {
   color?: string;
@@ -357,15 +359,18 @@ const ProductPage = () => {
     router.push(`/checkout`);
   };
 
-  // const handleCartToggle = () => {
-  //   if (isInCart(product.id)) {
-  //     showToast("Removed from Cart 🛒");
-  //     removeFromCart(product.id);
-  //   } else {
-  //     showToast("Added to Cart 🛒");
-  //     addToCart(product);
-  //   }
-  // };
+  const handleWhatsApp = () => {
+    const phoneNumber = "919999999999";
+    const message = encodeURIComponent(
+      `Hello! I'm interested in:\n\n` +
+        `🛒 Product: ${product?.title}\n` +
+        // `🎨 Color: ${product.colors}\n` +
+        `💰 Price: ₹${product?.price}\n\n` +
+        `Can you give me more details?`
+    );
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappUrl, "_blank");
+  };
 
   if (loading) return <div className=" text-center mt10">Loading...</div>;
 
@@ -714,10 +719,64 @@ const ProductPage = () => {
                   className="flex-1 bg-gradient-to-r from-red-600/90 to-red-600/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
                 >
                   Buy Now
+                </button>{" "}
+                <button
+                  onClick={handleWhatsApp}
+                  className="w-fit h-full  text-primary   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
+                >
+                  <BsWhatsapp className="size-10" />
                 </button>
               </div>
+
+              <hr className="" />
+
+              {/* shipping */}
+              <div className=" rounded-md pt-3 space-y-4">
+                <h3 className="text-sm font-semibold text-gray-800">
+                  CHECK DELIVERY & SERVICES
+                </h3>
+
+                {/* Pincode Input */}
+                <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                  <input
+                    type="text"
+                    value="560000"
+                    // readOnly
+                    className="bg-transparent outline-none text-sm font-medium w-full"
+                  />
+                  <button className="text-red-600 font-semibold text-sm">
+                    CHANGE
+                  </button>
+                </div>
+
+                {/* Delivery Items */}
+                <div className="space-y-3 text-sm text-gray-700">
+                  <div className="flex items-center gap-3">
+                    <Truck className="w-5 h-5 text-gray-600" />
+                    <span>
+                      Get it by{" "}
+                      <span className="font-semibold">Sat, Oct 11</span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <IndianRupee className="w-5 h-5 text-gray-600" />
+                    <span>Pay on delivery available</span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <RotateCcw className="w-5 h-5 text-gray-600" />
+                    <span>
+                      Easy 7 days return & exchange available{" "}
+                      <button className="text-red-600 font-semibold">
+                        VIEW
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
               {/* shipping,return and Warranty */}
-              <div className="grid grid-cols-2  p-2 md:p-6   border-y border-gray-400">
+              {/* <div className="grid grid-cols-2  p-2 md:p-6   border-y border-gray-400">
                 <div className="flex items-center justify-center space-x-3">
                   <Truck className="w-5 h-5 text-green-500" />
                   <div className="">
@@ -744,16 +803,8 @@ const ProductPage = () => {
                     </p>
                   </div>
                 </div>
-                {/* <div className="flex items-center space-x-2">
-                  <Shield size={20} className="text-purple-600" />
-                  <div>
-                    <p className="text-sm font-medium">Warranty</p>
-                    <p className="text-xs text-gray-500">
-                      {product.warrantyInformation}
-                    </p>
-                  </div>
-                </div> */}
-              </div>
+              
+              </div> */}
             </div>
           </div>
           {/* info tabs */}
@@ -845,7 +896,7 @@ const ProductPage = () => {
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
-                  className="flex-1  text-primary ring-[#900] ring-1  md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+                  className="flex-1  text-red-600 ring-red-700 ring-1  md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
                 >
                   {product.stock === 0 ? (
                     <div className="flex items-center md:px-3 gap-1  text-xs">
@@ -862,9 +913,15 @@ const ProductPage = () => {
                 <button
                   onClick={handleBuyNow}
                   disabled={product.stock === 0}
-                  className="flex-1 bg-gradient-to-r from-[#900001]/90 to-[#900000]/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+                  className="flex-1 bg-gradient-to-r from-red-600/90 to-red-700/60 text-white ring-1   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
                 >
                   Buy Now
+                </button>{" "}
+                <button
+                  onClick={handleWhatsApp}
+                  className="w-fit h-full  text-primary   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
+                >
+                  <BsWhatsapp className="size-10" />
                 </button>
               </div>
             </div>
