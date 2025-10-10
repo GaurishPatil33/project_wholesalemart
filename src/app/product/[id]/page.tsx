@@ -917,12 +917,7 @@ const ProductPage = () => {
                 >
                   Buy Now
                 </button>{" "}
-                <button
-                  onClick={handleWhatsApp}
-                  className="w-fit h-full  text-primary   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
-                >
-                  <BsWhatsapp className="size-10" />
-                </button>
+               
               </div>
             </div>
           </div>
