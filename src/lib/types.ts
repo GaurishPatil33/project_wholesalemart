@@ -5,14 +5,14 @@ export interface Product {
   title: string;
   brand: string;
   category: string;
-  subcategory: string;
-  product_type: string;
-  video: string | null;
+  subcategory?: string;
+  product_type?: string;
+  video?: string | null;
   images: string[];
   price: number;
   discount: number;
   description: string;
-  product_specs: Record<string, string | string[] | undefined>;
+  product_specs: Record<string, string | string[] | undefined | null>;
   rating: number;
   reviews: Review[];
   sku: string;
@@ -25,7 +25,7 @@ export interface Product {
   colors: string[];
   updatedAt: string
   sales: number
-  isTrending?: boolean | undefined
+  isTrending: boolean 
 }
 
 
@@ -48,7 +48,7 @@ export interface CartItem {
   basePrice: number,         // original per-piece price
   finalPrice: number,        // discounted per-piece price
   discount: number,          // applied discount %
-  totalprice: number,  ProductConfig: {
+  totalprice: number, ProductConfig: {
     color?: string;
     size?: string;
     price?: number;

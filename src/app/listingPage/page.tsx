@@ -878,8 +878,8 @@ const ListingPageContent = () => {
                   })}
                 </div>
                 <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-3">
-                  {paginatedProducts.map((p) => (
-                    <ProductCardType2 product={p} key={p.id} />
+                  {paginatedProducts.map((p,i) => (
+                    <ProductCardType2 product={p} key={i} />
                   ))}
                 </div>
                 {paginatedProducts.length <= 0 && !loading && (

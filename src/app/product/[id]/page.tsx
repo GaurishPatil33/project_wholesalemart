@@ -51,6 +51,7 @@ const ProductPage = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   // const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [pincode, setPincode] = useState("690000");
   const [selectedProductConfig, setSelectedProductConfig] =
     useState<ProductConfig>({
       color: product?.colors[0] || "",
@@ -264,9 +265,9 @@ const ProductPage = () => {
         if (getproduct) {
           setProduct(getproduct);
           setSelectedProductConfig({
-            color: getproduct.colors[0],
-            size: getproduct.sizes[0].size,
-            price: getproduct.sizes[0].price,
+            color: getproduct?.colors[0],
+            size: getproduct?.sizes[0].size,
+            price: getproduct?.sizes[0].price,
             quantity: 1,
           });
           const getRelateProduct = await fetchProductByCategory(
@@ -534,30 +535,33 @@ const ProductPage = () => {
                     {selectedProductConfig.size}
                   </span>
                 </h3>
-                <div className="gird grid-cols-3 space-x-3 space-y-2">
-                  {product.sizes.map((opt, i) => (
-                    <motion.button
-                      key={i}
-                      onClick={() => handleSizeSelect(opt.size, opt.price)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`px-4 py-2  rounded-xl border-2 transition-all  ${
-                        selectedProductConfig.size === opt.size
-                          ? "border-red-600/50 bg-red-50"
-                          : "border-gray-200 hover:border-red-300"
-                      }`}
-                    >
-                      <div className="md:flex items-center justify-center gap-2">
-                        <div className="font-semibold text-gray-900">
-                          {opt.size}
+
+                {product.sizes && (
+                  <div className="gird grid-cols-3 space-x-3 space-y-2">
+                    {product?.sizes.map((opt, i) => (
+                      <motion.button
+                        key={i}
+                        onClick={() => handleSizeSelect(opt.size, opt.price)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`px-4 py-2  rounded-xl border-2 transition-all  ${
+                          selectedProductConfig.size === opt.size
+                            ? "border-red-600/50 bg-red-50"
+                            : "border-gray-200 hover:border-red-300"
+                        }`}
+                      >
+                        <div className="md:flex items-center justify-center gap-2">
+                          <div className="font-semibold text-gray-900">
+                            {opt.size}
+                          </div>
+                          <div className="text-sm text-gray-600 mt-1">
+                            ₹{opt.price}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-600 mt-1">
-                          ₹{opt.price}
-                        </div>
-                      </div>
-                    </motion.button>
-                  ))}
-                </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                )}
               </div>
               {/* quantity */}
               <div>
@@ -695,7 +699,7 @@ const ProductPage = () => {
                 )}
               </div>
               {/*cart button */}
-              <div className=" flex  space-x-4">
+              <div className="hidden md:flex  space-x-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
@@ -720,12 +724,18 @@ const ProductPage = () => {
                 >
                   Buy Now
                 </button>{" "}
-                <button
-                  onClick={handleWhatsApp}
-                  className="w-fit h-full  text-primary   md:px-2 py-2 rounded-xl font-semibold text-sm  transition-all duration-300 transform hover:scale-105  flex items-center justify-center space-x-2"
-                >
-                  <BsWhatsapp className="size-10" />
-                </button>
+              </div>
+              <div
+                className="cursor-pointer pt-2 flex flex-wrap items-center leading-snug"
+                onClick={handleWhatsApp}
+              >
+                <span>
+                  You can know more about the product on{" "}
+                  <span className="inline-flex items-center">
+                    WhatsApp
+                    <BsWhatsapp className="inline-block size-4 text-green-500 ml-1 align-baseline" />
+                  </span>
+                </span>
               </div>
 
               <hr className="" />
@@ -737,11 +747,12 @@ const ProductPage = () => {
                 </h3>
 
                 {/* Pincode Input */}
-                <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                <div className="flex items-center max-w-100 justify-between border rounded-md px-3 py-2">
                   <input
+                    id="pincode"
                     type="text"
-                    value="560000"
-                    // readOnly
+                    value={pincode ?? "560000"}
+                    onChange={(e) => setPincode(e.target.value)}
                     className="bg-transparent outline-none text-sm font-medium w-full"
                   />
                   <button className="text-red-600 font-semibold text-sm">
@@ -768,45 +779,29 @@ const ProductPage = () => {
                     <RotateCcw className="w-5 h-5 text-gray-600" />
                     <span>
                       Easy 7 days return & exchange available{" "}
-                      <button className="text-red-600 font-semibold">
+                      <button className="text-red-700 font-semibold">
                         VIEW
                       </button>
                     </span>
                   </div>
                 </div>
-              </div>
-              {/* shipping,return and Warranty */}
-              {/* <div className="grid grid-cols-2  p-2 md:p-6   border-y border-gray-400">
-                <div className="flex items-center justify-center space-x-3">
-                  <Truck className="w-5 h-5 text-green-500" />
-                  <div className="">
-                    <p className="text-xs font-semibold">Fast Delivery</p>
-                    <p className="text-xs text-gray-500">
-                      {product.shippingInformation}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center space-x-2">
-                  {product.returnPolicy === "No return policy" ? (
-                    <Ban size={20} className="text-blue-600" />
-                  ) : (
-                    <RotateCcw size={20} className="text-blue-600" />
-                  )}
+
+                {/* <div className="flex gap-3 text-sm text-gray-700">
+                  <RotateCcw className="w-5 h-5 text-gray-600 flex-shrink-0" />
                   <div>
-                    <p className="text-xs font-semibold">
-                      {product.returnPolicy === "No return policy"
-                        ? "No Returns"
-                        : "Easy Returns"}
+                    <p className="font-semibold">
+                      Easy 14 days returns and exchange
                     </p>
-                    <p className="text-xs text-gray-500">
-                      {product.returnPolicy}
+                    <p className="text-gray-500 text-xs">
+                      Choose to return or exchange for a different size (if
+                      available) within 14 days.
                     </p>
                   </div>
-                </div>
-              
-              </div> */}
+                </div> */}
+              </div>
             </div>
           </div>
+          
           {/* info tabs */}
           <div className="bg-white py-2 mt-2 px-3 md:px-6 md:py-4 rounded-xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-800 ">
@@ -917,7 +912,6 @@ const ProductPage = () => {
                 >
                   Buy Now
                 </button>{" "}
-               
               </div>
             </div>
           </div>

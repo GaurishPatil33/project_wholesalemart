@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useVideoStore } from "@/lib/store/videoStore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FaFire } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { LuBadgeIndianRupee } from "react-icons/lu";
@@ -107,9 +107,9 @@ export const ProductList: React.FC<ProductListProps> = ({
             ref={scrollRef}
             className="flex  overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth scrollbar-hide"
           >
-            {products.map((p) => (
+            {products.map((p,i) => (
               <motion.div
-                key={p.id}
+                key={i}
                 variants={fadeInUp}
                 className="relative snap-start h-fit max-w-50 flex-shrink-0"
               >
@@ -255,11 +255,11 @@ export const ProductsGrid = ({
         <motion.div
           variants={containerVariants}
           ref={scrollRef}
-          className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2"
+          className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2"
         >
-          {products.map((p) => (
+          {products.map((p,i) => (
             <motion.div
-              key={p.id}
+              key={i}
               variants={fadeInUp}
               className="relative snap-start h-fit  flex-shrink-0"
             >

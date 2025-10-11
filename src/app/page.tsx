@@ -3,13 +3,13 @@ import { CategoryList, CategoryListType2 } from "@/components/CategoryList";
 import CategoryStories from "@/components/CategoryStories";
 import FeatureStrip from "@/components/FeaturesStrip";
 import ImageBanner from "@/components/ImageBanner";
-import { ProductList } from "@/components/ProductList";
+import { ProductList, ProductsGrid } from "@/components/ProductList";
 import { Categories, Products } from "@/lib/data";
+import { products1 } from "@/lib/data2";
 // import { Categories, data1 } from "@/lib/data";
 import { fetchAllProducts, fetchCategories } from "@/lib/productfetching";
 import { Product } from "@/lib/types";
 import { useState, useEffect } from "react";
-
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,6 +29,21 @@ export default function Home() {
     console.log("fetch", fetch);
     console.log("fetch", fetchCategory);
     setProducts(Products);
+  }, []);
+  useEffect(() => {
+    const fetchproducts = async () => {
+      try {
+        const cat = await fetchCategories();
+        const pro = await fetchAllProducts();
+        setProducts(pro);
+        console.log("pro", pro);
+        // setCategories(cat)
+      } catch (error) {
+        console.error("Error :", error);
+      }
+    };
+
+    fetchproducts();
   }, []);
 
   return (
@@ -57,8 +72,10 @@ export default function Home() {
         /> */}
       </div>
 
-      <ProductList products={products} title="New Arriwals" />
-      <ProductList products={products} title="Deals of Day" />
+      <ProductList
+        products={products.sort(() => Math.random() - 0.5).slice(0, 30)}
+        title="New Arriwals"
+      />
 
       <CategoryListType2
         data={
@@ -67,10 +84,18 @@ export default function Home() {
         title="Photo frames"
         displayType="slider"
       />
+      
+      <ProductList
+        products={products.sort(() => Math.random() - 0.5).slice(0, 30)}
+        title="Deal's of the day"
+      />
 
-      {/* products */}
+      <ProductsGrid
+        products={products.sort(() => Math.random() - 0.5).slice(0, 30)}
+        title="Check our other products"
+      />
+
       {/* <ProductList products={kurtas} title="Best Seller - Kurtas/Salwars" /> */}
-  
     </div>
   );
 }

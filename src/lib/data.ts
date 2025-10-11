@@ -86,7 +86,7 @@ export const Categories = [
     },
     {
         title: "Wallclocks",
-        slug: "wallclocks",
+        slug: "wall_clocks",
         image: "/categories/wallclocks.png",
         subCategories: [],
     },

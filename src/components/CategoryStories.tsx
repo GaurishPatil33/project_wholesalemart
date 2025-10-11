@@ -1,24 +1,28 @@
 "use client";
 
 import { useShare } from "@/lib/hooks/helperFunctions";
-import { fetchCategories, fetchProductByCategory } from "@/lib/productfetching";
+import {
+  fetchAllProducts,
+  fetchCategories,
+} from "@/lib/productfetching";
 import { Product } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import {  FaTelegramPlane } from "react-icons/fa";
+import { FaTelegramPlane } from "react-icons/fa";
 
 interface Category {
   title: string;
   slug: string;
   image: string;
+  products: Product[];
 }
 
 const CategoryStories = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  // const [products, setProducts] = useState<Product[]>([]);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [duration, setDuration] = useState(7); // default for images
   const [showVideo, setShowVideo] = useState(false);
@@ -30,7 +34,22 @@ const CategoryStories = () => {
     const fetch = async () => {
       try {
         const cat = await fetchCategories();
-        setCategories(cat);
+        const pro = await fetchAllProducts();
+
+        // create combined structure
+        const combined = cat.map((c) => {
+          const related = pro
+            .filter((p) => p.category === c.slug || p.subcategory === c.slug)
+            .slice(0, 4); // take up to 4
+
+          return {
+            ...c,
+            products: related,
+          };
+        });
+
+        setCategories(combined);
+        console.log("cats", combined);
       } catch (err) {
         console.log(err);
       }
@@ -39,37 +58,37 @@ const CategoryStories = () => {
   }, []);
 
   /** ───── Fetch Products by Category ───── */
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        if (selectedCategory) {
-          const product = await fetchProductByCategory(selectedCategory.slug);
-          setProducts(product.slice(1, 5));
-          console.log(product);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetch();
-  }, [selectedCategory]);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     try {
+  //       if (selectedCategory) {
+  //         const product = await fetchProductByCategory(selectedCategory.slug);
+  //         setProducts(product.slice(1, 5));
+  //         // console.log(product);
+  //       }
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetch();
+  // }, [selectedCategory]);
 
   /** ───── Show preview image 2s before video ───── */
   useEffect(() => {
     setShowVideo(false);
 
-    if (products[currentProductIndex]?.video) {
+    if (selectedCategory?.products[currentProductIndex]?.video) {
       const timer = setTimeout(() => setShowVideo(true), 1100);
       return () => clearTimeout(timer);
     }
-  }, [currentProductIndex, products]);
+  }, [currentProductIndex]);
 
   /** ───── Auto progression ───── */
   useEffect(() => {
-    if (!selectedCategory || products.length === 0) return;
+    if (!selectedCategory || selectedCategory.products.length === 0) return;
 
     let timer: NodeJS.Timeout;
-    const current = products[currentProductIndex];
+    const current = selectedCategory.products[currentProductIndex];
 
     if (current?.video) {
       // always 8s max for videos
@@ -84,7 +103,7 @@ const CategoryStories = () => {
     }
 
     return () => clearTimeout(timer);
-  }, [selectedCategory, products, currentProductIndex, showVideo]);
+  }, [selectedCategory, currentProductIndex, showVideo]);
 
   /** ───── Prevent background scroll on modal ───── */
   useEffect(() => {
@@ -119,17 +138,19 @@ const CategoryStories = () => {
     setSelectedCategory(undefined);
     setCurrentProductIndex(0);
   };
+
   const nextProduct = () =>
     setCurrentProductIndex((prev) =>
-      prev < products.length - 1 ? prev + 1 : 0
+      prev < (selectedCategory?.products?.length ?? 0) - 1 ? prev + 1 : 0
     );
+
   const prevProduct = () =>
     setCurrentProductIndex((prev) =>
-      prev > 0 ? prev - 1 : products.length - 1
+      prev > 0 ? prev - 1 : (selectedCategory?.products?.length ?? 1) - 1
     );
 
   return (
-    <div className="w-full pt-2 md:py-4 bg-gradient-to-b from-[#900002]/5 to-[#900001]/20 -mb-5">
+    <div className="w-full pt-2 md:py-4 bg-gradient-to-b -mb-6 ">
       {/* heading */}
       <div className="w-full px-4">
         <h2 className="text-md md:text-lg font-semibold bg-gradient-to-r from-red-800 to-red-400 bg-clip-text text-transparent">
@@ -139,37 +160,67 @@ const CategoryStories = () => {
 
       {/* categories */}
       <div className="max-w-6xl px-4 py-2 overflow-x-auto scrollbar-hide">
-        <div className="flex space-x-3 ">
-          {categories?.map((cat, i) => (
-            <motion.div
-              key={cat.slug}
-              onClick={() => openModal(cat)}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-shrink-0 cursor-pointer"
-            >
-              <div className="relative size-16 rounded-full overflow-hidden shadow-lg">
-                <img
-                  src={cat.image}
-                  alt={cat.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/20 w-full h-full" />
-              </div>
-              <div className="text-[11px] font-medium text-[#900001] text-center max-w-20 truncate">
-                {cat.title}
-              </div>
-            </motion.div>
-          ))}
+        <div className="flex space-x-3 gap-2 ">
+          {categories?.map((cat, i) => {
+            const segments = Math.min(cat.products.length, 4); // max 4 arcs
+            const gap = 6; // gap in degrees
+            const segmentAngle = 360 / segments;
+
+            const ringGradient = Array.from({ length: segments })
+              .map((_, idx) => {
+                const start = idx * segmentAngle;
+                const end = start + segmentAngle - gap;
+                return `#9f0712 ${start}deg ${end}deg, transparent ${end}deg ${
+                  start + segmentAngle
+                }deg`;
+              })
+              .join(", ");
+
+            return (
+              <motion.div
+                key={cat.slug}
+                onClick={() => openModal(cat)}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex-shrink-0 cursor-pointer"
+              >
+                <div className="relative size-16 md:size-20 flex items-center justify-center">
+                  {/* Dynamic conic gradient ring */}
+                  <div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: `conic-gradient(${ringGradient})`,
+                      padding: "2.5px",
+                    }}
+                  >
+                    <div className="w-full h-full rounded-full bg-white p-[2px]">
+                      <div className="rounded-full overflow-hidden w-full h-full">
+                        <img
+                          src={cat.image}
+                          alt={cat.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/20 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-[11px] md:text-sm font-medium text-[#900001] text-center max-w-20 line-clamp-2 truncate">
+                  {cat.title}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
       {/* modal */}
       <AnimatePresence>
-        {selectedCategory && products.length > 0 && (
+        {selectedCategory && selectedCategory.products.length > 0 && (
           <motion.div
             className="fixed inset-0 bg-black/50 backdrop-blur flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
@@ -188,7 +239,7 @@ const CategoryStories = () => {
               <div className=" absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/60 to-transparent">
                 {/* progress bars */}
                 <div className="flex space-x-1 py-0.5">
-                  {products.map((_, i) => (
+                  {selectedCategory.products.map((_, i) => (
                     <div
                       key={i}
                       className="h-1 flex-1 bg-gray-200 overflow-hidden"
@@ -243,10 +294,13 @@ const CategoryStories = () => {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     className="w-full h-full  flex items-center  justify-center bg-black/30 backdrop-blur-2xl"
                   >
-                    {products[currentProductIndex]?.video && showVideo ? (
+                    {selectedCategory.products[currentProductIndex]?.video &&
+                    showVideo ? (
                       <motion.video
                         ref={videoRef}
-                        src={products[currentProductIndex].video}
+                        src={
+                          selectedCategory.products[currentProductIndex].video
+                        }
                         autoPlay
                         muted
                         playsInline
@@ -262,7 +316,10 @@ const CategoryStories = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        src={products[currentProductIndex].images[1]}
+                        src={
+                          selectedCategory.products[currentProductIndex]
+                            .images[1]
+                        }
                         className=" w-full h-full object-cover"
                       />
                     )}
@@ -271,7 +328,7 @@ const CategoryStories = () => {
               </div>
 
               {/* nav buttons */}
-              {products.length > 1 && (
+              {selectedCategory.products.length > 1 && (
                 <>
                   {currentProductIndex > 0 && (
                     <button
@@ -282,7 +339,8 @@ const CategoryStories = () => {
                       <ChevronLeft className="size-5 text-gray-700" />
                     </button>
                   )}
-                  {currentProductIndex < products.length - 1 && (
+                  {currentProductIndex <
+                    selectedCategory.products.length - 1 && (
                     <button
                       onClick={nextProduct}
                       className="z-20 absolute right-2 top-1/2 -translate-y-1/2 size-9 bg-white/50 rounded-full flex items-center justify-center shadow-lg hover:bg-white/80 transition-colors"
@@ -304,7 +362,8 @@ const CategoryStories = () => {
                 <div className=" w-full flex justify-end">
                   <button
                     onClick={() => {
-                      const product = products[currentProductIndex];
+                      const product =
+                        selectedCategory.products[currentProductIndex];
 
                       share(
                         product.title,
@@ -320,22 +379,22 @@ const CategoryStories = () => {
                 </div>
                 <div className="flex justify-between gap-2 mb-2">
                   <div className="text-white/90 text-md font-medium line-clamp-2">
-                    {products[currentProductIndex]?.title}
+                    {selectedCategory.products[currentProductIndex]?.title}
                   </div>
                   <div className="flex text-white/80 text-xs gap-1 items-center">
-                    {products[currentProductIndex]?.rating}
+                    {selectedCategory.products[currentProductIndex]?.rating}
                     <Star className="size-3.5 text-yellow-400 fill-current" />
                   </div>
                 </div>
                 <div className="flex justify-between items-center px-2">
                   <div className="text-white/80 font-semibold">
-                    ₹ {products[currentProductIndex]?.price}
+                    ₹ {selectedCategory.products[currentProductIndex]?.price}
                   </div>
 
                   <button
                     onClick={() =>
                       router.push(
-                        `/product/${products[currentProductIndex]?.id}`
+                        `/product/${selectedCategory.products[currentProductIndex]?.id}`
                       )
                     }
                     className="bg-[#900001]/30 ring ring-white/70 hover:bg-[#900001]/90 
