@@ -58,7 +58,7 @@ const ProductPage = () => {
     useState<ProductConfig>({
       color: product?.colors[0] || "",
       size: product?.sizes[0].size || "",
-      price: product?.sizes[0].price ?? product?.price ,
+      price: product?.sizes[0].price ?? product?.price,
       quantity: 1,
     });
 
@@ -201,6 +201,30 @@ const ProductPage = () => {
     },
   ];
 
+ // Helper function to get hex color from color name
+  const getColorHex = (colorName: string): string => {
+    const colorMap: Record<string, string> = {
+      golden: "#FFD700",
+      silver: "#C0C0C0",
+      bronze: "#CD7F32",
+      "rose gold": "#E6A4B4",
+      copper: "#B87333",
+      black: "#000000",
+      white: "#FFFFFF",
+      red: "#FF0000",
+      blue: "#0000FF",
+      green: "#00FF00",
+      brown: "#8B4513",
+      gray: "#808080",
+      grey: "#808080",
+      yellow: "#FFFF00",
+      pink: "#FFC0CB",
+      purple: "#800080",
+      orange: "#FFA500",
+    };
+    return colorMap[colorName.toLowerCase()] || "#CCCCCC";
+  };
+
   // Filter color options to only show colors that the product has
   const availableColors = useMemo<ColorOptions[]>(() => {
     if (!product?.colors || product.colors.length === 0) {
@@ -229,29 +253,7 @@ const ProductPage = () => {
     return matched;
   }, [product?.colors]);
 
-  // Helper function to get hex color from color name
-  const getColorHex = (colorName: string): string => {
-    const colorMap: Record<string, string> = {
-      golden: "#FFD700",
-      silver: "#C0C0C0",
-      bronze: "#CD7F32",
-      "rose gold": "#E6A4B4",
-      copper: "#B87333",
-      black: "#000000",
-      white: "#FFFFFF",
-      red: "#FF0000",
-      blue: "#0000FF",
-      green: "#00FF00",
-      brown: "#8B4513",
-      gray: "#808080",
-      grey: "#808080",
-      yellow: "#FFFF00",
-      pink: "#FFC0CB",
-      purple: "#800080",
-      orange: "#FFA500",
-    };
-    return colorMap[colorName.toLowerCase()] || "#CCCCCC";
-  };
+ 
 
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
@@ -302,18 +304,6 @@ const ProductPage = () => {
     }
     setLoading(false);
   }, [id]);
-
-  // const nextImage = () => {
-  //   if (product)
-  //     setSelectedImage((prev) => (prev + 1) % product?.images?.length);
-  // };
-
-  // const prevImage = () => {
-  //   if (product)
-  //     setSelectedImage(
-  //       (prev) => (prev - 1 + product.images.length) % product.images.length
-  //     );
-  // };
 
   // Handle color change
   const handleColorSelect = (color: string) => {
@@ -428,43 +418,6 @@ const ProductPage = () => {
               Sorry, we couldn't find the product you're looking for. It may
               have been removed or is currently unavailable.
             </p>
-
-            {/* <div className="flex space-x-4">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
-                Go to Home
-              </button>
-              <button className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg border border-gray-300 transition-colors">
-                Browse All Products
-              </button>
-            </div>
-
-            <div className="mt-12 text-center">
-              <p className="text-sm text-gray-500 mb-4">Looking for something specific?</p>
-              <div className="flex items-center space-x-2 max-w-md">
-                <input 
-                  type="text" 
-                  placeholder="Search for products..." 
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg transition-colors">
-                  Search
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-12 border-t pt-8 w-full max-w-2xl">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">Popular Categories</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {['Fragrances', 'Beauty', 'Fashion', 'Accessories'].map((category) => (
-                  <button 
-                    key={category}
-                    className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-center transition-colors"
-                  >
-                    <p className="font-medium text-gray-700">{category}</p>
-                  </button>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
@@ -557,14 +510,6 @@ const ProductPage = () => {
                     </span>
                   )}
                 </div>
-                {/* {totalSavings > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    You save ₹{totalSavings}
-                  </motion.div>
-                )} */}
 
                 <div className="flex items-center space-x-2 mb-1 md:mb-4">
                   <Check className="w-5 h-5 text-green-500" />
@@ -671,9 +616,7 @@ const ProductPage = () => {
                     >
                       <Minus className="w-4 h-4" />
                     </button>
-                    {/* <span className="md:px-6 p-2 px-3 font-semibold text-sm">
-                              {quantity}
-                            </span> */}
+
                     <input
                       type="text"
                       name=""
@@ -689,10 +632,6 @@ const ProductPage = () => {
                         handleQtyChange(value);
                       }}
                       value={selectedProductConfig.quantity}
-                      // disabled={
-                      //   selectedProductConfig.quantity > 10 ||
-                      //   selectedProductConfig.quantity < 2
-                      // }
                     />
                     <button
                       onClick={() =>
@@ -877,19 +816,6 @@ const ProductPage = () => {
                     </span>
                   </div>
                 </div>
-
-                {/* <div className="flex gap-3 text-sm text-gray-700">
-                  <RotateCcw className="w-5 h-5 text-gray-600 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold">
-                      Easy 14 days returns and exchange
-                    </p>
-                    <p className="text-gray-500 text-xs">
-                      Choose to return or exchange for a different size (if
-                      available) within 14 days.
-                    </p>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -902,12 +828,7 @@ const ProductPage = () => {
             <div className="flex flex-col md:flex-row space-x-2">
               <div className="border-b md:border-0 md:border-r border-gray-200 ">
                 <nav className="flex justify-between  md:flex-col  items-center">
-                  {[
-                    "description",
-                    "specifications",
-                    // "reviews",
-                    // "reviews (" + product.reviews.length + ")",
-                  ].map((tab) => (
+                  {["description", "specifications"].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -949,8 +870,6 @@ const ProductPage = () => {
                     ))}
                   </div>
                 )}
-
-                {/* {activeTab === "reviews" && <Reviews product={product} />} */}
               </div>
             </div>
           </div>
@@ -960,7 +879,6 @@ const ProductPage = () => {
             <Reviews product={product} />
           </div>
 
-          {/* relatedProducts*/}
           {/* relatedProducts*/}
           <div className="mt-8">
             <h3 className="text-2xl font-bold text-gray-900 ">

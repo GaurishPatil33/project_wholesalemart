@@ -52,7 +52,7 @@ const ProductMediaCorousal = ({ product }: { product: Product }) => {
                 <img
                   src={slide.src}
                   alt={product?.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               ) : (
                 <div className="relative w-full h-full">
