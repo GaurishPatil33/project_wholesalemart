@@ -416,7 +416,7 @@ const ProductPage = () => {
               Product Not Found
             </h2>
             <p className="text-gray-600 text-center mb-8 max-w-md">
-              Sorry, we couldn't find the product you're looking for. It may
+              Sorry, we couldn&apose;t find the product you&apose;re looking for. It may
               have been removed or is currently unavailable.
             </p>
           </div>
