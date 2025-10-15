@@ -58,7 +58,7 @@ const ProductPage = () => {
     useState<ProductConfig>({
       color: product?.colors[0] || "",
       size: product?.sizes[0].size || "",
-      price: product?.sizes[0].price ?? product?.price ?? 0,
+      price: product?.sizes[0].price ?? product?.price ,
       quantity: 1,
     });
 
