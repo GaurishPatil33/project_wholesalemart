@@ -30,6 +30,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatedNumber } from "./components/AnimateNumber";
 import { BsWhatsapp } from "react-icons/bs";
+import Loading from "@/components/Loading";
 
 interface ProductConfig {
   color?: string;
@@ -201,7 +202,7 @@ const ProductPage = () => {
     },
   ];
 
- // Helper function to get hex color from color name
+  // Helper function to get hex color from color name
   const getColorHex = (colorName: string): string => {
     const colorMap: Record<string, string> = {
       golden: "#FFD700",
@@ -253,8 +254,6 @@ const ProductPage = () => {
     return matched;
   }, [product?.colors]);
 
- 
-
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
   const share = useShare();
@@ -295,6 +294,8 @@ const ProductPage = () => {
 
   useEffect(() => {
     if (!id) return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     setLoading(true);
     const getproduct = fetchProductById(id);
     if (getproduct) {
@@ -381,7 +382,7 @@ const ProductPage = () => {
     window.open(whatsappUrl, "_blank");
   };
 
-  if (loading) return <div className=" text-center mt10">Loading...</div>;
+  if (loading) return <Loading />;
 
   if (!product) {
     return (

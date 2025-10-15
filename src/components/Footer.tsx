@@ -35,7 +35,7 @@ const Footer = () => {
       {/* Scroll to top button */}
       <button
         onClick={scrollToTop}
-        className="absolute -top-6 right-8 bg-gradient-to-r from-[#900001] to-red-600 hover:from-red-600 hover:to-[#900001] text-white p-3 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 z-10 "
+        className="absolute -top-6 right-8 bg-gradient-to-r from-[#900001] to-red-600 hover:from-red-600 hover:to-[#900001] text-white p-3 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300   "
       >
         <ChevronUp className="w-5 h-5" />
       </button>
@@ -48,7 +48,7 @@ const Footer = () => {
           <div className="absolute top-40 right-20 w-24 h-24 bg-purple-500 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative z-10 mx-auto px-6 lg:px-8 max-w-7xl">
+        <div className="relative   mx-auto px-6 lg:px-8 max-w-7xl">
           {/* Main footer content */}
           <div className="pt-10 pb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -91,7 +91,7 @@ const Footer = () => {
               {/* Shop categories */}
               <div>
                 <h4 className="text-lg font-semibold mb-6 relative">
-                  <span className="relative z-10">Shop Categories</span>
+                  <span className="relative  ">Shop Categories</span>
                   <div className="absolute -bottom-2 left-0 w-8 h-0.5 bg-gradient-to-r from-red-500 to-purple-500"></div>
                 </h4>
                 <ul className="space-y-3">
@@ -101,7 +101,7 @@ const Footer = () => {
                         href="#"
                         className="text-gray-300 hover:text-white relative group transition-all duration-300 block py-1"
                       >
-                        <span className="relative z-10">{item.title}</span>
+                        <span className="relative  ">{item.title}</span>
                         <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-red-500 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                       </a>
                     </li>
@@ -112,7 +112,7 @@ const Footer = () => {
               {/* Quick Links */}
               <div>
                 <h4 className="text-lg font-semibold mb-6 relative">
-                  <span className="relative z-10">Quick Links</span>
+                  <span className="relative  ">Quick Links</span>
                   <div className="absolute -bottom-2 left-0 w-8 h-0.5 bg-gradient-to-r from-red-500 to-purple-500"></div>
                 </h4>
                 <ul className="space-y-3">
@@ -123,7 +123,7 @@ const Footer = () => {
                           href="#"
                           className="text-gray-300 hover:text-white relative group transition-all duration-300 block py-1"
                         >
-                          <span className="relative z-10">{item}</span>
+                          <span className="relative  ">{item}</span>
                           <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-red-500 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                         </a>
                       </li>
@@ -135,7 +135,7 @@ const Footer = () => {
               {/* Customer Service */}
               <div>
                 <h4 className="text-lg font-semibold mb-6 relative">
-                  <span className="relative z-10">Customer Service</span>
+                  <span className="relative  ">Customer Service</span>
                   <div className="absolute -bottom-2 left-0 w-8 h-0.5 bg-gradient-to-r from-red-500 to-purple-500"></div>
                 </h4>
                 <ul className="space-y-3">
@@ -150,7 +150,7 @@ const Footer = () => {
                         href="#"
                         className="text-gray-300 hover:text-white relative group transition-all duration-300 block py-1"
                       >
-                        <span className="relative z-10">{item}</span>
+                        <span className="relative  ">{item}</span>
                         <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-red-500 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                       </a>
                     </li>
