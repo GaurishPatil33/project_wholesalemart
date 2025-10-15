@@ -300,6 +300,13 @@ const ProductPage = () => {
     const getproduct = fetchProductById(id);
     if (getproduct) {
       setProduct(getproduct);
+      setProduct(getproduct);
+      setSelectedProductConfig({
+        color: getproduct?.colors[0],
+        size: getproduct?.sizes[0].size,
+        price: getproduct?.sizes[0].price,
+        quantity: 1,
+      });
       const getProducts = fetchAllProducts();
       setProducts(getProducts);
     }
@@ -416,8 +423,8 @@ const ProductPage = () => {
               Product Not Found
             </h2>
             <p className="text-gray-600 text-center mb-8 max-w-md">
-              Sorry, we couldn&apose;t find the product you&apose;re looking for. It may
-              have been removed or is currently unavailable.
+              Sorry, we couldn&apose;t find the product you&apose;re looking
+              for. It may have been removed or is currently unavailable.
             </p>
           </div>
         </div>
