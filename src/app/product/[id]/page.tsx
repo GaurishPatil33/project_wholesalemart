@@ -4,6 +4,7 @@ import ProductMediaCorousal from "@/components/ProductMediaCorousal";
 import Reviews from "@/components/Reviews";
 import { useShare } from "@/lib/hooks/helperFunctions";
 import {
+  fetchAllProducts,
   fetchProductByCategory,
   fetchProductById,
 } from "@/lib/productfetching";
@@ -48,7 +49,8 @@ const ProductPage = () => {
   //   const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const id = params.id?.toString();
   const [product, setProduct] = useState<Product | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  // const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   // const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [pincode, setPincode] = useState("690000");
@@ -255,34 +257,50 @@ const ProductPage = () => {
   const router = useRouter();
   const share = useShare();
 
+  // useEffect(() => {
+  //   if (!id) return;
+  //   const fetch = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const getproduct = await fetchProductById(id);
+  //       console.log();
+  //       if (getproduct) {
+  //         setProduct(getproduct);
+  //         setSelectedProductConfig({
+  //           color: getproduct?.colors[0],
+  //           size: getproduct?.sizes[0].size,
+  //           price: getproduct?.sizes[0].price,
+  //           quantity: 1,
+  //         });
+  //         const getRelateProduct = await fetchProductByCategory(
+  //           getproduct.category
+  //         );
+  //         const getProducts = await fetchAllProducts()
+  //         setProducts(getProducts)
+          
+  //         // setRelatedProducts(getRelateProduct);
+
+  //       }
+  //     } catch (err) {
+  //       console.log(err);
+  //     } finally {
+  //       setLoading(false);
+  //       console.log(selectedProductConfig);
+  //     }
+  //   };
+  //   fetch();
+  // }, [id]);
+
   useEffect(() => {
     if (!id) return;
-    const fetch = async () => {
-      try {
-        setLoading(true);
-        const getproduct = await fetchProductById(id);
-        console.log();
-        if (getproduct) {
-          setProduct(getproduct);
-          setSelectedProductConfig({
-            color: getproduct?.colors[0],
-            size: getproduct?.sizes[0].size,
-            price: getproduct?.sizes[0].price,
-            quantity: 1,
-          });
-          const getRelateProduct = await fetchProductByCategory(
-            getproduct.category
-          );
-          setRelatedProducts(getRelateProduct);
-        }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-        console.log(selectedProductConfig);
-      }
-    };
-    fetch();
+    setLoading(true);
+    const getproduct = fetchProductById(id);
+    if (getproduct) {
+      setProduct(getproduct);
+      const getProducts = fetchAllProducts();
+      setProducts(getProducts);
+    }
+    setLoading(false);
   }, [id]);
 
   // const nextImage = () => {
@@ -869,12 +887,27 @@ const ProductPage = () => {
           </div>
 
           {/* relatedProducts*/}
+         {/* relatedProducts*/}
           <div className="mt-8">
             <h3 className="text-2xl font-bold text-gray-900 ">
               Similar Products
             </h3>
 
-            <ProductList products={relatedProducts} />
+            <ProductList
+              products={products.filter((p) => p.category === product.category)}
+            />
+          </div>
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold text-gray-900 ">
+              Check Products in other Categories
+            </h3>
+
+            <ProductList
+              products={products
+                .filter((p) => p.category !== product.category)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 10)}
+            />
           </div>
 
           {/* sticky cart button for mobile View */}

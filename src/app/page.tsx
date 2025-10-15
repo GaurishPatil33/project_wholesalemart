@@ -57,8 +57,11 @@ export default function Home() {
 
       {/* Shop by Category */}
       <div className="">
-        <div className="w-full h-fit shadow-md -mb-3">
+        <div className="hidden md:block w-full h-fit shadow-md -mb-3">
           <img src="/cat-banner/category.png" alt="" />
+        </div>
+        <div className="md:hidden w-full h-fit shadow-md -mb-3">
+          <img src="/cat-banner/categorymob.png" alt="" />
         </div>
         <CategoryList
           data={Categories}

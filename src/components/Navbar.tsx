@@ -75,14 +75,15 @@ const Navbar = () => {
 
   return (
     <div className={`${isCheckout ? " hidden md:block" : " block"}`}>
-      {/* HEADER */}
+    
+       {/* HEADER */}
       <motion.header
         variants={headerVariants}
         initial="hidden"
         animate="visible"
         className="fixed top-0 left-0 right-0 z-30 transition-all duration-200 shadow-lg bg-white"
       >
-        <div className="max-w-screen md:mx-auto px-2 md:px-8 my-1 pt-2 flex items-center justify-between w-full gap-2">
+        <div className="max-w-screen mx-auto px-2 md:px-8 my-1 md:py-2 flex items-center justify-between w-full gap-2">
           {/* Mobile menu button + Logo */}
           <div className=" flex w-fit items-center justify-between  gap-3">
             <motion.button
@@ -94,6 +95,30 @@ const Navbar = () => {
               <Menu className="size-4 " />
             </motion.button>
             <Link
+              href="/"
+              aria-label="Go to homepage"
+              className=" hidden md:flex items-center justify-between w-fit gap-1.5 md:gap-3"
+            >
+              <motion.div
+                className="cursor-pointer size-13 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <img
+                  src={"/logos/logo1.png"}
+                  alt="Logo"
+                  width={48}
+                  height={48}
+                  className=" size-full rounded-full object-contain "
+                  // priority
+                />
+              </motion.div>
+              {/* <span className=" hidden lg:block  text-md md:text-2xl text-primary font-semibold">
+                {clientname
+              </span> */}
+            </Link>
+          </div>
+         <Link
               href="/"
               aria-label="Go to homepage"
               className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
@@ -116,7 +141,6 @@ const Navbar = () => {
                 {/* RAM */}
               </span>
             </Link>
-          </div>
 
           {/* Desktop Categories */}
           <nav className="hidden md:flex items-center gap-4">
@@ -136,9 +160,9 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="flex items-center justify-between gap-1 w-full md:w-fit md:gap-4">
+          <div className="flex items-center justify-between gap-1 w-fit  lg:w-[36%] md:gap-4 ">
             {/* Search */}
-            <div className=" md:block w-full   right-0">
+            <div className="hidden md:block w-full  right-0">
               <Search />
             </div>
             {/* <div className=" md:hidden text-primary ">
@@ -181,7 +205,7 @@ const Navbar = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px]  rounded-full size-4 flex items-center justify-center"
                   >
                     {wishlist.length}
                   </motion.span>
@@ -203,7 +227,7 @@ const Navbar = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] md:text-[10px] rounded-full size-4 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px]  rounded-full size-4 flex items-center justify-center"
                   >
                     {cart.length}
                   </motion.span>
@@ -212,6 +236,12 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+        {/* mobileSearch */}
+        <AnimatePresence>
+          <div className="w-full h-9 flex md:hidden px-3 py-0.5 pb-2">
+            <SearchBar />
+          </div>
+        </AnimatePresence>
       </motion.header>
 
       {/* MOBILE SEARCH OVERLAY */}
