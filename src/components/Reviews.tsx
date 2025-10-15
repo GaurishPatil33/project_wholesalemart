@@ -9,6 +9,8 @@ export default function Reviews({ product }: { product: Product }) {
     ? product.reviews
     : product.reviews.slice(0, 3);
 
+  const viewImage = () => <div className=""></div>;
+
   return (
     <div className="space-y-1 md:space-y-3">
       <div className="bg-white py-2 px-3 md:px-6 md:py-4 rounded-xl shadow-sm border border-gray-100">

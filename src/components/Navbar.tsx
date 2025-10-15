@@ -121,7 +121,7 @@ const Navbar = () => {
          <Link
               href="/"
               aria-label="Go to homepage"
-              className="flex items-center justify-between w-fit gap-1.5 md:gap-3"
+              className="md:hidden flex items-center justify-between w-fit gap-1.5 md:gap-3"
             >
               <motion.div
                 className="cursor-pointer h-fit w-20 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
