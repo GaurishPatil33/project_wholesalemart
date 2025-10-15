@@ -52,7 +52,7 @@ const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   // const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   // const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [pincode, setPincode] = useState("690000");
   const [selectedProductConfig, setSelectedProductConfig] =
     useState<ProductConfig>({
@@ -277,7 +277,7 @@ const ProductPage = () => {
   //         );
   //         const getProducts = await fetchAllProducts()
   //         setProducts(getProducts)
-          
+
   //         // setRelatedProducts(getRelateProduct);
 
   //       }
@@ -393,9 +393,83 @@ const ProductPage = () => {
 
   if (loading) return <div className=" text-center mt10">Loading...</div>;
 
-  if (!product)
-    return <div className="text-center mt-10">Product not found</div>;
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Breadcrumb */}
+        {/* <div className="bg-white px-4 py-2 text-sm text-gray-600">
+          <div className="max-w-7xl mx-auto">
+            Home / Products
+          </div>
+        </div> */}
 
+        <div className="max-w-7xl mx-auto px-4 py-16">
+          <div className="flex flex-col items-center justify-center min-h-[500px] bg-white rounded-lg shadow-sm p-12">
+            <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+              <svg
+                className="w-16 h-16 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">
+              Product Not Found
+            </h2>
+            <p className="text-gray-600 text-center mb-8 max-w-md">
+              Sorry, we couldn't find the product you're looking for. It may
+              have been removed or is currently unavailable.
+            </p>
+
+            {/* <div className="flex space-x-4">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                Go to Home
+              </button>
+              <button className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg border border-gray-300 transition-colors">
+                Browse All Products
+              </button>
+            </div>
+
+            <div className="mt-12 text-center">
+              <p className="text-sm text-gray-500 mb-4">Looking for something specific?</p>
+              <div className="flex items-center space-x-2 max-w-md">
+                <input 
+                  type="text" 
+                  placeholder="Search for products..." 
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg transition-colors">
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-12 border-t pt-8 w-full max-w-2xl">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">Popular Categories</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {['Fragrances', 'Beauty', 'Fashion', 'Accessories'].map((category) => (
+                  <button 
+                    key={category}
+                    className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-center transition-colors"
+                  >
+                    <p className="font-medium text-gray-700">{category}</p>
+                  </button>
+                ))}
+              </div>
+            </div> */}
+          </div>
+        </div>
+      </div>
+    );
+  }
   console.log(basePrice > finalPrice, basePrice, finalPrice);
 
   return (
@@ -819,7 +893,7 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-          
+
           {/* info tabs */}
           <div className="bg-white py-2 mt-2 px-3 md:px-6 md:py-4 rounded-xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-800 ">
@@ -887,7 +961,7 @@ const ProductPage = () => {
           </div>
 
           {/* relatedProducts*/}
-         {/* relatedProducts*/}
+          {/* relatedProducts*/}
           <div className="mt-8">
             <h3 className="text-2xl font-bold text-gray-900 ">
               Similar Products
