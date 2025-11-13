@@ -14,6 +14,7 @@ export type Address = {
     country?: string;
     isSelected?: boolean
     isDefault?: boolean
+    type?: string
 };
 
 export type User = {
@@ -21,6 +22,8 @@ export type User = {
     name: string;
     email: string;
     phone?: string;
+    password: string
+    avatar?: string
     address?: Address[];
     isLoggedIn: boolean;
 };
@@ -28,10 +31,12 @@ export type User = {
 
 type UserStore = {
     user: User | null
+    users: User[]
     orders: Order[]
 
-    login: (user: Omit<User, "isLoggedIn" | "address">) => void
-    logout: () => void
+    signup: (newUser: Omit<User, "isLoggedIn" | "address"> & { password: string }) => { success: boolean; message: string };
+    login: (identifier: string, password: string) => { success: boolean; message: string };
+    logout: () => void;
     updateUser: (updates: Partial<User>) => void
 
     addAddress: (address: Address) => void
@@ -47,15 +52,43 @@ export const useUserStore = create<UserStore>()(
     persist(
         (set, get) => ({
             user: null,
+            users: [],        // ✅ stored signup users
             orders: [],
 
-            login: (user) => {
-                set({ user: { ...user, isLoggedIn: true, address: [] }, })
+            signup: (newUser) => {
+                const { users } = get();
+                const exists = users.some(u => u.email === newUser.email);
+
+                if (exists) return { success: false, message: "User already exists" };
+
+                const userToSave: User = {
+                    ...newUser,
+                    isLoggedIn: false,
+                    address: []
+                };
+
+                set({ users: [...users, userToSave] });
+                return { success: true, message: "Signup successful" };
             },
 
-            logout: () => {
-                set({ user: null })
+            login: (identifier: string, password: string) => {
+                const { users } = get();
+
+                // Match user where email OR phone matches the input
+                const match = users.find(
+                    (u) =>
+                        (u.email === identifier || u.phone === identifier) &&
+                        u.password === password
+                );
+
+                if (!match) return { success: false, message: "Invalid credentials" };
+
+                set({ user: { ...match, isLoggedIn: true } });
+                return { success: true, message: "Login successful" };
             },
+
+
+            logout: () => set({ user: null }),
 
             updateUser: (updates) => {
                 const u = get().user;
@@ -78,6 +111,7 @@ export const useUserStore = create<UserStore>()(
                     }
                 })
             },
+            
             updateAddress: (index, address) => {
                 const u = get().user;
                 if (!u) return

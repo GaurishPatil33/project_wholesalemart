@@ -10,7 +10,7 @@ import ProgressBar, { Step } from "./components/progressBar";
 import PriceSummary from "./components/priceSummary";
 import { useIsMobile } from "@/lib/hooks/helperFunctions";
 import { useUserStore } from "@/lib/store/userStore";
-import AuthForm from "../auth/AuthForm";
+import AuthForm from "../auth/page";
 import AddressModal from "./components/AddressModal";
 import Payments, { PaymentMethod } from "./components/Payments";
 import CheckoutProductList from "./components/CheckoutProductList";
@@ -71,10 +71,10 @@ const CheckoutPage = () => {
       return;
     }
 
-    // const order = addOrderFromCart(items, user, {
-    //   method: paymentMethod.type,
-    //   status: paymentMethod.type === "cod" ? "pending" : "paid",
-    // });
+    const order = addOrderFromCart(items, user, {
+      method: paymentMethod.type,
+      status: paymentMethod.type === "cod" ? "pending" : "paid",
+    });
 
     setOrderComplete(true);
     // clearCart(); // or deselect items instead if you want to keep them
@@ -153,7 +153,7 @@ const CheckoutPage = () => {
           </motion.div>
           <motion.button
             onClick={handleComplete}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all"
+            className="w-full bg-gradient-to-r from-red-500 to-red-600/50 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all"
             // variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"

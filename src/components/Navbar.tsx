@@ -12,10 +12,11 @@ import {
   Mail,
   PhoneCallIcon,
   SearchIcon,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Search from "./Search";
 import { usePathname, useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cartStore";
@@ -24,6 +25,9 @@ import { Categories } from "@/lib/data";
 import CartSidebar from "./CartSidebar";
 import WishlistSidebar from "./WishlistSidebar";
 import SearchBar from "./Search";
+import { useUserStore } from "@/lib/store/userStore";
+import UserAvatar from "./UserAvatar";
+import { useAuthModalStore } from "@/lib/store/authModalStore";
 
 const Navbar = () => {
   const router = useRouter();
@@ -32,9 +36,11 @@ const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const { cart, wishlist } = useCartStore();
+  const { login, user } = useUserStore();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const pathname = usePathname();
   const isCheckout = pathname === "/checkout";
+  const { openModal } = useAuthModalStore();
 
   // const theme=useTheme()
 
@@ -73,10 +79,14 @@ const Navbar = () => {
     visible: { opacity: 1, x: 0 },
   };
 
+  const handleUserClick = useCallback(() => {
+    if (!user) return openModal("/profile");
+    router.push("/profile");
+  }, [router, user]);
+
   return (
     <div className={`${isCheckout ? " hidden md:block" : " block"}`}>
-    
-       {/* HEADER */}
+      {/* HEADER */}
       <motion.header
         variants={headerVariants}
         initial="hidden"
@@ -100,7 +110,7 @@ const Navbar = () => {
               className=" hidden md:flex items-center justify-between w-fit gap-1.5 md:gap-3"
             >
               <motion.div
-                className="cursor-pointer size-13 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
+                className="cursor-pointer h-12 w-20 "
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
               >
@@ -109,7 +119,7 @@ const Navbar = () => {
                   alt="Logo"
                   width={48}
                   height={48}
-                  className=" size-full rounded-full object-contain "
+                  className=" w-full h-full object-contain"
                   // priority
                 />
               </motion.div>
@@ -118,29 +128,29 @@ const Navbar = () => {
               </span> */}
             </Link>
           </div>
-         <Link
-              href="/"
-              aria-label="Go to homepage"
-              className="md:hidden flex items-center justify-between w-fit gap-1.5 md:gap-3"
+          <Link
+            href="/"
+            aria-label="Go to homepage"
+            className="md:hidden flex items-center justify-between w-fit gap-1.5 md:gap-3"
+          >
+            <motion.div
+              className="cursor-pointer h-fit w-20 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
             >
-              <motion.div
-                className="cursor-pointer h-fit w-20 md:size-12  flex items-center py-0.5 gap-1 md:gap-2"
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <img
-                  src="/logos/logo1.png"
-                  alt="Logo"
-                  // width={48}
-                  // height={48}
-                  className=" w-full   object-cover  "
-                  // priority
-                />
-              </motion.div>
-              <span className=" hidden lg:block  text-md md:text-2xl text-primary font-semibold">
-                {/* RAM */}
-              </span>
-            </Link>
+              <img
+                src="/logos/logo1.png"
+                alt="Logo"
+                // width={48}
+                // height={48}
+                className=" w-full   object-cover  "
+                // priority
+              />
+            </motion.div>
+            <span className=" hidden lg:block  text-md md:text-2xl text-primary font-semibold">
+              {/* RAM */}
+            </span>
+          </Link>
 
           {/* Desktop Categories */}
           <nav className="hidden md:flex items-center gap-4">
@@ -165,19 +175,10 @@ const Navbar = () => {
             <div className="hidden md:block w-full  right-0">
               <Search />
             </div>
-            {/* <div className=" md:hidden text-primary ">
-              <motion.button
-                onClick={() => setMobileSearchOpen(true)}
-                whileTap={{ scale: 0.95 }}
-                className="p-2 hover:bg-gray-50  rounded-lg"
-                aria-label="Open search"
-              >
-                <SearchIcon className="size-6" />
-              </motion.button>
-            </div> */}
+
             {/* Cart & Wishlist */}
             <div className="flex items-center gap-1 md:gap-2">
-              <motion.button
+              {/* <motion.button
                 onClick={() => router.push("/profile")}
                 aria-label="Profile"
                 className="hidden md:block  rounded-lg"
@@ -187,7 +188,7 @@ const Navbar = () => {
                 <div className="text-red-700 bg-red-50 rounded-full p-1 md:p-2">
                   <User2 className="size-5" />
                 </div>
-              </motion.button>
+              </motion.button> */}
 
               <motion.button
                 // onClick={() => router.push("/wishlist")}
@@ -205,7 +206,7 @@ const Navbar = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px]  rounded-full size-4 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px]  rounded-full size-4 flex items-center justify-center"
                   >
                     {wishlist.length}
                   </motion.span>
@@ -227,12 +228,16 @@ const Navbar = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-1 -right-1 bg-red-700 text-white text-[9px]  rounded-full size-4 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px]  rounded-full size-4 flex items-center justify-center"
                   >
                     {cart.length}
                   </motion.span>
                 )}
               </motion.button>
+
+              <div className="hidden md:block p-1">
+                <UserAvatar onClick={handleUserClick} size={24} />
+              </div>
             </div>
           </div>
         </div>
@@ -324,7 +329,7 @@ const Navbar = () => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed top-0 left-0 h-full w-64 bg-white z-50 overflow-y-auto"
+              className="fixed top-0 left-0 h-full min-w-64 max-w-70  bg-white z-50 overflow-y-auto"
             >
               {/* HEADER inside mobile menu */}
               <div className="flex items-center justify-between border-b border-gray-300 px-3 ">
@@ -338,7 +343,7 @@ const Navbar = () => {
                       loading="lazy"
                       // className=" w-full object-cover"
                       className="object-contain"
-                      />
+                    />
                     {/* <h1 className="text-xl font-bold text-red-700">RAM</h1> */}
                   </div>
                 </Link>
@@ -351,6 +356,27 @@ const Navbar = () => {
                   <X className="w-6 h-6" />
                 </motion.button>
               </div>
+              {/* User profile section */}
+              <motion.div
+                variants={itemVariants}
+                className="w-full mt-1 flex items-center space-x-3 p-4  mb-6 text-left justify-between focus:outline-none border-b border-gray-300  "
+                onClick={() => {
+                  handleUserClick();
+                  setMobileMenu(false);
+                }}
+              >
+                <UserAvatar />
+
+                <div className="flex-1">
+                  <div className="font-medium text-gray-800">
+                    {user?.name || "Guest"}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {user?.phone || "login now"}
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 flex-shrink-0" />
+              </motion.div>
 
               {/* Categories */}
               <div className=" space-y-2 pr-2">
@@ -387,15 +413,24 @@ const Navbar = () => {
 
               <div className=" flex flex-col justify-end  ">
                 {/* Login */}
-                <div className="px-2">
-                  <motion.button
+                {user ? (
+                  <motion.div
                     variants={itemVariants}
-                    className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-600 text-white"
+                    className="w-full mt-3 flex justify-between items-center gap-2 py-2 font-bold text-sm "
                   >
-                    LOG IN
-                    <LogInIcon className="w-5 h-5" />
-                  </motion.button>
-                </div>
+                    <div className=""></div>
+                  </motion.div>
+                ) : (
+                  <div className="px-2">
+                    <motion.button
+                      variants={itemVariants}
+                      className="w-full mt-3 flex justify-center items-center gap-2 py-2 font-bold text-sm rounded-full bg-red-600 text-white"
+                    >
+                      LOG IN
+                      <LogInIcon className="w-5 h-5" />
+                    </motion.button>
+                  </div>
+                )}
 
                 {/* Help Section */}
                 <motion.div

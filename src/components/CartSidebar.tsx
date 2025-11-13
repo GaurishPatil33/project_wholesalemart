@@ -65,7 +65,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   const CartProductCard = ({ p }: { p: CartItem }) => (
     <div
       key={p.product.id}
-      className="flex items-center justify-between gap-2 md:gap-3 bg-gray-50 p-2 rounded-lg shadow-sm w-full"
+      className="flex items-center justify-between gap-2 md:gap-3 bg-gray-50 p-2 rounded-lg shadow-sm w-full cursor-pointer"
     >
       <div className="relative flex items-center gap-2 w-30 h-30  rounded overflow-hidden shadow-md">
         <input

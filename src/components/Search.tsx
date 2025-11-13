@@ -27,7 +27,7 @@ const SearchBar = ({ onSearch }: { onSearch?: () => void }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full md:w-fit  relative flex justify-between items-center px-2 py-1 rounded-full ring-1 ring-red-700 overflow-x-hidden "
+      className="w-full md:w-fit  relative flex justify-between items-center px-2 py-1 rounded-full ring-1 ring-red-600 overflow-x-hidden "
     >
       <input
         type="text"

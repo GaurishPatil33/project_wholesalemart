@@ -16,7 +16,7 @@ export interface Order {
     items: CartItem[]
     total: number
     createdAt: string
-    status: "pending" | "paid" | "shipped" | "delivered" | "cancelled"
+    status: "pending" | "paid" | "shipped" | "delivered" | "cancelled" | "processing"
 
     userId: string
     userInfo: {
@@ -26,6 +26,8 @@ export interface Order {
     }
     address: Address
     payment: PaymentInfo
+    deliveryDate: string
+    OrderDate: string
 }
 
 interface OrderStore {
@@ -55,7 +57,13 @@ export const useOrderStore = create<OrderStore>()(
 
         addOrder: (items, user, address, payment) => {
             const total = items.reduce(
-                (sum, item) => sum + (item.ProductConfig.price ?? item.product.sizes[0].price) * item.ProductConfig.quantity,
+                (sum, item) =>
+                    sum +
+                    ((item.ProductConfig?.price ??
+                        item.product?.sizes?.[0]?.price ??
+                        item.product?.price ??
+                        0) *
+                        (item.ProductConfig?.quantity ?? 1)),
                 0
             );
 
@@ -81,6 +89,8 @@ export const useOrderStore = create<OrderStore>()(
                 },
                 address,
                 payment,
+                deliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+                OrderDate: new Date().toISOString(),
             };
 
             set({ orders: [...get().orders, newOrder], lastOrderNumber: { ...get().lastOrderNumber, [orderYear]: seq } });
@@ -88,7 +98,8 @@ export const useOrderStore = create<OrderStore>()(
         },
 
         addOrderFromCart: (cartItems, user, payment) => {
-            const selectedAddress = user.address?.find(a => a.isSelected);
+            const selectedAddress = user.address?.find(a => a.isSelected) ||
+                user.address?.find(a => a.isDefault);
             if (!selectedAddress) throw new Error("No selected Address")
 
             return get().addOrder(
@@ -154,6 +165,7 @@ export const useOrderStore = create<OrderStore>()(
             return [...get().orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
         },
     })
-        , { name: "order-store" }
+        , { name: "order-store", version: 1, migrate: (persistedState, version) => persistedState }
+
     )
 ); 

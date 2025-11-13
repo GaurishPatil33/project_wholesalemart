@@ -255,13 +255,14 @@ export const ProductsGrid = ({
         <motion.div
           variants={containerVariants}
           ref={scrollRef}
-          className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2"
+          className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6  gap-2"
+          // className="flex flex-wrap md:grid-cols-3 lg:grid-cols-6 gap-2"
         >
           {products.map((p,i) => (
             <motion.div
               key={i}
               variants={fadeInUp}
-              className="relative snap-start h-fit  flex-shrink-0"
+              className="max-w-58"
             >
               <ProductCard product={p} />
             </motion.div>
