@@ -1,12 +1,7 @@
 import { Address, useUserStore } from "@/lib/store/userStore";
 import { motion } from "framer-motion";
 import {
-  Building,
-  Check,
   Edit2,
-  Home,
-  MapPin,
-  Pencil,
   Phone,
   Plus,
   Trash2,
@@ -348,7 +343,7 @@ const AddressModal = () => {
           )}
           {!showAddressForm &&
             user?.address?.map((address, index) => (
-              <AddressCard2 address={address} index={index} />
+              <AddressCard2 address={address} index={index} key={index} />
             ))}
         </div>
       </div>

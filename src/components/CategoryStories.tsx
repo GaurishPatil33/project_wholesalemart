@@ -1,10 +1,7 @@
 "use client";
 
 import { useShare } from "@/lib/hooks/helperFunctions";
-import {
-  fetchAllProducts,
-  fetchCategories,
-} from "@/lib/productfetching";
+import { fetchAllProducts, fetchCategories } from "@/lib/productfetching";
 import { Product } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
@@ -81,7 +78,26 @@ const CategoryStories = () => {
       const timer = setTimeout(() => setShowVideo(true), 1100);
       return () => clearTimeout(timer);
     }
-  }, [currentProductIndex]);
+  }, [currentProductIndex, selectedCategory]);
+
+  const openModal = (cat: Category) => {
+    setSelectedCategory(cat);
+    setCurrentProductIndex(0);
+  };
+  const closeModal = () => {
+    setSelectedCategory(undefined);
+    setCurrentProductIndex(0);
+  };
+
+  const nextProduct = () =>
+    setCurrentProductIndex((prev) =>
+      prev < (selectedCategory?.products?.length ?? 0) - 1 ? prev + 1 : 0
+    );
+
+  const prevProduct = () =>
+    setCurrentProductIndex((prev) =>
+      prev > 0 ? prev - 1 : (selectedCategory?.products?.length ?? 1) - 1
+    );
 
   /** ───── Auto progression ───── */
   useEffect(() => {
@@ -103,7 +119,7 @@ const CategoryStories = () => {
     }
 
     return () => clearTimeout(timer);
-  }, [selectedCategory, currentProductIndex, showVideo]);
+  }, [selectedCategory, currentProductIndex, showVideo, nextProduct]);
 
   /** ───── Prevent background scroll on modal ───── */
   useEffect(() => {
@@ -127,27 +143,8 @@ const CategoryStories = () => {
   }, []);
 
   /** ───── Controls ───── */
-  const handleHoldStart = () => videoRef.current?.pause();
-  const handleHoldEnd = () => videoRef.current?.play();
-
-  const openModal = (cat: Category) => {
-    setSelectedCategory(cat);
-    setCurrentProductIndex(0);
-  };
-  const closeModal = () => {
-    setSelectedCategory(undefined);
-    setCurrentProductIndex(0);
-  };
-
-  const nextProduct = () =>
-    setCurrentProductIndex((prev) =>
-      prev < (selectedCategory?.products?.length ?? 0) - 1 ? prev + 1 : 0
-    );
-
-  const prevProduct = () =>
-    setCurrentProductIndex((prev) =>
-      prev > 0 ? prev - 1 : (selectedCategory?.products?.length ?? 1) - 1
-    );
+  // const handleHoldStart = () => videoRef.current?.pause();
+  // const handleHoldEnd = () => videoRef.current?.play();
 
   return (
     <div className="w-full pt-2 md:py-4 bg-gradient-to-b -mb-6 ">

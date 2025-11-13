@@ -1,9 +1,5 @@
-import UserAvatar from "@/components/UserAvatar";
 import { motion } from "framer-motion";
 import {
-  Edit2,
-  Save,
-  X,
   User,
   Mail,
   Phone,
@@ -150,15 +146,15 @@ const categories:Categories[] = [
 
 const Help_Support = () => {
   const [selectedCategory, setSelectedCategory] = useState<string|null>(null);
-  const [showContactForm, setShowContactForm] = useState(false);
+  // const [showContactForm, setShowContactForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [formData, setFormData] = useState({
-    subject: "",
-    category: "",
-    message: "",
-    email: "",
-    orderNumber: "",
-  });
+  // const [formData, setFormData] = useState({
+  //   subject: "",
+  //   category: "",
+  //   message: "",
+  //   email: "",
+  //   orderNumber: "",
+  // });
 
   const filteredFaqs = selectedCategory
     ? categories.find((c) => c.id === selectedCategory)?.faqs || []
@@ -234,14 +230,14 @@ const Help_Support = () => {
                   ? categories.find((c) => c.id === selectedCategory)?.title
                   : "Search Results"}
               </h2>
-              {selectedCategory && (
+              {selectedCategory && 
                 <button
                   onClick={() => setSelectedCategory(null)}
                   className="text-red-400 hover:text-red-600 font-medium"
                 >
-                  ← Back
+                  ← Back 
                 </button>
-              )}
+              }
             </div>
 
             {filteredFaqs.length > 0 ? (

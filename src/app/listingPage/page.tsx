@@ -312,7 +312,7 @@ const ListingPageContent = () => {
     }
 
     return filtered;
-  }, [products, filters, minPrice, maxPrice, sort, priceRange]);
+  }, [products, filters,  sort, priceRange]);
 
   const updateUrlParams = useCallback(
     (

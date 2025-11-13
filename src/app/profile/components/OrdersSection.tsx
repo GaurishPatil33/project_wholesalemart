@@ -1,11 +1,11 @@
 import { Order, useOrderStore } from "@/lib/store/orderStore";
-import { AnimatePresence, motion } from "framer-motion";
+import {  motion } from "framer-motion";
 import { ShieldCheck, Truck, Clock, X } from "lucide-react";
 import React, { useState } from "react";
 
 const OrdersSection = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const { orders, clearOrders } = useOrderStore();
+  const { orders } = useOrderStore();
   const getStatusColor = (status: Order["status"]) => {
     switch (status) {
       case "delivered":

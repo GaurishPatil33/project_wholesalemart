@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
 import React from "react";
 
 const Loading = () => {

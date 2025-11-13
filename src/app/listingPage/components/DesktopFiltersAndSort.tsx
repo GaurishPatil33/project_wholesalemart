@@ -21,7 +21,7 @@ interface FilterModalProps {
   ) => React.ReactNode;
 }
 export const DesktopFilters: React.FC<FilterModalProps> = ({
-  filters,
+  // filters,
   filterOptions,
   onClearAll,
   filterContent,

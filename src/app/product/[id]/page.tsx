@@ -5,7 +5,6 @@ import Reviews from "@/components/Reviews";
 import { useShare } from "@/lib/hooks/helperFunctions";
 import {
   fetchAllProducts,
-  fetchProductByCategory,
   fetchProductById,
 } from "@/lib/productfetching";
 import { useCartStore } from "@/lib/store/cartStore";
@@ -13,7 +12,6 @@ import { useToast } from "@/lib/store/toast";
 import { Product } from "@/lib/types";
 import { motion } from "framer-motion";
 import {
-  Ban,
   BellIcon,
   Check,
   Heart,
@@ -252,7 +250,7 @@ const ProductPage = () => {
     }
 
     return matched;
-  }, [product?.colors]);
+  }, [product?.colors,colorOptions]);
 
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
@@ -314,12 +312,12 @@ const ProductPage = () => {
   }, [id]);
 
   // Handle color change
-  const handleColorSelect = (color: string) => {
-    setSelectedProductConfig((prev) => ({
-      ...prev,
-      color: color,
-    }));
-  };
+  // const handleColorSelect = (color: string) => {
+  //   setSelectedProductConfig((prev) => ({
+  //     ...prev,
+  //     color: color,
+  //   }));
+  // };
 
   // Handle size selection
   const handleSizeSelect = (size: string, price: number) => {

@@ -11,7 +11,7 @@ interface FormErrors {
 }
 
 const ProfileInfo = () => {
-  const { user, updateUser } = useUserStore();
+  const { user } = useUserStore();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -51,7 +51,7 @@ const ProfileInfo = () => {
     }
   };
 
-  const userInfoForm = () => <div className=""></div>;
+  // const userInfoForm = () => <div className=""></div>;
 
   return (
     <motion.div

@@ -12,16 +12,12 @@ import {
   Package,
   Heart,
   MapPin,
-  CreditCard,
   Gift,
-  Star,
   HelpCircle,
   LogOutIcon,
 } from "lucide-react";
 import Coupons from "./components/Coupons";
 import Wishlist from "./components/Wishlist";
-import { profile } from "console";
-import Link from "next/link";
 import Payments from "./components/Payments";
 import Help_Support from "./components/Help&Support";
 

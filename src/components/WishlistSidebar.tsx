@@ -14,7 +14,7 @@ type CartSidebarProps = {
 
 const WishlistSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   const {
-    cart,
+    // cart,
     wishlist,
     // selectedCartItems,
     // selectedCartTotal,

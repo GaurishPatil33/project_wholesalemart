@@ -3,7 +3,7 @@ import { useUserStore } from "@/lib/store/userStore";
 import { User, Package, MapPin, Lock, LucideIcon } from "lucide-react";
 import React from "react";
 
-const icons: Record<string, any> = {
+const icons: Record<string, LucideIcon> = {
   Profile: User,
   Orders: Package,
   Addresses: MapPin,

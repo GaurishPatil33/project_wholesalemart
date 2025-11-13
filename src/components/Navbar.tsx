@@ -6,17 +6,14 @@ import {
   Heart,
   LogInIcon,
   ShoppingBagIcon,
-  User2,
   X,
   Menu,
   Mail,
   PhoneCallIcon,
-  SearchIcon,
-  User,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Search from "./Search";
 import { usePathname, useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cartStore";
@@ -36,7 +33,7 @@ const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const { cart, wishlist } = useCartStore();
-  const { login, user } = useUserStore();
+  const {  user } = useUserStore();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const pathname = usePathname();
   const isCheckout = pathname === "/checkout";
@@ -82,7 +79,7 @@ const Navbar = () => {
   const handleUserClick = useCallback(() => {
     if (!user) return openModal("/profile");
     router.push("/profile");
-  }, [router, user]);
+  }, [router, user,openModal]);
 
   return (
     <div className={`${isCheckout ? " hidden md:block" : " block"}`}>

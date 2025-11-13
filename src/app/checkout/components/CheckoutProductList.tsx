@@ -1,7 +1,6 @@
 import { useCartStore } from "@/lib/store/cartStore";
 import { motion } from "framer-motion";
 import { Minus, Plus, HeartPlus, Trash2, ShoppingCart } from "lucide-react";
-import Image from "next/image";
 import React from "react";
 
 const CheckoutProductList = () => {

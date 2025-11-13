@@ -165,7 +165,7 @@ export const useOrderStore = create<OrderStore>()(
             return [...get().orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
         },
     })
-        , { name: "order-store", version: 1, migrate: (persistedState, version) => persistedState }
+        , { name: "order-store", version: 1, migrate: (persistedState) => persistedState }
 
     )
 ); 

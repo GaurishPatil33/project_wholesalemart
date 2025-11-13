@@ -9,7 +9,7 @@ export default function Reviews({ product }: { product: Product }) {
     ? product.reviews
     : product.reviews.slice(0, 3);
 
-  const viewImage = () => <div className=""></div>;
+  // const viewImage = () => <div className=""></div>;
 
   return (
     <div className="space-y-1 md:space-y-3">

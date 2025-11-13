@@ -1,4 +1,4 @@
-import { Categories, Products } from "./data";
+import { Categories} from "./data";
 import { products1 } from "./data2";
 import { Product, Category } from "./types";
 

@@ -19,7 +19,6 @@ import {
   Edit2,
   Trash2,
   Check,
-  X,
   Phone,
   Mail,
   Home,
@@ -1081,7 +1080,7 @@ const ProfilePage = () => {
                         GOLD Member
                       </h2>
                       <p className="text-sm text-gray-800">
-                        You're enjoying exclusive benefits!
+                        You are enjoying exclusive benefits!
                       </p>
                     </div>
 

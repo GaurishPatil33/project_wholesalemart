@@ -38,7 +38,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
   setPriceRange,
   updateUrlParams,
 }) => {
-  const [activeSlider, setActiveSlider] = useState<"min" | "max" | null>(null);
+  // const [activeSlider, setActiveSlider] = useState<"min" | "max" | null>(null);
 
   const handleCheckboxChange = (key: string, value: string) => {
     setFilters((prev) => {

@@ -1,5 +1,4 @@
 // useIsMobile.ts
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 export function useIsMobile(breakpoint = 768) {

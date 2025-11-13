@@ -21,7 +21,7 @@ interface FilterBannerProps {
 
 const FilterBanner: React.FC<FilterBannerProps> = ({
   type,
-  categories,
+  // categories,
   brands,
   filters,
   onChange,
@@ -29,12 +29,12 @@ const FilterBanner: React.FC<FilterBannerProps> = ({
   // Make a copy of filters
   const tempFilters: Filters = { ...filters };
 
-  const toggleCategory = (id: string) => {
-    const updated = tempFilters.category.includes(id)
-      ? tempFilters.category.filter((c) => c !== id)
-      : [...tempFilters.category, id];
-    onChange({ category: updated });
-  };
+  // const toggleCategory = (id: string) => {
+  //   const updated = tempFilters.category.includes(id)
+  //     ? tempFilters.category.filter((c) => c !== id)
+  //     : [...tempFilters.category, id];
+  //   onChange({ category: updated });
+  // };
 
   const toggleBrand = (id: string) => {
     const updated = tempFilters.brands.includes(id)

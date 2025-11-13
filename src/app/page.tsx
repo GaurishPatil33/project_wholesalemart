@@ -5,7 +5,6 @@ import FeatureStrip from "@/components/FeaturesStrip";
 import ImageBanner from "@/components/ImageBanner";
 import { ProductList, ProductsGrid } from "@/components/ProductList";
 import { Categories, Products } from "@/lib/data";
-import { products1 } from "@/lib/data2";
 // import { Categories, data1 } from "@/lib/data";
 import { fetchAllProducts, fetchCategories } from "@/lib/productfetching";
 import { Product } from "@/lib/types";
@@ -16,12 +15,7 @@ export default function Home() {
 
   // const sarees = products.filter((s) => s.category === "sarees");
   // const kurtas = products.filter((s) => s.category === "kurtas");
-  const [isMobile, setIsMobile] = useState(false);
-  const [categories, setCategories] = useState();
   // const isMobile = window.innerWidth < 768;
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
 
   useEffect(() => {
     const fetch = () => fetchAllProducts();
@@ -33,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     const fetchproducts = async () => {
       try {
-        const cat = await fetchCategories();
+        // const cat = await fetchCategories();
         const pro = await fetchAllProducts();
         setProducts(pro);
         console.log("pro", pro);
