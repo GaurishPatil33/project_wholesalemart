@@ -259,7 +259,7 @@ const CheckoutPage = () => {
         clear Orders
       </div> */}
 
-      {showAuth && <AuthForm onClose={() => setShowAuth(false)} />}
+      {/* {showAuth && <AuthForm onClose={() => setShowAuth(false)} />} */}
     </div>
   );
 };
