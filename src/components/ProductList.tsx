@@ -239,7 +239,7 @@ export const ProductsGrid = ({
                 <div
                   key={i}
                   onClick={() => {
-                    router.push(`/listingpage/`);
+                    router.push(`/listingPage?badges=${item.key}`);
                   }}
                   className={` flex items-center w-full justify-center rounded-full border px-2 py-1 gap-1 transition-all duration-150 text-[#900001]/70 bg-amber-900/20 hover:scale-105"
                   }`}

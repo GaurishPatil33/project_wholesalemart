@@ -29,6 +29,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AnimatedNumber } from "./components/AnimateNumber";
 import { BsWhatsapp } from "react-icons/bs";
 import Loading from "@/components/Loading";
+import Skeleton from "@/components/Skeleton";
 
 interface ProductConfig {
   color?: string;
@@ -292,7 +293,7 @@ const ProductPage = () => {
 
   useEffect(() => {
     if (!id) return;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
 
     setLoading(true);
     const getproduct = fetchProductById(id);
@@ -387,7 +388,8 @@ const ProductPage = () => {
     window.open(whatsappUrl, "_blank");
   };
 
-  if (loading) return <Loading />;
+  // if (loading) return <Loading />;
+  if (loading) return <div className=""><Skeleton></Skeleton></div>;
 
   if (!product) {
     return (

@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   } = useCartStore();
 
   const { showToast } = useToast();
-  const { activeId, setActiveId, visibleIds, setVisibleIds } = useVideoStore();
+  // const { activeId, setActiveId, visibleIds, setVisibleIds } = useVideoStore();
   const router = useRouter();
 
   // useEffect(() => {
@@ -79,51 +79,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   // }, [isInView,]);
 
   // 🎥 Manage playback based on view & active state
-  useEffect(() => {
-    if (!videoRef.current) return;
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
 
-    // Clear old timers when effect runs
-    if (timeRef.current) {
-      clearTimeout(timeRef.current);
-      timeRef.current = null;
-    }
+  //   // Clear old timers when effect runs
+  //   if (timeRef.current) {
+  //     clearTimeout(timeRef.current);
+  //     timeRef.current = null;
+  //   }
 
-    if (isInView) {
-      // Immediately mark as active
-      setActiveId(product.id);
+  //   if (isInView) {
+  //     // Immediately mark as active
+  //     setActiveId(product.id);
 
-      timeRef.current = setTimeout(() => {
-        if (videoRef.current) {
-          setShowVideo(true);
-          videoRef.current.currentTime = 0;
-          videoRef.current.play().catch(() => {});
+  //     timeRef.current = setTimeout(() => {
+  //       if (videoRef.current) {
+  //         setShowVideo(true);
+  //         videoRef.current.currentTime = 0;
+  //         videoRef.current.play().catch(() => {});
 
-          // Stop vid after 4sec
-          timeRef.current = setTimeout(() => {
-            // ✅ No need to check stale activeId here
-            if (videoRef.current) {
-              videoRef.current.pause();
-              setShowVideo(false);
-            }
-          }, 6000);
-        }
-      }, 1100);
-    } else {
-      // Reset when out of view
-      if (activeId === product.id) {
-        setActiveId(null);
-      }
-      setShowVideo(false);
-      videoRef.current.pause();
-    }
+  //         // Stop vid after 4sec
+  //         timeRef.current = setTimeout(() => {
+  //           // ✅ No need to check stale activeId here
+  //           if (videoRef.current) {
+  //             videoRef.current.pause();
+  //             setShowVideo(false);
+  //           }
+  //         }, 6000);
+  //       }
+  //     }, 1100);
+  //   } else {
+  //     // Reset when out of view
+  //     if (activeId === product.id) {
+  //       setActiveId(null);
+  //     }
+  //     setShowVideo(false);
+  //     videoRef.current.pause();
+  //   }
 
-    return () => {
-      if (timeRef.current) {
-        clearTimeout(timeRef.current);
-        timeRef.current = null;
-      }
-    };
-  }, [isInView, product.id, setActiveId]);
+  //   return () => {
+  //     if (timeRef.current) {
+  //       clearTimeout(timeRef.current);
+  //       timeRef.current = null;
+  //     }
+  //   };
+  // }, [isInView, product.id, setActiveId]);
 
   const handleWishlistToggle = () => {
     toggleWishlist(product);
@@ -164,12 +164,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
             key="image"
             src={product.images[0]}
             alt={product.title}
-            initial={{ opacity: 1 }}
-            animate={{ opacity: showVideo ? 0 : 1 }}
+            // initial={{ opacity: 1 }}
+            // animate={{ opacity: showVideo ? 0 : 1 }}
             transition={{ duration: 0.4 }}
             className="absolute inset-0 w-full h-full object-cover "
           />
-          {product.video &&  (
+          {/* {product.video &&  (
             <motion.video
               key="video"
               ref={videoRef}
@@ -189,7 +189,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
               className="absolute inset-0 w-full h-full object-cover hover:scale-102 "
               onEnded={() => setShowVideo(false)}
             />
-          )}
+          )} */}
         </div>
 
         <motion.div

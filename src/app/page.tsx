@@ -70,7 +70,7 @@ export default function Home() {
       </div>
 
       <ProductList
-        products={products.sort(() => Math.random() - 0.5).slice(0, 30)}
+        products={products.sort(() => Math.random() - 0.5).slice(0, 10)}
         title="New Arriwals"
       />
 
