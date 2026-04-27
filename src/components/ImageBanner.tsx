@@ -62,7 +62,7 @@ const ImageBanner = () => {
 
   return (
     <section
-      className="relative w-full mt-2 md:mt-2 min-h-60  max-h-150 "
+      className="relative w-full mt-2 md:mt-2 min-h-60  md:min-h-125 max-h-fit "
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -76,7 +76,7 @@ const ImageBanner = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="absolute inset-0 w-full h-full md:object-cover object-contain"
+          className="absolute inset-0 w-full h-full lg:object-cover object-contain"
         />
       </AnimatePresence>
 
